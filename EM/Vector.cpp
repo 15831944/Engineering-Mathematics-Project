@@ -78,7 +78,7 @@ Vector Vector::operator+(const Vector& v) {
 Vector Vector::operator-(const Vector& v) {
 	// add zero vector
 	if (this->dim_ == 0) {
-		Vector tmp(v.dim_);
+		Vector tmp = v;
 		tmp.data_ *= -1.0;
 		return tmp;
 	}
