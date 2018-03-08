@@ -7,7 +7,7 @@ private:
 	valarray<NumType> data_;
 public:
 	Vector(int);
-
+	Vector(int, NumType, ...);
 
 
 };
