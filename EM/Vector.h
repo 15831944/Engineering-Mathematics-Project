@@ -6,8 +6,11 @@ private:
 	int dim_;
 	valarray<NumType> data_;
 public:
+	Vector();
 	Vector(int);
-	Vector(int, NumType, ...);
+	Vector(initializer_list<NumType>);
+
+	string ToString();
 
 
 };
