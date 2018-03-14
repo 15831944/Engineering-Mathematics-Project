@@ -1,6 +1,4 @@
 #include "Vector.h"
-#include <sstream>
-using std::stringstream;
 
 Vector::Vector() {
 	this->dim_ = 0; // zero vector !!!
