@@ -6,10 +6,13 @@ using namespace std;
 int main() {
 
 	Matrix test(3, 3,
-	{ 1,2,3,
-	  4,5,6,
-	  7,8,9 });
-	cout << test.Cofactor(2, 2).ToString();
+	{
+		-1,3,2,
+		0,-2,1,
+		1, 0,-2
+	}
+	);
+	cout << test.Inv().ToString();
 	getchar();
 	return 0;
 }

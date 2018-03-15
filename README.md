@@ -1,15 +1,18 @@
 # Engineering-Mathematics-Project
 
-## Vector
+## Coding Style
 
-### initial
+Function 前要先做Check
+example
 
-```
-// init by dimension
-Vector v(3);
-// init by all elements of vector
-Vector v({1,2,3});
-Vector v = {1,2,3};
-// init by copy
-Vector r = v;
+```cpp
+Matrix::Matrix(int rSize, int cSize) {
+	// check
+	if (rSize <= 0 || cSize <= 0)
+		throw "Wrong Size!";
+	//
+	this->data_.resize(rSize*cSize);
+	this->shape_[0] = rSize;
+	this->shape_[1] = cSize;
+}
 ```
