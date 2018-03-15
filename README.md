@@ -3,9 +3,9 @@
 ## Coding Style
 
 Function 前要先做Check
-example
 
 ```cpp
+// Example
 Matrix::Matrix(int rSize, int cSize) {
 	// check
 	if (rSize <= 0 || cSize <= 0)
