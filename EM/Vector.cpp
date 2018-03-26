@@ -90,3 +90,86 @@ Vector Vector::operator-(const Vector& v) {
 	result.data_ = this->data_ - v.data_;
 	return result;
 }
+
+double Vector::Dot(const Vector& v){
+	if (this->dim_!=v.dim_){
+		throw "Dimension is not same!";
+	}
+	else{
+		NumType tmp=0;
+		for (int i = 0; i < this->dim_; i++) {
+			tmp += this->data_[0] * v.data_[0];
+		}
+		return tmp;
+	}
+}
+
+Vector Vector::Scalar(NumType s){
+	for (int i = 0; i < this->dim_; i++)
+		this->data_[0] *= s;
+	return *this;
+}
+
+NumType Vector::Norm() {
+	NumType tmp = 0;
+	for (int i = 0; i < this->dim_; i++){
+		tmp += pow(this->data_[i], 2);
+	}
+	return sqrt(tmp);
+}
+
+Vector Vector::Normalization() {
+	return (this->Scalar(1.0 / this->Norm));
+}
+
+Vector Vector::Cross(const Vector& v) {
+	if(this->dim_!=v.dim_)
+		throw "Dimension is not same!";
+	else {
+		Vector tmp(this->dim_);
+		int dim = this->dim_;
+		for (int i = 0; i < tmp.dim_; i++)
+			tmp.data_[i] == this->data_[(i + 1) % dim] * v.data_[(i + 2) % dim] - this->data_[(i + 2) % dim] * v.data_[(i + 1) % dim];
+		return tmp;
+	}
+}
+
+NumType Vector::Component(const Vector& v) {
+	if (this->dim_ != v.dim_)
+		throw "Dimension is not same!";
+	else {
+		Vector tmp = v;
+		return this->Dot(tmp.Normalization);
+	}
+}
+
+Vector Vector::Projection(const Vector& v) {
+	Vector tmp = v;
+	return (this->Component(v)*tmp.Normalization);
+}
+
+NumType Vector::TriangleArea(const Vector& v) {
+	return (this->Cross(v).Norm/2.0);
+}
+
+bool Vector::Parallel(const Vector& v) {
+	if (this->Cross(v).Norm == 0)
+		return true;
+	return false;
+}
+
+bool Vector::Orthogonal(const Vector& v) {
+	if (this->Dot(v) == 0)
+		return true;
+	return false;
+}
+
+NumType Vector::Getangle(const Vector& v) {
+	Vector tmp = this->Dot(v);
+	return (acos(tmp / (this->Norm*v.Norm)) * 180.0 / PI);
+}
+
+Vector Vector::PlaneNormal(const Vector& v) {
+	Vector tmp = this->Cross(v);
+	return tmp;
+}
