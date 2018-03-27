@@ -24,6 +24,9 @@
     <ClInclude Include="Vector.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="WinForm.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -34,6 +37,9 @@
     </ClCompile>
     <ClCompile Include="Vector.cpp">
       <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="WinForm.cpp">
+      <Filter>標頭檔</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

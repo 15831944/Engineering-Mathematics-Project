@@ -13,8 +13,19 @@ public:
 	Vector operator=(const Vector&);
 	Vector operator+(const Vector&);
 	Vector operator-(const Vector&);
-
+	NumType Dot(const Vector&);
+	Vector Scalar(NumType);
+	NumType const Norm();
+	Vector const Normalization();
+	Vector Cross(const Vector&);
+	NumType Component(const Vector&);
+	Vector Projection(const Vector& v);//project onto v
+	NumType TriangleArea(const Vector&);
+	bool Parallel(const Vector&);
+	bool Orthogonal(const Vector&);
+	NumType Getangle(const Vector&);
+	Vector PlaneNormal(const Vector&);
 	string ToString();
-
+	
 
 };
