@@ -1,5 +1,6 @@
 #include "Matrix.h"
 
+
 Matrix::Matrix(int rSize, int cSize) {
 	// check
 	if (rSize <= 0 || cSize <= 0)
@@ -145,6 +146,10 @@ NumType Matrix::Det() {
 }
 
 NumType Matrix::Det(Matrix mat) {
+#ifdef DEBUG
+	cout << mat.shape_[0] << " " << mat.shape_[1] << '\n';
+#endif // DEBUG
+
 	if (mat.shape_[0] == 2) {
 		return mat.data_[0] * mat.data_[3] - mat.data_[1] * mat.data_[2];
 	}
