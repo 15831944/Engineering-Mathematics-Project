@@ -119,6 +119,8 @@ NumType Vector::Norm() {
 }
 
 Vector Vector::Normalization() {
+	if (this->Norm==0)
+		return *this;
 	return (this->Scalar(1.0 / this->Norm));
 }
 
@@ -166,6 +168,8 @@ bool Vector::Orthogonal(const Vector& v) {
 
 NumType Vector::Getangle(const Vector& v) {
 	Vector tmp = this->Dot(v);
+	if (this->Norm == 0 || v.Norm == 0)
+		throw "vector can't be zero vector";
 	return (acos(tmp / (this->Norm*v.Norm)) * 180.0 / PI);
 }
 
