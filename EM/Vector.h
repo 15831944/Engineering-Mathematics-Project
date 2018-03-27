@@ -15,8 +15,8 @@ public:
 	Vector operator-(const Vector&);
 	NumType Dot(const Vector&);
 	Vector Scalar(NumType);
-	NumType const Norm();
-	Vector const Normalization();
+	NumType Norm() const;
+	Vector Normalization();
 	Vector Cross(const Vector&);
 	NumType Component(const Vector&);
 	Vector Projection(const Vector& v);//project onto v
@@ -26,6 +26,4 @@ public:
 	NumType Getangle(const Vector&);
 	Vector PlaneNormal(const Vector&);
 	string ToString();
-	
-
 };

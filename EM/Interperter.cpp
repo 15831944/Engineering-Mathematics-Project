@@ -1,4 +1,4 @@
-#include "Interpreter.h"
+/*#include "Interpreter.h"
 #include "Vector.h"
 #include "Matrix.h"
 map<string, VAR> Interpreter::vars;
@@ -21,4 +21,4 @@ vector<ListViewItem^> LoadVars(string path) {
 		
 
 	}
-}
+}*/

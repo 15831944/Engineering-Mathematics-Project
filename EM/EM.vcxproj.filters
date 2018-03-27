@@ -44,8 +44,13 @@
     <ClCompile Include="WinForm.cpp">
       <Filter>標頭檔</Filter>
     </ClCompile>
-    <ClCompile Include="Interpreter.cpp">
-      <Filter>標頭檔</Filter>
+    <ClCompile Include="Interperter.cpp">
+      <Filter>原始程式檔</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WinForm.resx">
+      <Filter>資源檔</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
