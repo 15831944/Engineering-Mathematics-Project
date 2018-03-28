@@ -1,22 +1,21 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <fstream>
 #include <map>
+#include <string>
+#include "Vector.h"
+#include "Matrix.h"
+using std::map;
+using std::string;
+using System::Array;
 using System::String;
 using System::Windows::Forms::ListViewItem;
-using std::vector;
-using std::string;
-using std::ifstream;
-using std::map;
 
-struct VAR {
-	bool type; // 0 = vector 1 = matrix
+struct Var {
+	string type;
 	void* data;
 };
 
-class Interpreter {
-public:
-	static map<string, VAR> vars;
-	vector<ListViewItem^> LoadVars(string path);
-};
+extern map<string, Var> vars;
+extern int vCounter, mCounter;
+
+void loadVars(string path);
+

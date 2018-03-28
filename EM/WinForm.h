@@ -193,12 +193,7 @@ namespace EM {
 	private: System::Void toolStripDropDownButton1_Click(System::Object^  sender, System::EventArgs^  e) {
 	}
 	private: System::Void WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
-		ListViewItem ^lvi = gcnew ListViewItem();
-		lvi->SubItems->Add("1");
-		lvi->SubItems->Add("2");
-		lvi->SubItems->Add("3");
-
-		this->listView1->Items->Add(lvi);
+		
 	}
 private: System::Void ¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 };

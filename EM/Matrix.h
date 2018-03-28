@@ -2,12 +2,12 @@
 #include "Defines.h"
 
 class Matrix {
-private:
+public:
 	int shape_[2];
 	valarray<NumType> data_;
 	Matrix MiniorMat_(int, int);
 
-public:
+
 	Matrix(int, int);
 
 	Matrix(int, int, initializer_list<NumType>);

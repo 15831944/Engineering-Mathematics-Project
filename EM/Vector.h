@@ -2,10 +2,9 @@
 #include "Defines.h"
 
 class Vector {
-private:
+public:
 	int dim_;
 	valarray<NumType> data_;
-public:
 	Vector();
 	Vector(int);
 	Vector(initializer_list<NumType>);
