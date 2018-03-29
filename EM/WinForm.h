@@ -152,6 +152,7 @@ namespace EM {
 			// Col3
 			// 
 			this->Col3->Text = L"Value";
+			this->Col3->Width = 500;
 			// 
 			// cmdBox
 			// 

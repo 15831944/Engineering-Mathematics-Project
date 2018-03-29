@@ -23,7 +23,7 @@ void loadVars(string path) {
 			var.type = "Vector";
 			var.data = new Vector(dim);
 			// var name
-			name = "v"+ std::to_string(vCounter++);
+			name = "$v"+ std::to_string(vCounter++);
 			// input
 			for (int j = 0; j < dim; j++)
 				fin >> ((Vector*)var.data)->data_[j];
@@ -35,7 +35,7 @@ void loadVars(string path) {
 			fin >> shape[0] >> shape[1];
 			var.type = "Matrix";
 			var.data = new Matrix(shape[0], shape[1]);
-			name = "m" + std::to_string(mCounter++);
+			name = "$m" + std::to_string(mCounter++);
 			size = shape[0] * shape[1];
 			for (int j = 0; j < size; ++j)
 				fin >> ((Matrix*)var.data)->data_[j];
