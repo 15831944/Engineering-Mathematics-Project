@@ -85,9 +85,11 @@ namespace EM {
 			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripDropDownButton1 });
 			this->toolStrip1->Location = System::Drawing::Point(0, 24);
 			this->toolStrip1->Name = L"toolStrip1";
+			this->toolStrip1->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
 			this->toolStrip1->Size = System::Drawing::Size(1239, 25);
 			this->toolStrip1->TabIndex = 0;
 			this->toolStrip1->Text = L"toolStrip1";
+			this->toolStrip1->ItemClicked += gcnew System::Windows::Forms::ToolStripItemClickedEventHandler(this, &WinForm::toolStrip1_ItemClicked);
 			// 
 			// toolStripDropDownButton1
 			// 
@@ -103,7 +105,7 @@ namespace EM {
 			// 更郎ToolStripMenuItem
 			// 
 			this->更郎ToolStripMenuItem->Name = L"更郎ToolStripMenuItem";
-			this->更郎ToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->更郎ToolStripMenuItem->Size = System::Drawing::Size(103, 22);
 			this->更郎ToolStripMenuItem->Text = L"Load";
 			this->更郎ToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::更郎ToolStripMenuItem_Click);
 			// 
@@ -196,5 +198,7 @@ namespace EM {
 		
 	}
 private: System::Void 更郎ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void toolStrip1_ItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
+}
 };
 }

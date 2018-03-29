@@ -32,12 +32,12 @@ void loadVars(string path) {
 			break;
 		case 'M':
 			int shape[2];
-			fin >> shape[0], shape[1];
+			fin >> shape[0] >> shape[1];
 			var.type = "Matrix";
 			var.data = new Matrix(shape[0], shape[1]);
 			name = "m" + std::to_string(mCounter++);
 			size = shape[0] * shape[1];
-			for (int j = 0; j < size; ++i)
+			for (int j = 0; j < size; ++j)
 				fin >> ((Matrix*)var.data)->data_[j];
 			vars[name] = var;
 			break;
