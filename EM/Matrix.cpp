@@ -27,6 +27,74 @@ Matrix::Matrix(int rSize, int cSize, initializer_list<NumType> args) {
 	}
 }
 
+Matrix Matrix::operator+(const Matrix& m) {
+	if(this->shape_[0]!=m.shape_[0]||this->shape_[1]!=m.shape_[1])
+		throw "Dimension is not same!";
+	else {
+		Matrix result(this->shape_[0],this->shape_[1]);
+		for (int i = 0; i < this->shape_[0]*this->shape_[1]; i++){
+			result.data_[i] = this->data_[i] + m.data_[i];
+		}
+		return result;
+	}		
+}
+
+Matrix Matrix::operator-(const Matrix& m) {
+	if (this->shape_[0] != m.shape_[0] || this->shape_[1] != m.shape_[1])
+		throw "Dimension is not same!";
+	else {
+		Matrix result(this->shape_[0], this->shape_[1]);
+		for (int i = 0; i < this->shape_[0] * this->shape_[1]; i++) {
+			result.data_[i] = this->data_[i] - m.data_[i];
+		}
+		return result;
+	}
+}
+
+Matrix Matrix::operator=(const Matrix& m) {
+	this->shape_[0] = m.shape_[0];
+	this->shape_[1] = m.shape_[1];
+	this->data_.resize(m.shape_[0] * m.shape_[1]);
+	for (int i = 0; i < m.shape_[0] * m.shape_[1]; i++) {
+		this->data_[i] = m.data_[i];
+	}
+	return *this;
+}
+
+Matrix Matrix::operator=(initializer_list<NumType> args) {
+	if(this->data_.size()!=args.size())
+		throw "Dimension is not same!";
+	else {
+		auto iter = args.begin();
+		int i;
+		for (i = 0; iter != args.end(); ++iter, ++i) {
+			this->data_[i] = *iter;
+		}
+		return *this;
+	}
+}
+
+Matrix Matrix::operator*(const Matrix& m) {
+	if (this->shape_[1] != m.shape_[0])
+		throw "Error dimension!";
+	else
+	{
+		Matrix result(this->shape_[0], m.shape_[1]);
+		int size = this->shape_[0] * m.shape_[1];
+		NumType sum = 0;
+		for (int i = 0; i < size; i++) {
+			int j = i / m.shape_[1];
+			int k = i % m.shape_[1];
+			sum=0;
+			for (int n = 0; n < this->shape_[0]; n++) {
+				sum += this->data_[i*this->shape_[1] + n] * m.data_[n*m.shape_[1] + k];
+			}
+			result.data_[i] = sum;
+		}
+		return result;
+	}
+}
+
 string Matrix::ToString() {
 	// check
 	if (this->shape_[0] == 0 || this->shape_[1] == 0)
@@ -74,7 +142,6 @@ Matrix Matrix::MiniorMat_(int row, int col) {
 			++minorIdx;
 		}
 	}
-
 	return result;
 }
 

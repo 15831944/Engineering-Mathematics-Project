@@ -24,5 +24,7 @@ public:
 	bool Orthogonal(const Vector&);
 	NumType Getangle(const Vector&);
 	Vector PlaneNormal(const Vector&);
+	bool LinearIndependent(const Vector&);
+
 	string ToString();
 };

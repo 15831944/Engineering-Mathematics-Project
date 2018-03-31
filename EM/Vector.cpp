@@ -178,3 +178,7 @@ Vector Vector::PlaneNormal(const Vector& v) {
 	Vector tmp = this->Cross(v);
 	return tmp;
 }
+
+bool Vector::LinearIndependent(const Vector& v){
+	return !this->Parallel(v);
+}

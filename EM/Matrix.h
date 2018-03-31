@@ -11,6 +11,11 @@ public:
 	Matrix(int, int);
 
 	Matrix(int, int, initializer_list<NumType>);
+	Matrix operator+(const Matrix&);
+	Matrix operator-(const Matrix&);
+	Matrix operator=(const Matrix&);
+	Matrix operator=(initializer_list<NumType>);
+	Matrix operator*(const Matrix&);
 
 	Matrix Trans();
 	Matrix Adj();
