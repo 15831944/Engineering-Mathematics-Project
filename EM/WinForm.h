@@ -38,7 +38,7 @@ namespace EM {
 	protected:
 	private: System::Windows::Forms::ToolStripDropDownButton^  toolStripDropDownButton1;
 	private: System::Windows::Forms::ToolStripMenuItem^  更郎ToolStripMenuItem;
-	private: System::Windows::Forms::MenuStrip^  menuStrip1;
+
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::RichTextBox^  cmdBox;
 	private: System::Windows::Forms::ListView^  listView1;
@@ -46,6 +46,7 @@ namespace EM {
 	private: System::Windows::Forms::ColumnHeader^  Col2;
 	private: System::Windows::Forms::ColumnHeader^  Col3;
 	private: System::Windows::Forms::OpenFileDialog^  OFD;
+	private: System::Windows::Forms::Label^  debugLabel;
 
 
 
@@ -68,7 +69,6 @@ namespace EM {
 			this->toolStrip1 = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripDropDownButton1 = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->更郎ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->Col1 = (gcnew System::Windows::Forms::ColumnHeader());
@@ -76,6 +76,7 @@ namespace EM {
 			this->Col3 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->cmdBox = (gcnew System::Windows::Forms::RichTextBox());
 			this->OFD = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->debugLabel = (gcnew System::Windows::Forms::Label());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -83,7 +84,7 @@ namespace EM {
 			// toolStrip1
 			// 
 			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripDropDownButton1 });
-			this->toolStrip1->Location = System::Drawing::Point(0, 24);
+			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
 			this->toolStrip1->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
 			this->toolStrip1->Size = System::Drawing::Size(1239, 25);
@@ -109,23 +110,16 @@ namespace EM {
 			this->更郎ToolStripMenuItem->Text = L"Load";
 			this->更郎ToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::更郎ToolStripMenuItem_Click);
 			// 
-			// menuStrip1
-			// 
-			this->menuStrip1->Location = System::Drawing::Point(0, 0);
-			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1239, 24);
-			this->menuStrip1->TabIndex = 1;
-			this->menuStrip1->Text = L"menuStrip1";
-			// 
 			// groupBox1
 			// 
 			this->groupBox1->Controls->Add(this->listView1);
 			this->groupBox1->Controls->Add(this->cmdBox);
-			this->groupBox1->Location = System::Drawing::Point(12, 276);
+			this->groupBox1->Location = System::Drawing::Point(12, 41);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(602, 310);
+			this->groupBox1->Size = System::Drawing::Size(608, 310);
 			this->groupBox1->TabIndex = 2;
 			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Main Panel";
 			// 
 			// listView1
 			// 
@@ -167,21 +161,28 @@ namespace EM {
 			this->cmdBox->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
 			this->cmdBox->Size = System::Drawing::Size(286, 270);
 			this->cmdBox->TabIndex = 0;
-			this->cmdBox->Text = L"";
+			this->cmdBox->Text = L"> ";
 			// 
 			// OFD
 			// 
 			this->OFD->FileName = L"openFileDialog1";
+			// 
+			// debugLabel
+			// 
+			this->debugLabel->AutoSize = true;
+			this->debugLabel->Location = System::Drawing::Point(823, 555);
+			this->debugLabel->Name = L"debugLabel";
+			this->debugLabel->Size = System::Drawing::Size(0, 12);
+			this->debugLabel->TabIndex = 3;
 			// 
 			// WinForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1239, 598);
+			this->Controls->Add(this->debugLabel);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->toolStrip1);
-			this->Controls->Add(this->menuStrip1);
-			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"WinForm";
 			this->Text = L"Mat";
 			this->Load += gcnew System::EventHandler(this, &WinForm::WinForm_Load);
@@ -195,9 +196,7 @@ namespace EM {
 #pragma endregion
 	private: System::Void toolStripDropDownButton1_Click(System::Object^  sender, System::EventArgs^  e) {
 	}
-	private: System::Void WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
-		
-	}
+	private: System::Void WinForm_Load(System::Object^  sender, System::EventArgs^  e);
 private: System::Void 更郎ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void toolStrip1_ItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
 }

@@ -17,3 +17,7 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 		this->listView1->Items->Add(lvi);
 	}
 }
+
+System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
+	this->debugLabel->Text = gcnew String(dealFormula("Dot(1,2)").c_str());
+}

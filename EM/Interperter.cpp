@@ -47,3 +47,14 @@ void loadVars(string path) {
 	}
 	fin.close();
 }
+
+string dealFormula(string f) {
+	for (int i = 0; i < CMDS.size(); ++i) {
+		std::size_t find = f.find(CMDS[i] + "(");
+		while (find != string::npos) {
+			f.replace(find, CMDS[i].length(), CMDS[i] + '|');
+			find = f.find(CMDS[i] + "(");
+		}
+	}
+	return f;
+}
