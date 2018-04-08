@@ -6,6 +6,8 @@ using std::ifstream;
 map<string, Var> vars;
 int vCounter = 0, mCounter = 0;
 
+
+
 void loadVars(string path) {
 	ifstream fin(path);
 	int total;
@@ -49,12 +51,27 @@ void loadVars(string path) {
 }
 
 string dealFormula(string f) {
-	for (int i = 0; i < CMDS.size(); ++i) {
-		std::size_t find = f.find(CMDS[i] + "(");
+	for (int i = 0; i < OpCMD.size(); ++i) {
+		std::size_t find = f.find(OpCMD[i] + "(");
 		while (find != string::npos) {
-			f.replace(find, CMDS[i].length(), CMDS[i] + '|');
-			find = f.find(CMDS[i] + "(");
+			f.replace(find, OpCMD[i].length(), OpCMD[i] + '|');
+			find = f.find(OpCMD[i] + "(");
 		}
 	}
 	return f;
+}
+
+int checkFormula(string f) {
+	int status = NoError;
+	// check if variable exist
+
+	// check OpCMD have ()
+
+	// check () is all right 
+
+	return NoError;
+}
+
+Var ExecFormula(string f) {
+
 }

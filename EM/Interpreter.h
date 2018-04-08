@@ -10,7 +10,13 @@ using std::vector;
 using System::String;
 using System::Windows::Forms::ListViewItem;
 
-const vector<string> CMDS = {"Dot"};
+enum ERRORS{NoError,Syntax,Math};
+
+const vector<string> OpCMD = {"Dot","Pow"};
+
+const vector<string> CMDs = {};
+
+const char OP[] = {'+','-'};
 
 struct Var {
 	string type;
@@ -24,3 +30,6 @@ void loadVars(string path);
 
 string dealFormula(string f);
 
+int checkFormula(string f);
+
+Var ExecFormula(string f);
