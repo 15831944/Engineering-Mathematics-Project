@@ -145,6 +145,42 @@ Matrix Matrix::MiniorMat_(int row, int col) {
 	return result;
 }
 
+valarray<NumType> Matrix::GetRow(int x) {
+	valarray<NumType> tmp;
+	tmp.resize(this->shape_[1]);
+	for (int i = 0; i < tmp.size(); i++) {
+		tmp[i] = this->data_[x*this->shape_[1] + i];
+	}
+	return tmp;
+}
+
+int Matrix::Rank() {
+	int rank = this->shape_[0];
+	bool *check = NULL;
+	check = new bool[rank];
+	for (int i = 0; i < rank; i++)
+		check[i] = true;
+	for (int i = 0; i < this->shape_[0]-1; i++) {
+		if (check[i]) {
+			Vector a(this->GetRow(i));
+			for (int j = i + 1; j < this->shape_[0]; j++) {
+				if (check[j]) {
+					Vector b(this->GetRow(j));
+					if (!a.LinearIndependent(b)){
+						rank--;
+						check[j] = false;
+					}
+				}
+				else
+					continue;
+			}
+		}
+		else
+			continue;
+	}
+	return rank;
+}
+
 Matrix Matrix::Trans() {
 	// check
 	if (this->shape_[0] == 0 || this->shape_[1] == 0)

@@ -8,6 +8,7 @@ public:
 	Vector();
 	Vector(int);
 	Vector(initializer_list<NumType>);
+	Vector(valarray<NumType>);
 	Vector operator=(initializer_list<NumType>);
 	Vector operator=(const Vector&);
 	Vector operator+(const Vector&);

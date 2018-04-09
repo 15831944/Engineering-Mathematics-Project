@@ -23,6 +23,14 @@ Vector::Vector(initializer_list<NumType> v) {
 	}
 }
 
+Vector::Vector(valarray<NumType> v) {
+	this->dim_ = v.size();
+	this->data_.resize(this->dim_);
+	for (int i = 0; i < this->dim_; i++) {
+		this->data_[i] = v[i];
+	}
+}
+
 Vector Vector::operator=(initializer_list<NumType> rhs) {
 	this->dim_ = (int)rhs.size();
 	this->data_.resize(this->dim_);
@@ -156,9 +164,16 @@ NumType Vector::TriangleArea(const Vector& v) {
 }
 
 bool Vector::Parallel(const Vector& v) {
-	if (this->Cross(v).Norm() == 0)
+	if (this->dim_ != v.dim_)
+		throw "Dimension is not same!";
+	else {
+		for (int i = 0; i < this->dim_ - 1; i++)
+		{
+			if (this->data_[i] / v.data_[i] != this->data_[i + 1] / v.data_[i + 1])
+				return false;
+		}
 		return true;
-	return false;
+	}
 }
 
 bool Vector::Orthogonal(const Vector& v) {
@@ -182,3 +197,4 @@ Vector Vector::PlaneNormal(const Vector& v) {
 bool Vector::LinearIndependent(const Vector& v){
 	return !this->Parallel(v);
 }
+
