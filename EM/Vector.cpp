@@ -198,3 +198,17 @@ bool Vector::LinearIndependent(const Vector& v){
 	return !this->Parallel(v);
 }
 
+valarray<Vector> Vector::Gram_Schmidt_Orthogonal(valarray<Vector>& v) {
+	valarray<Vector> tmp;
+	tmp.resize(v.size());
+	for (int i = 0; i < v.size; i++) {
+		tmp[i] = v[i];
+		for (int j = 0; j < i; j++) {
+			tmp[i] = tmp[i] - tmp[j].Scalar(v[i].Dot(tmp[j]) / tmp[j].Dot(tmp[j]));
+		}
+	}
+	for (int i = 0; i < tmp.size(); i++)
+		tmp[i].Normalization();
+	return tmp;
+}
+
