@@ -9,6 +9,8 @@ public:
 	Matrix MiniorMat_(int, int);
 	valarray<NumType> GetRow(int);
 
+	Matrix() {}
+
 	Matrix(int, int);
 
 	Matrix(int, int, initializer_list<NumType>);

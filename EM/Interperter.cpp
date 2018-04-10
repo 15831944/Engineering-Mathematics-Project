@@ -10,14 +10,16 @@ int vCounter = 0, mCounter = 0;
 int getPiority(char op) {
 	switch (op)
 	{
+	case '=':
+		return 1;
 	case '+':
-		return 1;
-	case '-':
-		return 1;
-	case '*':
 		return 2;
-	case '|':
+	case '-':
 		return 3;
+	case '*':
+		return 4;
+	case '|':
+		return 5;
 	default:
 		return -1;
 	}
@@ -81,7 +83,8 @@ int checkFormula(string f) {
 	int status = NoError;
 	// check if variable exist
 
-	// check OpCMD have ()
+	// check OpCMD is follow by (
+
 
 	// check () is all right 
 
@@ -92,7 +95,7 @@ string rmUseless(string f) {
 	
 	for (int i = 0; i < useless.size(); ++i)
 	{
-		// you need include <algorithm> to use general algorithms like std::remove()
+		
 		f.erase(std::remove(f.begin(), f.end(), useless[i]), f.end());
 	}
 	return f;
@@ -132,8 +135,6 @@ Var getVal(string f) {
 		if (it->first == f)
 			return it->second;
 	}
-
-	// is const
 	
 	// is value
 
@@ -146,6 +147,77 @@ Var regularCale(Var a, Var b, char op) {
 	switch (op)
 	{
 	case '+':
+		if (a.type != b.type)
+			break;
+		if (a.type == "Vector") {
+			result.data = new Vector();
+			try {
+				*((Vector*)result.data) = *((Vector*)a.data) + *((Vector*)b.data);
+			}
+			catch (const string e) {
+				delete result.data;
+				result.type = "Error";
+				result.data = new string(e);
+			}
+			
+		}
+		else if (a.type == "Matrix") {
+			result.data = new Matrix();
+			try {
+				*((Matrix*)result.data) = *((Matrix*)a.data) + *((Matrix*)b.data);
+			}
+			catch (const string e) {
+				delete result.data;
+				result.type = "Error";
+				result.data = new string(e);
+			}
+		}
+		break;
+	case '-':
+		if (a.type != b.type)
+			break;
+		if (a.type == "Vector") {
+			result.data = new Vector();
+			try {
+				*((Vector*)result.data) = *((Vector*)a.data) - *((Vector*)b.data);
+			}
+			catch (const string e) {
+				delete result.data;
+				result.type = "Error";
+				result.data = new string(e);
+			}
+
+		}
+		else if (a.type == "Matrix") {
+			result.data = new Matrix();
+			try {
+				*((Matrix*)result.data) = *((Matrix*)a.data) - *((Matrix*)b.data);
+			}
+			catch (const string e) {
+				delete result.data;
+				result.type = "Error";
+				result.data = new string(e);
+			}
+		}
+		break;
+	case '*':
+		if (a.type != b.type)
+			break;
+		if (a.type == "Vector") {
+			result.type = "Error";
+			result.data = new string("Vector don't have * try use cross or dot");
+		}
+		else if (a.type == "Matrix") {
+			result.data = new Matrix();
+			try {
+				*((Matrix*)result.data) = *((Matrix*)a.data) * *((Matrix*)b.data);
+			}
+			catch (const string e) {
+				delete result.data;
+				result.type = "Error";
+				result.data = new string(e);
+			}
+		}
 		break;
 	// etc
 	default:
@@ -206,11 +278,21 @@ Var ExecFormula(string f) {
 		return getVal(f);
 	}
 	else {
-		if (f[minLoc] != '|') {
-			return regularCale(ExecFormula(f.substr(0, minLoc)), ExecFormula(f.substr(minLoc + 1, f.length() - minLoc)),f[minLoc]);
+		if (f[minLoc] == '|') {
+			return funcCale(f.substr(0, minLoc), f.substr(minLoc + 1, f.length() - minLoc));
+		}
+		else if (f[minLoc] == '=') {
+			Var result = ExecFormula(f.substr(minLoc + 1, f.length() - minLoc));
+			
+			// set value to var map
+
+			return result;
+
+			
 		}
 		else {
-			return funcCale(f.substr(0, minLoc),f.substr(minLoc + 1, f.length() - minLoc));
+			return regularCale(ExecFormula(f.substr(0, minLoc)), ExecFormula(f.substr(minLoc + 1, f.length() - minLoc)), f[minLoc]);
+			
 		}
 	}
 }

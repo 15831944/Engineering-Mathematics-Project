@@ -18,7 +18,7 @@ const vector<string> CMDs = {};
 
 const vector<char> useless = { '(',')',' ' };
 
-const char OP[] = {'+','-','*','|'};
+const char OP[] = {'=','+','-','*','|'};
 const int INF = 0x7fffffff;
 
 struct Var {
