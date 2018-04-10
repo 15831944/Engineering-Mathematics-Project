@@ -113,9 +113,10 @@ double Vector::Dot(const Vector& v){
 }
 
 Vector Vector::Scalar(NumType s){
+	Vector tmp = *this;
 	for (int i = 0; i < this->dim_; i++)
-		this->data_[0] *= s;
-	return *this;
+		tmp.data_[0] *= s;
+	return tmp;
 }
 
 NumType Vector::Norm() const{

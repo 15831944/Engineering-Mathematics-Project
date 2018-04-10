@@ -266,3 +266,49 @@ NumType Matrix::Det(Matrix mat) {
 	}
 	return result;
 }
+
+valarray<NumType> Matrix::SolveLinear(const Matrix& m) {//Ax=B
+	if(this->shape_[0]!=m.shape_[0])
+		throw "Dimension is not same!";
+	bool zero = true;
+	for (int i = 0; i < m.data_.size(); i++) {//判斷B是否為0
+		if (m.data_[i] != 0) {
+			zero = false;
+			break;
+		}
+	}
+	if (zero) {//B為0
+		if (this->Rank() == this->shape_[0]) {//唯一均為0解
+			valarray<NumType> tmp;
+			tmp.resize(this->Rank());
+			for (int i = 0; i < tmp.size(); i++)
+				tmp[i] = 0;
+			return tmp;
+		}
+		else {//參數解
+
+		}
+	}
+	else {//B非0
+		Matrix tmp(this->shape_[0],this->shape_[1]);//A|B
+		for (int i = 0; i < tmp.data_.size(); i++) {
+			if (i%tmp.shape_[1] == tmp.shape_[1] - 1) {
+				tmp.data_[i] = m.data_[i / tmp.shape_[1]];
+			}
+			else
+				tmp.data_[i] = this->data_[i - i / tmp.shape_[1]];
+		}
+		if (this->Rank() == tmp.Rank()) {//Consistent
+			if (this->Rank() == this->shape_[0]) {//唯一解
+				Matrix ans = this->Inv()*m;
+				
+			}
+			else {//參數解
+
+			}
+		}
+		else {//無解
+			throw "Inconsistent!";
+		}
+	}
+}

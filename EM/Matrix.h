@@ -32,7 +32,7 @@ public:
 
 	static NumType Det(Matrix);
 
-	
+	valarray<NumType> SolveLinear(const Matrix&);
 
 };
 
