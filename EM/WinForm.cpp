@@ -21,3 +21,11 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
 	this->debugLabel->Text = gcnew String(dealFormula("Dot(Pow(1,2),2)").c_str());
 }
+
+System::Void EM::WinForm::cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex) {
+	if (ex->KeyChar == '\r') {
+		String^ f = this->cmdBox->Lines[cmdBox->Lines->Length - 2];
+		String^ result = getResultStr(f);
+		this->cmdBox->AppendText(result);
+	}
+}

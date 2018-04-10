@@ -7,6 +7,12 @@ using std::ifstream;
 map<string, Var> vars;
 int vCounter = 0, mCounter = 0;
 
+string convShitTostring(String^ s) {
+	const char* chars = (const char*)(System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(s)).ToPointer();
+	string dest = chars;
+	return dest;
+}
+
 int getPiority(char op) {
 	switch (op)
 	{
@@ -25,6 +31,21 @@ int getPiority(char op) {
 	}
 }
 
+String^ getResultStr(String^ s) {
+	string f = convShitTostring(s);
+	Var result = ExecFormula(dealFormula(f));
+	if (result.type == "Vector")
+		return gcnew String(((Vector *)result.data)->ToString().c_str())+"\n";
+	else if (result.type == "Matrix") {
+		//other situation
+
+		return gcnew String(((Matrix *)result.data)->ToString().c_str()) + "\n";
+		
+	}
+
+	// error
+	return gcnew String(((string *)result.data)->c_str());
+}
 
 void loadVars(string path) {
 	ifstream fin(path);
@@ -130,6 +151,8 @@ string trimUseless(string f) {
 }
 
 Var getVal(string f) {
+
+	f = rmUseless(f);
 	// is var
 	for (auto it = vars.begin(); it != vars.end(); ++it) {
 		if (it->first == f)
@@ -151,6 +174,7 @@ Var regularCale(Var a, Var b, char op) {
 			break;
 		if (a.type == "Vector") {
 			result.data = new Vector();
+			result.type = "Vector";
 			try {
 				*((Vector*)result.data) = *((Vector*)a.data) + *((Vector*)b.data);
 			}
@@ -163,6 +187,7 @@ Var regularCale(Var a, Var b, char op) {
 		}
 		else if (a.type == "Matrix") {
 			result.data = new Matrix();
+			result.type = "Matrix";
 			try {
 				*((Matrix*)result.data) = *((Matrix*)a.data) + *((Matrix*)b.data);
 			}
@@ -178,6 +203,7 @@ Var regularCale(Var a, Var b, char op) {
 			break;
 		if (a.type == "Vector") {
 			result.data = new Vector();
+			result.type = "Vector";
 			try {
 				*((Vector*)result.data) = *((Vector*)a.data) - *((Vector*)b.data);
 			}
@@ -190,6 +216,7 @@ Var regularCale(Var a, Var b, char op) {
 		}
 		else if (a.type == "Matrix") {
 			result.data = new Matrix();
+			result.type = "Matrix";
 			try {
 				*((Matrix*)result.data) = *((Matrix*)a.data) - *((Matrix*)b.data);
 			}
@@ -209,6 +236,7 @@ Var regularCale(Var a, Var b, char op) {
 		}
 		else if (a.type == "Matrix") {
 			result.data = new Matrix();
+			result.type = "Matrix";
 			try {
 				*((Matrix*)result.data) = *((Matrix*)a.data) * *((Matrix*)b.data);
 			}
@@ -221,6 +249,8 @@ Var regularCale(Var a, Var b, char op) {
 		break;
 	// etc
 	default:
+		result.type = "Error";
+		result.data = new string("operator is not define");
 		break;
 	}
 	return result;
@@ -231,7 +261,7 @@ Var funcCale(string cmd, string argument) {
 	cmd = rmUseless(cmd);
 	argument = trimUseless(argument);
 	// deal right side
-	
+	Var result;
 	size_t commaPosi = argument.find(","), lastPosi = 0;
 
 	while(commaPosi != string::npos){
@@ -243,7 +273,17 @@ Var funcCale(string cmd, string argument) {
 
 	// cale
 	if (cmd == "Dot") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("Dot fail") };
 		// dot it
+		result.type = "Vector";
+		result.data = new Vector();
+		*((Vector *)result.data) = *((Vector *)args[0].data) + *((Vector *)args[1].data);
+		return result;
+	}
+	else if (cmd == "") {
+
 	}
 	return Var{ "Error",new string("CMD is wrong") };
 }
@@ -253,7 +293,6 @@ Var ExecFormula(string f) {
 	int is_error = checkFormula(f);
 	if (is_error != NoError)
 		return Var{ "Error", new int(is_error) };
-	f = dealFormula(f);
 	int baseVal = 0, opCount = 0, minLoc = -1, minVal = INF, pio;
 
 	for (int i = 0; i<f.length(); ++i) {
@@ -285,6 +324,9 @@ Var ExecFormula(string f) {
 			Var result = ExecFormula(f.substr(minLoc + 1, f.length() - minLoc));
 			
 			// set value to var map
+
+			vars[rmUseless(f.substr(0, minLoc))] = result;
+			
 
 			return result;
 

@@ -161,7 +161,9 @@ namespace EM {
 			this->cmdBox->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
 			this->cmdBox->Size = System::Drawing::Size(286, 270);
 			this->cmdBox->TabIndex = 0;
-			this->cmdBox->Text = L"> ";
+			this->cmdBox->Text = L"";
+			this->cmdBox->TextChanged += gcnew System::EventHandler(this, &WinForm::cmdBox_TextChanged);
+			this->cmdBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &WinForm::cmdBox_KeyPress);
 			// 
 			// OFD
 			// 
@@ -183,6 +185,7 @@ namespace EM {
 			this->Controls->Add(this->debugLabel);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->toolStrip1);
+			this->KeyPreview = true;
 			this->Name = L"WinForm";
 			this->Text = L"Mat";
 			this->Load += gcnew System::EventHandler(this, &WinForm::WinForm_Load);
@@ -200,5 +203,9 @@ namespace EM {
 private: System::Void ¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void toolStrip1_ItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
 }
+private: System::Void cmdBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+
+}
+private: System::Void cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex);
 };
 }
