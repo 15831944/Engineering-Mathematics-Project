@@ -370,12 +370,50 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 			for (int i = 0; i < this->shape_[0]; i++) {
 				check[i] = false;
 			}
+			int t = 0;
 			for (int i = this->shape_[0] - 1; i >= 0; i--) {//Ux=y
-				for (int j = this->shape_[1]-1; j >= i; j--) {
-
+				int count = 0;
+				for (int k = 0; k <= i; k++) {
+					if (LU[1].data_[i*this->shape_[0] + k]) {//判斷幾個未知數
+						if (!check[k])
+							count++;
+					}
 				}
+				valarray <NumType> tmp;
+				tmp.resize(ans.shape_[1]);
+				for (int i = 0; i < tmp.size() - 1; i++)
+					tmp[i] = 0;
+				for (int j = this->shape_[1] - 1; j >= i; j--) {
+					tmp[tmp.size()] = y.data_[i];
+					if (count == 0)
+						break;
+					else if (count == 1) {
+						if (!check[j]) {
+							for (int a = 0; a < ans.shape_[1]; a++)
+								ans.data_[j*ans.shape_[1] + a] = tmp[a] / LU[1].data_[i*this->shape_[1] + j];
+							count--;
+							check[j] = true;
+						}
+						else {
+							for (int a = 0; a < ans.shape_[1]; a++) {
+								tmp[a] -= LU[1].data_[i*this->shape_[1] + j] * ans.data_[j*ans.shape_[1] + a];
+							}
+							count--;
+						}
+					}
+					else {
+						if (!check[j]) {
+							ans.data_[j*ans.shape_[1]+t]=1;
+							t++;
+						}
+						for (int a = 0; a < ans.shape_[1]; a++) {
+							tmp[a] -= LU[1].data_[i*this->shape_[1] + j] * ans.data_[j*ans.shape_[1] + a];
+						}
+						count--;
+					}
+				}
+				return ans;
 			}
-			return ans;
 		}
 	}
 	else {//B非0
@@ -396,7 +434,68 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 				LU.resize(2);
 				LU = this->reff();
 				int n = this->shape_[0] - this->Rank();
+				Matrix y(this->shape_[0], 1);
 				Matrix ans(this->shape_[0], n + 1);
+				for (int i = 0; i < ans.data_.size(); i++)
+					ans.data_[i] = 0;
+				for (int i = 0; i < this->shape_[0]; i++) {//Ly=B
+					NumType tmp = m.data_[i];
+					for (int j = 0; j <= i; j++) {
+						if (i == j)
+							y.data_[i] = tmp;
+						else
+							tmp -= LU[0].data_[i*this->shape_[1] + j] * y.data_[j];
+					}
+				}
+				bool *check = NULL;
+				check = new bool[this->shape_[0]];
+				for (int i = 0; i < this->shape_[0]; i++) {
+					check[i] = false;
+				}
+				int t = 0;
+				for (int i = this->shape_[0] - 1; i >= 0; i--) {//Ux=y
+					int count = 0;
+					for (int k = 0; k <= i; k++) {
+						if (LU[1].data_[i*this->shape_[0] + k]) {//判斷幾個未知數
+							if (!check[k])
+								count++;
+						}
+					}
+					valarray <NumType> tmp;
+					tmp.resize(ans.shape_[1]);
+					for (int i = 0; i < tmp.size() - 1; i++)
+						tmp[i] = 0;
+					for (int j = this->shape_[1] - 1; j >= i; j--) {
+						tmp[tmp.size()] = y.data_[i];
+						if (count == 0)
+							break;
+						else if (count == 1) {
+							if (!check[j]) {
+								for (int a = 0; a < ans.shape_[1]; a++)
+									ans.data_[j*ans.shape_[1] + a] = tmp[a] / LU[1].data_[i*this->shape_[1] + j];
+								count--;
+								check[j] = true;
+							}
+							else {
+								for (int a = 0; a < ans.shape_[1]; a++) {
+									tmp[a] -= LU[1].data_[i*this->shape_[1] + j] * ans.data_[j*ans.shape_[1] + a];
+								}
+								count--;
+							}
+						}
+						else {
+							if (!check[j]) {
+								ans.data_[j*ans.shape_[1] + t] = 1;
+								t++;
+							}
+							for (int a = 0; a < ans.shape_[1]; a++) {
+								tmp[a] -= LU[1].data_[i*this->shape_[1] + j] * ans.data_[j*ans.shape_[1] + a];
+							}
+							count--;
+						}
+					}
+					return ans;
+				}
 			}
 		}
 		else {//無解
