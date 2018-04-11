@@ -9,8 +9,9 @@ public:
 	Matrix MiniorMat_(int, int);
 	valarray<NumType> GetRow(int);
 
+	Matrix() {}
+
 	Matrix(int, int);
-	Matrix() { shape_[0] = 0; shape_[1] = 0; };
 	Matrix(int, int, initializer_list<NumType>);
 	Matrix operator+(const Matrix&);
 	Matrix operator-(const Matrix&);

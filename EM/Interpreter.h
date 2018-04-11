@@ -18,7 +18,7 @@ const vector<string> CMDs = {};
 
 const vector<char> useless = { '(',')',' ' };
 
-const char OP[] = {'+','-','*','|'};
+const char OP[] = {'=','+','-','*','|'};
 const int INF = 0x7fffffff;
 
 struct Var {
@@ -48,3 +48,4 @@ Var funcCale(string cmd, string argument);
 
 Var ExecFormula(string f);
 
+String^ getResultStr(String^ s);
