@@ -12,7 +12,7 @@ using System::Windows::Forms::ListViewItem;
 
 enum ERRORS{NoError,Syntax,Math};
 
-const vector<string> OpCMD = {"Dot","Pow"};
+const vector<string> OpCMD = {"Dot","Norm","Normli","Cross","Compo","Proj","Tri","Paral","Ortho","Angle","PlaneNorm","Indepen","GramS"};
 
 const vector<string> CMDs = {};
 
@@ -25,6 +25,9 @@ struct Var {
 	string type;
 	void* data;
 };
+
+Vector* ToVector(void* p);
+Matrix* ToMatrix(void* p);
 
 extern map<string, Var> vars;
 extern int vCounter, mCounter;

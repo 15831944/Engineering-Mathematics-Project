@@ -31,6 +31,7 @@ int getPiority(char op) {
 	}
 }
 
+
 String^ getResultStr(String^ s) {
 	string f = convShitTostring(s);
 	Var result = ExecFormula(dealFormula(f));
@@ -42,9 +43,22 @@ String^ getResultStr(String^ s) {
 		return gcnew String(((Matrix *)result.data)->ToString().c_str()) + "\n";
 		
 	}
-
+	else if (result.type == "NumType") {
+		return (*((NumType *)result.data)).ToString() + "\n";
+	}
+	else if (result.type == "Bool") {
+		return *((bool*)result.data) ? "True" : "False";
+	}
 	// error
-	return gcnew String(((string *)result.data)->c_str());
+	return gcnew String(((string *)result.data)->c_str()) + "\n";
+}
+
+Vector* ToVector(void* p) {
+	return (Vector*)p;
+}
+
+Matrix* ToMatrix(void* p) {
+	return (Matrix*)p;
 }
 
 void loadVars(string path) {
@@ -67,7 +81,7 @@ void loadVars(string path) {
 			name = "$v"+ std::to_string(vCounter++);
 			// input
 			for (int j = 0; j < dim; j++)
-				fin >> ((Vector*)var.data)->data_[j];
+				fin >> ToVector(var.data)->data_[j];
 			// add to map
 			vars[name] = var;
 			break;
@@ -79,7 +93,7 @@ void loadVars(string path) {
 			name = "$m" + std::to_string(mCounter++);
 			size = shape[0] * shape[1];
 			for (int j = 0; j < size; ++j)
-				fin >> ((Matrix*)var.data)->data_[j];
+				fin >> ToMatrix(var.data)->data_[j];
 			vars[name] = var;
 			break;
 		default:
@@ -176,7 +190,7 @@ Var regularCale(Var a, Var b, char op) {
 			result.data = new Vector();
 			result.type = "Vector";
 			try {
-				*((Vector*)result.data) = *((Vector*)a.data) + *((Vector*)b.data);
+				*ToVector(result.data) = *ToVector(a.data) + *ToVector(b.data);
 			}
 			catch (const string e) {
 				delete result.data;
@@ -189,7 +203,7 @@ Var regularCale(Var a, Var b, char op) {
 			result.data = new Matrix();
 			result.type = "Matrix";
 			try {
-				*((Matrix*)result.data) = *((Matrix*)a.data) + *((Matrix*)b.data);
+				*ToMatrix(result.data) = *ToMatrix(a.data) + *ToMatrix(b.data);
 			}
 			catch (const string e) {
 				delete result.data;
@@ -205,7 +219,7 @@ Var regularCale(Var a, Var b, char op) {
 			result.data = new Vector();
 			result.type = "Vector";
 			try {
-				*((Vector*)result.data) = *((Vector*)a.data) - *((Vector*)b.data);
+				*ToVector(result.data) = *ToVector(a.data) - *ToVector(b.data);
 			}
 			catch (const string e) {
 				delete result.data;
@@ -218,7 +232,7 @@ Var regularCale(Var a, Var b, char op) {
 			result.data = new Matrix();
 			result.type = "Matrix";
 			try {
-				*((Matrix*)result.data) = *((Matrix*)a.data) - *((Matrix*)b.data);
+				*ToMatrix(result.data) = *ToMatrix(a.data) - *ToMatrix(b.data);
 			}
 			catch (const string e) {
 				delete result.data;
@@ -231,14 +245,33 @@ Var regularCale(Var a, Var b, char op) {
 		if (a.type != b.type)
 			break;
 		if (a.type == "Vector") {
-			result.type = "Error";
-			result.data = new string("Vector don't have * try use cross or dot");
+			Vector *ap = ToVector(a.data), *bp = ToVector(b.data),*tmp;
+			if (ap->data_.size() != 1 && bp->data_.size() != 1) {
+				result.type = "Error";
+				result.data = new string("Vector only have scalar *");
+			}
+			// swap
+			if (bp->data_.size() == 1) {
+				tmp = ap;
+				ap = bp;
+				bp = tmp;
+			}
+			result.type = "Vector";
+			result.data = new Vector();
+			try {
+				*ToVector(result.data) = bp->Scalar(ap->data_[0]);
+			}
+			catch (const string e) {
+				delete result.data;
+				result.type = "Error";
+				result.data = new string(e);
+			}
 		}
 		else if (a.type == "Matrix") {
 			result.data = new Matrix();
 			result.type = "Matrix";
 			try {
-				*((Matrix*)result.data) = *((Matrix*)a.data) * *((Matrix*)b.data);
+				*ToMatrix(result.data) = *ToMatrix(a.data) * *ToMatrix(b.data);
 			}
 			catch (const string e) {
 				delete result.data;
@@ -259,13 +292,13 @@ Var regularCale(Var a, Var b, char op) {
 Var funcCale(string cmd, string argument) {
 	vector<Var> args;
 	cmd = rmUseless(cmd);
-	argument = trimUseless(argument);
+	argument = trimUseless(argument) + ",";
 	// deal right side
 	Var result;
 	size_t commaPosi = argument.find(","), lastPosi = 0;
-
+	
 	while(commaPosi != string::npos){
-		args.push_back(ExecFormula(argument.substr(lastPosi, commaPosi)));
+		args.push_back(ExecFormula(argument.substr(lastPosi, commaPosi - lastPosi)));
 		lastPosi = commaPosi + 1;
 		commaPosi = argument.find(",",lastPosi);
 	}
@@ -275,15 +308,236 @@ Var funcCale(string cmd, string argument) {
 	if (cmd == "Dot") {
 		// check arguments
 		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
-			return Var{ "Error",new string("Dot fail") };
+			return Var{ "Error",new string("parameter wrong") };
 		// dot it
-		result.type = "Vector";
-		result.data = new Vector();
-		*((Vector *)result.data) = *((Vector *)args[0].data) + *((Vector *)args[1].data);
+		result.type = "NumType";
+		result.data = new NumType();
+		try {
+			*((NumType *)result.data) = ToVector(args[0].data)->Dot(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
 		return result;
 	}
-	else if (cmd == "") {
+	else if (cmd == "Norm") {
+		// check argument
+		if(args.size() != 1 || args[0].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		result.type = "NumType";
+		result.data = new NumType();
+		try {
+			*((NumType *)result.data) = ToVector(args[0].data)->Norm();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if(cmd == "Normli") {
+		if (args.size() != 1 || args[0].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		result.type = "Vector";
+		result.data = new Vector();
+		try {
+			*ToVector(result.data) = ToVector(args[0].data)->Normalization();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		
+		return result;
+	}
+	else if (cmd == "Cross") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "Vector";
+		result.data = new Vector();;
+		try {
 
+			*ToVector(result.data) = ToVector(args[0].data)->Cross(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	} // below need test
+	else if (cmd == "Compo") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "NumType";
+		result.data = new NumType();
+		try {
+			*((NumType *)result.data) = ToVector(args[0].data)->Component(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Proj") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "Vector";
+		result.data = new Vector();;
+		try {
+
+			*ToVector(result.data) = ToVector(args[0].data)->Projection(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Tri") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "NumType";
+		result.data = new NumType();
+		try {
+			*((NumType *)result.data) = ToVector(args[0].data)->TriangleArea(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Paral") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "Bool";
+		result.data = new bool();
+		try {
+			*((bool *)result.data) = ToVector(args[0].data)->Parallel(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Ortho") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "Bool";
+		result.data = new bool();
+		try {
+			*((bool *)result.data) = ToVector(args[0].data)->Orthogonal(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Angle") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "NumType";
+		result.data = new NumType();
+		try {
+			*((NumType *)result.data) = ToVector(args[0].data)->Getangle(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "PlaneNorm") {
+		// check arguments
+		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
+			return Var{ "Error",new string("parameter wrong") };
+		// 
+		result.type = "Vector";
+		result.data = new Vector();;
+		try {
+
+			*ToVector(result.data) = ToVector(args[0].data)->PlaneNormal(*ToVector(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Indepen") {
+		// check arguments
+		if(args.size()<2)
+			return Var{ "Error",new string("parameter wrong") };
+		for (int i = 0; i < args.size(); ++i) {
+			if(args[i].type != "Vector")
+				return Var{ "Error",new string("parameter wrong") };
+		}
+		//
+		result.type = "Bool";
+		result.data = new bool(true);
+		try{
+			for (int i = 0; i < args.size(); ++i) {
+				for (int j = i; j < args.size(); ++j) {
+					*((bool *)result.data) &= ToVector(args[i].data)->LinearIndependent(*ToVector(args[j].data));
+				}
+			}
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "GramS") {
+		valarray<Vector> basis(args.size());
+		// check arguments
+		if (args.size()<2)
+			return Var{ "Error",new string("parameter wrong") };
+		for (int i = 0; i < args.size(); ++i) {
+			basis[i] = *ToVector(args[i].data);
+			if (args[i].type != "Vector")
+				return Var{ "Error",new string("parameter wrong") };
+		}
+		//
+		result.type = "Array";
+		result.data = new valarray<Vector>(args.size());
+		try {
+			*((valarray<Vector>*)result.data) = 
+		}
+		catch (const string e) {
+			result.type = "Error";
+			result.data = new string(e);
+		}
 	}
 	return Var{ "Error",new string("CMD is wrong") };
 }

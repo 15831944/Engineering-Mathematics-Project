@@ -26,6 +26,6 @@ public:
 	NumType Getangle(const Vector&);
 	Vector PlaneNormal(const Vector&);
 	bool LinearIndependent(const Vector&);
-	valarray<Vector> Gram_Schmidt_Orthogonal(valarray<Vector>&);
+	static valarray<Vector> Gram_Schmidt_Orthogonal(valarray<Vector>&);
 	string ToString();
 };
