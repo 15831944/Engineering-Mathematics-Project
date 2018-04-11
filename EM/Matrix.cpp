@@ -153,30 +153,48 @@ valarray<NumType> Matrix::GetRow(int x) {
 	}
 	return tmp;
 }
+void Matrix::swap(int a,int b) {
+	for (int i = 0; i < this->shape_[1]; i++) {
+		NumType tmp;
+		tmp = this->data_[a*this->shape_[1] + i];
+		this->data_[a*this->shape_[1] + i] = this->data_[b*this->shape_[1] + i];
+		this->data_[b*this->shape_[1] + i] = tmp;
+	}
+}
 
 int Matrix::Rank() {
+	Matrix tmp = *this;
 	int rank = this->shape_[0];
-	bool *check = NULL;
-	check = new bool[rank];
-	for (int i = 0; i < rank; i++)
-		check[i] = true;
-	for (int i = 0; i < this->shape_[0]-1; i++) {
-		if (check[i]) {
-			Vector a(this->GetRow(i));
-			for (int j = i + 1; j < this->shape_[0]; j++) {
-				if (check[j]) {
-					Vector b(this->GetRow(j));
-					if (!a.LinearIndependent(b)){
-						rank--;
-						check[j] = false;
-					}
+	for (int row = 0; row < tmp.shape_[0]; row++) {
+		if (tmp.data_[row*this->shape_[1] + row]) {//判斷是否為0
+			for (int col = row + 1; col < this->shape_[0]; col++) {
+				NumType mult = tmp.data_[col*this->shape_[1]+row] / tmp.data_[row*this->shape_[1] + row];
+				for (int i = 0; i < tmp.shape_[1]; i++) {
+					tmp.data_[col*tmp.shape_[1] + i] -= mult * tmp.data_[row*this->shape_[1] + i];
 				}
-				else
-					continue;
 			}
 		}
 		else
-			continue;
+		{
+			for (int i = row + 1; i < tmp.shape_[0]; i++) {
+				if (tmp.data_[i*tmp.shape_[1]+row]) {
+					tmp.swap(row, i);
+					row--;
+					break;
+				}
+			}
+		}
+	}
+	for (int i = 0; i < tmp.shape_[0]; i++) {//判斷0列有幾列
+		bool check = true;
+		for (int j = 0; j < tmp.shape_[1]; j++) {
+			if (!tmp.data_[i*tmp.shape_[0] + j]) {
+				check = false;
+				break;
+			}		
+		}
+		if (check)
+			rank--;
 	}
 	return rank;
 }
@@ -267,7 +285,52 @@ NumType Matrix::Det(Matrix mat) {
 	return result;
 }
 
-valarray<NumType> Matrix::SolveLinear(const Matrix& m) {//Ax=B
+valarray<Matrix> Matrix::reff() {
+	if (!this->IsSquare())
+		throw "Not a Square Matrix !";
+	valarray<Matrix> LU;
+	Matrix L(this->shape_[0], this->shape_[1]);
+	Matrix U(this->shape_[0], this->shape_[1]);
+	int n = this->data_.size();
+	int s = this->shape_[0];
+	for (int i = 0; i < s; i++){
+		for (int j = 0; j < s; j++){
+			if (i == j)
+				L.data_[i*s + j] = 1;
+			if (i < j)
+				L.data_[i*s + j] = 0;
+			if (i > j)
+				U.data_[i*s + j] = 0;
+			U.data_[0 * s + j] = this->data_[0 * s + j];
+			L.data_[i*s + 0] = this->data_[i*s + 0] / U.data_[0 * s + 0];
+		}
+	}
+	NumType tmp = 0;
+	for (int k = 1; k < s; k++){
+		for (int j = k; j < s; j++){
+			for (int m = 0; m < k; m++){
+				tmp += L.data_[k*s + m] * U.data_[m*s + j];
+			}
+
+			U.data_[k*s + j] = this->data_[k*s + j] - tmp;
+		}
+
+		for (int i = k + 1; i < s; i++){
+			tmp = 0;
+			for (int m = 0; m < k; m++){
+				tmp += L.data_[i*s + m] * U.data_[m*s + k];
+			}
+
+			L.data_[i*s + k] = (this->data_[i*s + k] - tmp) / U.data_[k*s + k];
+		}
+	}
+	LU.resize(2);
+	LU[0] = L;
+	LU[1] = U;
+	return LU;
+}
+
+Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 	if(this->shape_[0]!=m.shape_[0])
 		throw "Dimension is not same!";
 	bool zero = true;
@@ -279,14 +342,40 @@ valarray<NumType> Matrix::SolveLinear(const Matrix& m) {//Ax=B
 	}
 	if (zero) {//B為0
 		if (this->Rank() == this->shape_[0]) {//唯一均為0解
-			valarray<NumType> tmp;
-			tmp.resize(this->Rank());
-			for (int i = 0; i < tmp.size(); i++)
-				tmp[i] = 0;
-			return tmp;
+			Matrix ans(this->shape_[0],1);
+			for (int i = 0; i < ans.data_.size(); i++)
+				ans.data_[i] = 0;
+			return ans;
 		}
 		else {//參數解
+			valarray<Matrix> LU;
+			LU.resize(2);
+			LU = this->reff();
+			int n = this->shape_[0] - this->Rank();
+			Matrix y(this->shape_[0], 1);
+			Matrix ans(this->shape_[0], n + 1);
+			for (int i = 0; i < ans.data_.size(); i++)
+				ans.data_[i] = 0;
+			for (int i = 0; i < this->shape_[0]; i++) {//Ly=B
+				NumType tmp = m.data_[i];
+				for (int j = 0; j <= i; j++) {
+					if (i == j)
+						y.data_[i] = tmp;
+					else
+						tmp -= LU[0].data_[i*this->shape_[1] + j] * y.data_[j];
+				}
+			}
+			bool *check = NULL;
+			check = new bool[this->shape_[0]];
+			for (int i = 0; i < this->shape_[0]; i++) {
+				check[i] = false;
+			}
+			for (int i = this->shape_[0] - 1; i >= 0; i--) {//Ux=y
+				for (int j = this->shape_[1]-1; j >= i; j--) {
 
+				}
+			}
+			return ans;
 		}
 	}
 	else {//B非0
@@ -300,11 +389,14 @@ valarray<NumType> Matrix::SolveLinear(const Matrix& m) {//Ax=B
 		}
 		if (this->Rank() == tmp.Rank()) {//Consistent
 			if (this->Rank() == this->shape_[0]) {//唯一解
-				Matrix ans = this->Inv()*m;
-				
+				return this->Inv()*m;
 			}
 			else {//參數解
-
+				valarray<Matrix> LU;
+				LU.resize(2);
+				LU = this->reff();
+				int n = this->shape_[0] - this->Rank();
+				Matrix ans(this->shape_[0], n + 1);
 			}
 		}
 		else {//無解

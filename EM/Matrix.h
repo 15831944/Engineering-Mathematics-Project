@@ -10,7 +10,7 @@ public:
 	valarray<NumType> GetRow(int);
 
 	Matrix(int, int);
-
+	Matrix() { shape_[0] = 0; shape_[1] = 0; };
 	Matrix(int, int, initializer_list<NumType>);
 	Matrix operator+(const Matrix&);
 	Matrix operator-(const Matrix&);
@@ -23,6 +23,7 @@ public:
 	Matrix Adj();
 	Matrix Inv();
 
+	
 	string ToString();
 
 	bool IsSquare();
@@ -31,8 +32,9 @@ public:
 	NumType Det();
 
 	static NumType Det(Matrix);
-
-	valarray<NumType> SolveLinear(const Matrix&);
-
+	valarray<Matrix> reff();//¦^¶ÇL©MU
+	Matrix SolveLinear(const Matrix&);
+private:
+	void swap(int, int);
 };
 
