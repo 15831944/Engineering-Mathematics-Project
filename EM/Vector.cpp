@@ -106,7 +106,7 @@ double Vector::Dot(const Vector& v){
 	else{
 		NumType tmp=0;
 		for (int i = 0; i < this->dim_; i++) {
-			tmp += this->data_[0] * v.data_[0];
+			tmp += this->data_[i] * v.data_[i];
 		}
 		return tmp;
 	}
