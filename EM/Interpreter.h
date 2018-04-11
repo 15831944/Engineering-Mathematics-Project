@@ -12,7 +12,8 @@ using System::Windows::Forms::ListViewItem;
 
 enum ERRORS{NoError,Syntax,Math};
 
-const vector<string> OpCMD = {"Dot","Norm","Normli","Cross","Compo","Proj","Tri","Paral","Ortho","Angle","PlaneNorm","Indepen","GramS"};
+const vector<string> OpCMD = {"Dot","Norm","Normli","Cross","Compo","Proj","Tri","Paral","Ortho","Angle","PlaneNorm","Indepen","GramS",
+							  "Rank","Trans","Solve","Det","Inv","Adj"};
 
 const vector<string> CMDs = {};
 

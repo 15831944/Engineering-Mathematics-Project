@@ -35,6 +35,9 @@ public:
 	static NumType Det(Matrix);
 	valarray<Matrix> reff();//¦^¶ÇL©MU
 	Matrix SolveLinear(const Matrix&);
+
+	void rowAdd(int rowFrom,NumType scale,int addTo);
+	void rowScale(int row, NumType scale);
 private:
 	void swap(int, int);
 };

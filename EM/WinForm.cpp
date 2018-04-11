@@ -19,7 +19,8 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 }
 
 System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
-	this->debugLabel->Text = gcnew String(dealFormula("Dot(Pow(1,2),2)").c_str());
+	Matrix A(4, 4, { 1,3,3,0,1,4,0,2,1,4,3,0,1,3,1,0 });
+	this->debugLabel->Text = A.Det().ToString();
 }
 
 System::Void EM::WinForm::cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex) {

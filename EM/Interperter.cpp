@@ -304,7 +304,9 @@ Var funcCale(string cmd, string argument) {
 	}
 
 
-	// cale
+	//
+	// Vector part
+	//
 	if (cmd == "Dot") {
 		// check arguments
 		if (args.size() != 2 || args[0].type != "Vector" || args[1].type != "Vector")
@@ -532,14 +534,121 @@ Var funcCale(string cmd, string argument) {
 		result.type = "Array";
 		result.data = new valarray<Vector>(args.size());
 		try {
-			*((valarray<Vector>*)result.data) = 
+			*((valarray<Vector>*)result.data) = Vector::Gram_Schmidt_Orthogonal(basis);
 		}
 		catch (const string e) {
 			result.type = "Error";
 			result.data = new string(e);
 		}
+		return result;
 	}
-	return Var{ "Error",new string("CMD is wrong") };
+	//
+	// Matrix part
+	//
+	else if (cmd == "Rank") {
+		// check 
+		if(args.size() != 1 || args[0].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		//
+		result.type = "NumType";
+		result.data = new NumType();;
+		try {
+			*((NumType *)result.data) = ToMatrix(args[0].data)->Rank();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Trans") {
+		// check 
+		if (args.size() != 1 || args[0].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		//
+		result.type = "Matrix";
+		result.data = new Matrix();;
+		try {
+			*ToMatrix(result.data) = ToMatrix(args[0].data)->Trans();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Solve") {
+		// check 
+		if (args.size() != 2 || args[0].type != "Matrix" || args[1].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		//
+		result.type = "Matrix";
+		result.data = new Matrix();;
+		try {
+			*ToMatrix(result.data) = ToMatrix(args[0].data)->SolveLinear(*ToMatrix(args[1].data));
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Det") {
+		// check 
+		if (args.size() != 1 || args[0].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		//
+		result.type = "NumType";
+		result.data = new NumType();;
+		try {
+			*((NumType *)result.data) = ToMatrix(args[0].data)->Det();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Inv") {
+		// check 
+		if (args.size() != 1 || args[0].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		//
+		result.type = "Matrix";
+		result.data = new Matrix();;
+		try {
+			*ToMatrix(result.data) = ToMatrix(args[0].data)->Inv();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Adj") {
+		// check 
+		if (args.size() != 1 || args[0].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		//
+		result.type = "Matrix";
+		result.data = new Matrix();;
+		try {
+			*ToMatrix(result.data) = ToMatrix(args[0].data)->Adj();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	// Cmd not Find
+	return Var{ "Error",new string(cmd + " no found") };
 }
 
 
