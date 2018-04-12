@@ -26,7 +26,7 @@ public:
 	bool Orthogonal(const Vector&);
 	NumType Getangle(const Vector&);
 	Vector PlaneNormal(const Vector&);
-	bool LinearIndependent(valarray<Vector>&);
+	bool LinearIndependent(const valarray<Vector>&);
 	static valarray<Vector> Gram_Schmidt_Orthogonal(valarray<Vector>&);
 	string ToString();
 	string getSizeInfo();
