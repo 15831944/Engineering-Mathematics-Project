@@ -47,6 +47,13 @@ namespace EM {
 	private: System::Windows::Forms::ColumnHeader^  Col3;
 	private: System::Windows::Forms::OpenFileDialog^  OFD;
 	private: System::Windows::Forms::Label^  debugLabel;
+	private: System::Windows::Forms::ColumnHeader^  Col2i;
+
+	private: System::Windows::Forms::ToolStripMenuItem^  saveResultsToolStripMenuItem;
+	private: System::Windows::Forms::SaveFileDialog^  SFD;
+
+
+
 
 
 
@@ -69,14 +76,17 @@ namespace EM {
 			this->toolStrip1 = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripDropDownButton1 = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->更郎ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveResultsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->Col1 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->Col2 = (gcnew System::Windows::Forms::ColumnHeader());
+			this->Col2i = (gcnew System::Windows::Forms::ColumnHeader());
 			this->Col3 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->cmdBox = (gcnew System::Windows::Forms::RichTextBox());
 			this->OFD = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->debugLabel = (gcnew System::Windows::Forms::Label());
+			this->SFD = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -87,9 +97,8 @@ namespace EM {
 			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripDropDownButton1 });
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
-			this->toolStrip1->Padding = System::Windows::Forms::Padding(0, 0, 2, 0);
 			this->toolStrip1->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
-			this->toolStrip1->Size = System::Drawing::Size(1858, 31);
+			this->toolStrip1->Size = System::Drawing::Size(946, 31);
 			this->toolStrip1->TabIndex = 0;
 			this->toolStrip1->Text = L"toolStrip1";
 			this->toolStrip1->ItemClicked += gcnew System::Windows::Forms::ToolStripItemClickedEventHandler(this, &WinForm::toolStrip1_ItemClicked);
@@ -97,45 +106,53 @@ namespace EM {
 			// toolStripDropDownButton1
 			// 
 			this->toolStripDropDownButton1->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
-			this->toolStripDropDownButton1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->更郎ToolStripMenuItem });
+			this->toolStripDropDownButton1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->更郎ToolStripMenuItem,
+					this->saveResultsToolStripMenuItem
+			});
 			this->toolStripDropDownButton1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"toolStripDropDownButton1.Image")));
 			this->toolStripDropDownButton1->ImageTransparentColor = System::Drawing::Color::Magenta;
 			this->toolStripDropDownButton1->Name = L"toolStripDropDownButton1";
-			this->toolStripDropDownButton1->Size = System::Drawing::Size(42, 28);
+			this->toolStripDropDownButton1->Size = System::Drawing::Size(37, 28);
 			this->toolStripDropDownButton1->Text = L"toolStripDropDownButton1";
 			this->toolStripDropDownButton1->Click += gcnew System::EventHandler(this, &WinForm::toolStripDropDownButton1_Click);
 			// 
 			// 更郎ToolStripMenuItem
 			// 
 			this->更郎ToolStripMenuItem->Name = L"更郎ToolStripMenuItem";
-			this->更郎ToolStripMenuItem->Size = System::Drawing::Size(133, 30);
-			this->更郎ToolStripMenuItem->Text = L"Load";
+			this->更郎ToolStripMenuItem->Size = System::Drawing::Size(158, 22);
+			this->更郎ToolStripMenuItem->Text = L"Load Variables";
 			this->更郎ToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::更郎ToolStripMenuItem_Click);
+			// 
+			// saveResultsToolStripMenuItem
+			// 
+			this->saveResultsToolStripMenuItem->Name = L"saveResultsToolStripMenuItem";
+			this->saveResultsToolStripMenuItem->Size = System::Drawing::Size(158, 22);
+			this->saveResultsToolStripMenuItem->Text = L"Save Results";
+			this->saveResultsToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::saveResultsToolStripMenuItem_Click);
 			// 
 			// groupBox1
 			// 
 			this->groupBox1->Controls->Add(this->listView1);
 			this->groupBox1->Controls->Add(this->cmdBox);
-			this->groupBox1->Location = System::Drawing::Point(18, 62);
-			this->groupBox1->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->groupBox1->Location = System::Drawing::Point(12, 41);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
-			this->groupBox1->Size = System::Drawing::Size(912, 465);
+			this->groupBox1->Size = System::Drawing::Size(920, 445);
 			this->groupBox1->TabIndex = 2;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Main Panel";
 			// 
 			// listView1
 			// 
+			this->listView1->AutoArrange = false;
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(3) {
+			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(4) {
 				this->Col1, this->Col2,
-					this->Col3
+					this->Col2i, this->Col3
 			});
-			this->listView1->Location = System::Drawing::Point(465, 32);
-			this->listView1->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->listView1->Location = System::Drawing::Point(416, 21);
 			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(428, 404);
+			this->listView1->Size = System::Drawing::Size(485, 399);
 			this->listView1->TabIndex = 1;
 			this->listView1->UseCompatibleStateImageBehavior = false;
 			this->listView1->View = System::Windows::Forms::View::Details;
@@ -147,6 +164,10 @@ namespace EM {
 			// Col2
 			// 
 			this->Col2->Text = L"Type";
+			// 
+			// Col2i
+			// 
+			this->Col2i->Text = L"Size";
 			// 
 			// Col3
 			// 
@@ -161,17 +182,14 @@ namespace EM {
 				static_cast<System::Byte>(136)));
 			this->cmdBox->ForeColor = System::Drawing::Color::Lime;
 			this->cmdBox->ImeMode = System::Windows::Forms::ImeMode::Alpha;
-			this->cmdBox->Location = System::Drawing::Point(27, 32);
-			this->cmdBox->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->cmdBox->Location = System::Drawing::Point(18, 21);
 			this->cmdBox->Name = L"cmdBox";
 			this->cmdBox->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
-			this->cmdBox->Size = System::Drawing::Size(427, 403);
+			this->cmdBox->Size = System::Drawing::Size(392, 399);
 			this->cmdBox->TabIndex = 0;
-
 			this->cmdBox->Text = L"";
 			this->cmdBox->TextChanged += gcnew System::EventHandler(this, &WinForm::cmdBox_TextChanged);
 			this->cmdBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &WinForm::cmdBox_KeyPress);
-
 			// 
 			// OFD
 			// 
@@ -180,23 +198,21 @@ namespace EM {
 			// debugLabel
 			// 
 			this->debugLabel->AutoSize = true;
-			this->debugLabel->Location = System::Drawing::Point(1234, 832);
-			this->debugLabel->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			this->debugLabel->Location = System::Drawing::Point(823, 555);
 			this->debugLabel->Name = L"debugLabel";
-			this->debugLabel->Size = System::Drawing::Size(0, 18);
+			this->debugLabel->Size = System::Drawing::Size(0, 12);
 			this->debugLabel->TabIndex = 3;
 			// 
 			// WinForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 18);
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1858, 897);
+			this->ClientSize = System::Drawing::Size(946, 493);
 			this->Controls->Add(this->debugLabel);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->toolStrip1);
-
 			this->KeyPreview = true;
-
+			this->Margin = System::Windows::Forms::Padding(2);
 			this->Name = L"WinForm";
 			this->Text = L"Mat";
 			this->Load += gcnew System::EventHandler(this, &WinForm::WinForm_Load);
@@ -211,14 +227,17 @@ namespace EM {
 	private: System::Void toolStripDropDownButton1_Click(System::Object^  sender, System::EventArgs^  e) {
 	}
 	private: System::Void WinForm_Load(System::Object^  sender, System::EventArgs^  e);
-private: System::Void 更郎ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-private: System::Void toolStrip1_ItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
-}
-private: System::Void cmdBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void 更郎ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void toolStrip1_ItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
+	}
+	private: System::Void cmdBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 
 
-}
-private: System::Void cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex);
+	}
+	private: System::Void cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex);
 
+	private: System::Void saveResultsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void InfoBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	}
 };
 }

@@ -55,6 +55,12 @@ Vector Vector::operator=(const Vector& v) {
 	return *this;
 }
 
+string Vector::getSizeInfo() {
+	stringstream ss;
+	ss << this->dim_;
+	return ss.str();
+}
+
 string Vector::ToString(){
 	if (this->dim_ == 0)
 		return "";
@@ -104,18 +110,13 @@ double Vector::Dot(const Vector& v){
 		throw "Dimension is not same!";
 	}
 	else{
-		NumType tmp=0;
-		for (int i = 0; i < this->dim_; i++) {
-			tmp += this->data_[i] * v.data_[i];
-		}
-		return tmp;
+		return (v.data_ * this->data_).sum();
 	}
 }
 
 Vector Vector::Scalar(NumType s){
 	Vector tmp = *this;
-	for (int i = 0; i < this->dim_; i++)
-		tmp.data_[0] *= s;
+	tmp.data_ = tmp.data_ * s;
 	return tmp;
 }
 
@@ -140,7 +141,7 @@ Vector Vector::Cross(const Vector& v) {
 		Vector tmp(this->dim_);
 		int dim = this->dim_;
 		for (int i = 0; i < tmp.dim_; i++)
-			tmp.data_[i] == this->data_[(i + 1) % dim] * v.data_[(i + 2) % dim] - this->data_[(i + 2) % dim] * v.data_[(i + 1) % dim];
+			tmp.data_[i] = this->data_[(i + 1) % dim] * v.data_[(i + 2) % dim] - this->data_[(i + 2) % dim] * v.data_[(i + 1) % dim];
 		return tmp;
 	}
 }

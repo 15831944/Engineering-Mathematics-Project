@@ -1,5 +1,6 @@
 #include "Matrix.h"
 
+int rowOptime;
 
 Matrix::Matrix(int rSize, int cSize) {
 	// check
@@ -80,19 +81,23 @@ Matrix Matrix::operator*(const Matrix& m) {
 	else
 	{
 		Matrix result(this->shape_[0], m.shape_[1]);
-		int size = this->shape_[0] * m.shape_[1];
-		NumType sum = 0;
-		for (int i = 0; i < size; i++) {
-			int j = i / m.shape_[1];
-			int k = i % m.shape_[1];
-			sum=0;
-			for (int n = 0; n < this->shape_[0]; n++) {
-				sum += this->data_[i*this->shape_[1] + n] * m.data_[n*m.shape_[1] + k];
+		for (int i = 0; i<this->shape_[0]; ++i) {
+			for (int j = 0; j<m.shape_[1]; ++j) {
+				NumType sum = 0.0;
+				for (int k = 0; k<m.shape_[0]; ++k) {
+					sum += this->data_[i*this->shape_[1]+k] * m.data_[k*m.shape_[1] + j];
+				}
+				result.data_[i*m.shape_[1]+j] = sum;
 			}
-			result.data_[i] = sum;
 		}
 		return result;
 	}
+}
+
+string Matrix::getSizeInfo() {
+	stringstream ss;
+	ss << this->shape_[0] << "x" << this->shape_[1];
+	return ss.str();
 }
 
 string Matrix::ToString() {
@@ -267,67 +272,180 @@ NumType Matrix::Det() {
 }
 
 NumType Matrix::Det(Matrix mat) {
-#ifdef DEBUG
-	cout << mat.shape_[0] << " " << mat.shape_[1] << '\n';
-#endif // DEBUG
-
-	if (mat.shape_[0] == 2) {
+	if (mat.shape_[0] == 1)
+		return mat.data_[0];
+	if (mat.shape_[0] == 2)
 		return mat.data_[0] * mat.data_[3] - mat.data_[1] * mat.data_[2];
+	NumType result = 1;
+	rowOptime = 0;
+	bool rowFlag = true;
+	for (int i = 0; i<mat.shape_[0]; ++i) {
+		if (mat.data_[i*mat.shape_[0] + i] == 0.0) {
+			rowFlag = false;
+			for (int j = 0; j<mat.shape_[0]; ++j) {
+				if (j == i)continue;
+				if (mat.data_[j*mat.shape_[0] + i] != 0.0) {
+					rowFlag = true;
+					mat.swap(i, j);
+					rowOptime++;
+				}
+			}
+			if (!rowFlag)break;
+		}
 	}
-	
-	// expand by first row
-	NumType result = 0;
+	if (!rowFlag)
+		throw "不可解";
+	for (int i = 0; i < mat.shape_[0]; ++i) {
+		NumType scale = mat.data_[i*mat.shape_[0] + i];
+		if (scale == 0.0) {
+			for (int k = i + 1; k < mat.shape_[0]; ++k) {
+				if (mat.data_[k*mat.shape_[0] + i] != 0.0) {
+					mat.swap(i, k);
+					rowOptime++;
+					break;
+				}
+			}
+		}
+		for (int j = i + 1; j < mat.shape_[0]; j++) {
+			scale = -mat.data_[j*mat.shape_[0] + i] / mat.data_[i*mat.shape_[0] + i];
+			if (scale == 0.0) continue;
+			mat.rowAdd(i, scale, j);
+		}
+	}
+	for (int i = 0; i < mat.shape_[0]; ++i)
+		result *= mat.data_[i*mat.shape_[0] + i];
+	result *= rowOptime % 2 == 0 ? 1 : -1;
+	/*
+	this method slow to dead
 	int sc = 1;
 	for (int i = 0; i < mat.shape_[1]; ++i) {
 		result += sc * mat.data_[i] * Det(mat.MiniorMat_(0,i));
 		sc *= -1;
 	}
+	*/
 	return result;
 }
 
 valarray<Matrix> Matrix::reff() {
+	
 	if (!this->IsSquare())
 		throw "Not a Square Matrix !";
-	valarray<Matrix> LU;
+	valarray<Matrix> LU(2);
+	Matrix mat = *this;
 	Matrix L(this->shape_[0], this->shape_[1]);
 	Matrix U(this->shape_[0], this->shape_[1]);
-	int n = this->data_.size();
-	int s = this->shape_[0];
-	for (int i = 0; i < s; i++){
-		for (int j = 0; j < s; j++){
-			if (i == j)
-				L.data_[i*s + j] = 1;
-			if (i < j)
-				L.data_[i*s + j] = 0;
-			if (i > j)
-				U.data_[i*s + j] = 0;
-			U.data_[0 * s + j] = this->data_[0 * s + j];
-			L.data_[i*s + 0] = this->data_[i*s + 0] / U.data_[0 * s + 0];
+	Matrix p(mat.shape_[0], mat.shape_[0]);
+	for (int i = 0; i < mat.shape_[0]; ++i)
+		p.data_[i*shape_[0] + i] = 1;
+	// row swap
+	rowOptime = 0;
+	bool rowFlag = true;
+	for (int i = 0; i<mat.shape_[0]; ++i) {
+		if (mat.data_[i*mat.shape_[0]+i] == 0.0) {
+			rowFlag = false;
+			for (int j = 0; j<mat.shape_[0]; ++j) {
+				if (j == i)continue;
+				if (mat.data_[j*mat.shape_[0] + i] != 0.0) {
+					rowFlag = true;
+					mat.swap(i, j);
+					//p.swap(i, j);
+					rowOptime++;
+				}
+			}
+			if (!rowFlag)break;
 		}
 	}
-	NumType tmp = 0;
-	for (int k = 1; k < s; k++){
-		for (int j = k; j < s; j++){
-			for (int m = 0; m < k; m++){
-				tmp += L.data_[k*s + m] * U.data_[m*s + j];
+	if (!rowFlag)
+		throw "不可解";
+	for (int i = 0; i < mat.shape_[0]; ++i) {
+		NumType scale = mat.data_[i*mat.shape_[0]+i];
+		if (scale == 0.0) {
+			for (int k = i + 1; k < mat.shape_[0]; ++k) {
+				if (mat.data_[k*mat.shape_[0] + i] != 0.0) {
+					mat.swap(i, k);
+					p.swap(i, k);
+					
+					rowOptime++;
+					break;
+				}
 			}
-
-			U.data_[k*s + j] = this->data_[k*s + j] - tmp;
 		}
-
-		for (int i = k + 1; i < s; i++){
-			tmp = 0;
-			for (int m = 0; m < k; m++){
-				tmp += L.data_[i*s + m] * U.data_[m*s + k];
-			}
-
-			L.data_[i*s + k] = (this->data_[i*s + k] - tmp) / U.data_[k*s + k];
+		for (int j = i + 1; j < mat.shape_[0]; j++) {
+			scale = -mat.data_[j*mat.shape_[0] + i] / mat.data_[i*mat.shape_[0] + i];
+			if (scale == 0.0) continue;
+			mat.rowAdd(i, scale, j);
+			p.rowAdd(i, scale, j);
 		}
 	}
-	LU.resize(2);
+	Matrix R = p* *this;
+	U = mat;
+	// bug below
+	for (int i = 0; i < mat.shape_[0]; ++i)
+		L.data_[i*shape_[0] + i] = 1;
+	for (int i = 0; i<mat.shape_[0]; ++i) {
+		if (p.data_[i*mat.shape_[0] + i] == 0.0) {
+			for (int j = 0; j<mat.shape_[0]; ++j) {
+				if (j == i)continue;
+				if (p.data_[j*mat.shape_[0] + i] != 0.0) {
+					p.swap(i, j);
+					L.swap(i, j);
+				}
+			}
+		}
+	}
+	
+
+	for (int i = 0; i < mat.shape_[0]; ++i) {
+		NumType scale = p.data_[i*mat.shape_[0] + i];
+		if (scale == 0.0) {
+			for (int k = i + 1; k < mat.shape_[0]; ++k) {
+				if (p.data_[k*mat.shape_[0] + i] != 0.0) {
+					p.swap(i, k);
+					L.swap(i, k);
+					scale = p.data_[i*mat.shape_[0] + i];
+					break;
+				}
+			}
+		}
+		
+		
+		for (int j = i + 1; j < mat.shape_[0]; j++) {
+			scale = -p.data_[j*mat.shape_[0] + i]/p.data_[i*mat.shape_[0] + i];
+			if (scale == 0.0) continue;
+			p.rowAdd(i, scale, j);
+			L.rowAdd(i, scale, j);
+		}
+		scale = p.data_[i*mat.shape_[0] + i];
+		p.rowScale(i, scale);
+		L.rowScale(i, scale);
+	}
+
+	
+	for (int i = mat.shape_[0]-1; i > 0; --i) {
+		for (int j = 0; j < i; j++) {
+			NumType scale = -p.data_[j*mat.shape_[0] + i]/ p.data_[i*mat.shape_[0] + i];
+			if (scale == 0.0)
+				continue;
+			p.rowAdd(i, scale, j);
+			L.rowAdd(i, scale, j);
+		}
+	}
+
+
 	LU[0] = L;
 	LU[1] = U;
 	return LU;
+}
+
+void Matrix::rowAdd(int rowFrom, NumType scale, int addTo) {
+	for (int i = 0; i < this->shape_[0]; ++i) {
+		this->data_[addTo*this->shape_[0] + i] += scale * this->data_[rowFrom*this->shape_[0] + i];
+	}
+}
+void Matrix::rowScale(int row, NumType scale) {
+	for (int i = 0; i < this->shape_[0]; ++i) {
+		this->data_[row*this->shape_[0] + i] *= scale;
+	}
 }
 
 Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
