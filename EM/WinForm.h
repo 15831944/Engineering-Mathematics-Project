@@ -56,6 +56,9 @@ namespace EM {
 
 
 
+
+
+
 	private:
 		/// <summary>
 		/// 設計工具所需的變數。
@@ -95,7 +98,7 @@ namespace EM {
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
 			this->toolStrip1->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
-			this->toolStrip1->Size = System::Drawing::Size(1214, 31);
+			this->toolStrip1->Size = System::Drawing::Size(946, 31);
 			this->toolStrip1->TabIndex = 0;
 			this->toolStrip1->Text = L"toolStrip1";
 			this->toolStrip1->ItemClicked += gcnew System::Windows::Forms::ToolStripItemClickedEventHandler(this, &WinForm::toolStrip1_ItemClicked);
@@ -141,6 +144,7 @@ namespace EM {
 			// 
 			// listView1
 			// 
+			this->listView1->AutoArrange = false;
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(4) {
 				this->Col1, this->Col2,
@@ -203,7 +207,7 @@ namespace EM {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1214, 502);
+			this->ClientSize = System::Drawing::Size(946, 493);
 			this->Controls->Add(this->debugLabel);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->toolStrip1);
@@ -233,5 +237,7 @@ namespace EM {
 	private: System::Void cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex);
 
 	private: System::Void saveResultsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-	};
+	private: System::Void InfoBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	}
+};
 }

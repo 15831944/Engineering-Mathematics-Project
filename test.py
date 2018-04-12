@@ -15,4 +15,4 @@ if __name__ == "__main__":
 	s = int(input())
 	a = np.random.randint(5, size=(s, s))
 	print(mat(a))
-	print(np.linalg.det(a))
+	print(np.linalg.inv(a))

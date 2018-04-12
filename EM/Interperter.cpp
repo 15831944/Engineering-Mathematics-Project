@@ -47,10 +47,13 @@ String^ getResultStr(String^ s) {
 		return (*((NumType *)result.data)).ToString() + "\n";
 	}
 	else if (result.type == "Bool") {
-		return *((bool*)result.data) ? "True" : "False";
+		return *((bool*)result.data) ? "True\n" : "False\n";
+	}
+	else if (result.type == "Error") {
+		return gcnew String(((string *)result.data)->c_str()) + "\n";
 	}
 	// error
-	return gcnew String(((string *)result.data)->c_str()) + "\n";
+	return gcnew String("Error\n");
 }
 
 Vector* ToVector(void* p) {
@@ -246,26 +249,42 @@ Var regularCale(Var a, Var b, char op) {
 			break;
 		if (a.type == "Vector") {
 			Vector *ap = ToVector(a.data), *bp = ToVector(b.data),*tmp;
-			if (ap->data_.size() != 1 && bp->data_.size() != 1) {
+			if (ap->data_.size() == 1 || bp->data_.size() == 1) {
+				// swap
+				if (bp->data_.size() == 1) {
+					tmp = ap;
+					ap = bp;
+					bp = tmp;
+				}
+				result.type = "Vector";
+				result.data = new Vector();
+				try {
+					*ToVector(result.data) = bp->Scalar(ap->data_[0]);
+				}
+				catch (const string e) {
+					delete result.data;
+					result.type = "Error";
+					result.data = new string(e);
+				}
+			}
+			else if (ap->data_.size() == bp->data_.size()) {
+				// dot
+				result.type = "NumType";
+				result.data = new NumType();
+				try {
+					*((NumType *)result.data) = ap->Dot(*bp);
+				}
+				catch (const string e) {
+					delete result.data;
+					result.type = "Error";
+					result.data = new string(e);
+				}
+			}
+			else {
 				result.type = "Error";
-				result.data = new string("Vector only have scalar *");
+				result.data = new string("Parameter wrong");
 			}
-			// swap
-			if (bp->data_.size() == 1) {
-				tmp = ap;
-				ap = bp;
-				bp = tmp;
-			}
-			result.type = "Vector";
-			result.data = new Vector();
-			try {
-				*ToVector(result.data) = bp->Scalar(ap->data_[0]);
-			}
-			catch (const string e) {
-				delete result.data;
-				result.type = "Error";
-				result.data = new string(e);
-			}
+			
 		}
 		else if (a.type == "Matrix") {
 			result.data = new Matrix();
@@ -508,7 +527,7 @@ Var funcCale(string cmd, string argument) {
 		result.data = new bool(true);
 		try{
 			for (int i = 0; i < args.size(); ++i) {
-				for (int j = i; j < args.size(); ++j) {
+				for (int j = i+1; j < args.size(); ++j) {
 					*((bool *)result.data) &= ToVector(args[i].data)->LinearIndependent(*ToVector(args[j].data));
 				}
 			}
