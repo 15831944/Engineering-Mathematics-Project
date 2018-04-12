@@ -155,6 +155,8 @@ NumType Vector::Component(const Vector& v) {
 }
 
 Vector Vector::Projection(const Vector& v) {
+	if (this->Dot(v) == 0)
+		throw "two vector are vertical";
 	Vector tmp = v;
 	tmp.Normalization();
 	return (tmp.Scalar(this->Component(v)));

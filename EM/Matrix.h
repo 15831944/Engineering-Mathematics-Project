@@ -35,6 +35,11 @@ public:
 	static NumType Det(Matrix);
 	valarray<Matrix> reff();//¦^¶ÇL©MU
 	Matrix SolveLinear(const Matrix&);
+
+	Matrix LeastSquare(const Matrix&);
+
+	valarray<Matrix> Eigen();
+	valarray<Matrix> PowerEigen();
 private:
 	void swap(int, int);
 };

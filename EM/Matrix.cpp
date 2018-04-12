@@ -503,3 +503,130 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 		}
 	}
 }
+
+Matrix Matrix::LeastSquare(const Matrix& y) {
+	Matrix ans;
+	ans = (this->Trans()**this).Inv()*this->Trans()*y;
+	return ans;
+}
+
+valarray<Matrix> Matrix::Eigen() {
+	if(!this->IsSquare())
+		throw "Not a Square Matrix !";
+	valarray<Matrix> ans;
+	ans.resize(2);
+	if (this->shape_[0] == 2) {
+		NumType det=(this->data_[0]+this->data_[3])*(this->data_[0] + this->data_[3])+4*(this->data_[1]*this->data_[2]+this->data_[0]*this->data_[3]);
+		if (det < 0)
+			throw "Not support imaginary number solution!";
+		else if (det == 0) {
+			Matrix E_value(2,2);
+			E_value.data_[0] = (this->data_[0]+this->data_[3])/(-2);
+			E_value.data_[3] = E_value.data_[0];
+			ans[0] = E_value;
+			Matrix E_vector(2, 2);
+			Vector tmp(2);
+			tmp.data_[0] = this->data_[0] - E_value.data_[0];
+			tmp.data_[1] = this->data_[2];
+			E_vector.data_[0] = tmp.Normalization().data_[0];
+			E_vector.data_[1] = E_vector.data_[0];
+			E_vector.data_[2] = tmp.Normalization().data_[1];
+			E_vector.data_[3] = E_vector.data_[2];
+			ans[1] = E_vector;
+			return ans;
+		}
+		else {
+			ans.resize(4);
+			Matrix E_value(2, 2);
+			E_value.data_[0] = (this->data_[0] + this->data_[3]) / (-2) + det;
+			E_value.data_[3] = (this->data_[0] + this->data_[3]) / (-2) - det;
+			ans[0] = E_value;
+			Matrix E_vector(2, 2);
+			Vector tmp(2);
+			tmp.data_[0] = this->data_[0] - E_value.data_[0];
+			tmp.data_[1] = this->data_[2];
+			E_vector.data_[0] = tmp.Normalization().data_[0];
+			E_vector.data_[2] = tmp.Normalization().data_[1];
+
+
+			tmp.data_[0] = this->data_[0] - E_value.data_[3];
+			tmp.data_[1] = this->data_[2];
+			E_vector.data_[1] = tmp.Normalization().data_[0];
+			E_vector.data_[3] = tmp.Normalization().data_[1];
+			ans[1] = E_vector;
+			return ans;
+		}
+	}
+	else if (this->shape_[0] == 3) {
+		/*
+		[ a-x  b    c]
+		[ d   e-x   f]  det=0
+		[ g    h  i-x]
+		*/
+		//-x^3 + (a+e+i)x^2 + (-ae-ai-ei+cg+hf+bd)x+ (aei+cdh+bfg-cge-ahf-bdi) = 0 
+		NumType a = -1;
+		NumType b = this->data_[0] + this->data_[4] + this->data_[8];
+		NumType c = -this->data_[0] * this->data_[4] - this->data_[0] * this->data_[8] - this->data_[4] * this->data_[8] + this->data_[2] * this->data_[6] + this->data_[7] * this->data_[5] + this->data_[1] * this->data_[3];
+		NumType d = this->data_[0] * this->data_[4] * this->data_[8] + this->data_[2] * this->data_[3] * this->data_[7] + this->data_[1] * this->data_[5] * this->data_[6] - this->data_[2] * this->data_[6] * this->data_[4] - this->data_[0] * this->data_[7] * this->data_[5] - this->data_[1] * this->data_[3] * this->data_[8];
+
+		NumType det = pow(36 * a*b*c - 8 * pow(b, 3) - 108 * pow(a, 2)*d, 2) + pow(12 * a*c - 4 * pow(b, 2), 3);
+		if (det > 0) {
+			throw "Not support imaginary number solution!";
+		}
+		else{
+			NumType Alpha, Beta;
+			Alpha = (-pow(b, 3) / (27 * pow(a, 3)) + (-d) / (2 * a) + b * c / (6 * pow(a, 2)));
+			Beta = c / (3 * a) - pow(b, 2) / (9 * pow(a, 2));
+			NumType x[3];
+			x[0] = -b / (3 * a) + 2 * sqrt(-Beta)*cos(acos(Alpha / (sqrt(pow(-Beta, 3)))) / 3);
+			x[1] = -b / (3 * a) + 2 * sqrt(-Beta)*cos(acos(Alpha / (sqrt(pow(-Beta, 3))))+2*PI / 3);
+			x[2] = -b / (3 * a) + 2 * sqrt(-Beta)*cos(acos(Alpha / (sqrt(pow(-Beta, 3))))-2*PI / 3);
+			for (int i = 0; i < 2; i++) {//大的放前面
+				for (int j = i + 1; j < 3; j++) {
+					if (x[j] > x[i]) {
+						NumType tmp = x[i];
+						x[i] = x[j];
+						x[j] = tmp;
+					}
+				}
+			}
+
+			Matrix E_value(3, 3);
+			E_value.data_[0] = x[0];
+			E_value.data_[4] = x[1];
+			E_value.data_[8] = x[2];
+
+			Matrix E_vector(3, 3);
+			
+			Vector tmp(3);
+			tmp.data_[0] = this->data_[0] - x[0];
+			tmp.data_[1] = this->data_[3];
+			tmp.data_[2] = this->data_[6];
+
+			E_vector.data_[0] = tmp.Normalization().data_[0];
+			E_vector.data_[3] = tmp.Normalization().data_[1];
+			E_vector.data_[6] = tmp.Normalization().data_[2];
+
+			tmp.data_[0] = this->data_[0] - x[1];
+			tmp.data_[1] = this->data_[3];
+			tmp.data_[2] = this->data_[6];
+
+			E_vector.data_[1] = tmp.Normalization().data_[0];
+			E_vector.data_[4] = tmp.Normalization().data_[1];
+			E_vector.data_[7] = tmp.Normalization().data_[2];
+
+			tmp.data_[0] = this->data_[0] - x[2];
+			tmp.data_[1] = this->data_[3];
+			tmp.data_[2] = this->data_[6];
+
+			E_vector.data_[2] = tmp.Normalization().data_[0];
+			E_vector.data_[5] = tmp.Normalization().data_[1];
+			E_vector.data_[8] = tmp.Normalization().data_[2];
+
+			ans[0] = E_value;
+			ans[1] = E_vector;
+			return ans;
+		}
+	}
+	
+}
