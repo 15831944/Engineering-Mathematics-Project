@@ -19,8 +19,8 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 }
 
 System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
-	Matrix A(4, 4, { 1,3,3,0,1,4,0,2,1,4,3,0,1,3,1,0 });
-	this->debugLabel->Text = A.Det().ToString();
+	Matrix A(3, 3, { 1,2,3,2,5,7,3,5,3 });
+	A.reff();
 }
 
 System::Void EM::WinForm::cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex) {

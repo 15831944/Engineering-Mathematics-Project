@@ -270,11 +270,44 @@ NumType Matrix::Det(Matrix mat) {
 		return mat.data_[0];
 	if (mat.shape_[0] == 2)
 		return mat.data_[0] * mat.data_[3] - mat.data_[1] * mat.data_[2];
-	
 	NumType result = 1;
-	Matrix U = mat.reff()[1];
-	for (int i = 0; i < U.shape_[0]; ++i)
-		result *= U.data_[i*U.shape_[0] + i];
+	rowOptime = 0;
+	bool rowFlag = true;
+	for (int i = 0; i<mat.shape_[0]; ++i) {
+		if (mat.data_[i*mat.shape_[0] + i] == 0.0) {
+			rowFlag = false;
+			for (int j = 0; j<mat.shape_[0]; ++j) {
+				if (j == i)continue;
+				if (mat.data_[j*mat.shape_[0] + i] != 0.0) {
+					rowFlag = true;
+					mat.swap(i, j);
+					rowOptime++;
+				}
+			}
+			if (!rowFlag)break;
+		}
+	}
+	if (!rowFlag)
+		throw "¤£¥i¸Ñ";
+	for (int i = 0; i < mat.shape_[0]; ++i) {
+		NumType scale = mat.data_[i*mat.shape_[0] + i];
+		if (scale == 0.0) {
+			for (int k = i + 1; k < mat.shape_[0]; ++k) {
+				if (mat.data_[k*mat.shape_[0] + i] != 0.0) {
+					mat.swap(i, k);
+					rowOptime++;
+					break;
+				}
+			}
+		}
+		for (int j = i + 1; j < mat.shape_[0]; j++) {
+			scale = -mat.data_[j*mat.shape_[0] + i] / mat.data_[i*mat.shape_[0] + i];
+			if (scale == 0.0) continue;
+			mat.rowAdd(i, scale, j);
+		}
+	}
+	for (int i = 0; i < mat.shape_[0]; ++i)
+		result *= mat.data_[i*mat.shape_[0] + i];
 	result *= rowOptime % 2 == 0 ? 1 : -1;
 	/*
 	this method slow to dead
@@ -309,7 +342,7 @@ valarray<Matrix> Matrix::reff() {
 				if (mat.data_[j*mat.shape_[0] + i] != 0.0) {
 					rowFlag = true;
 					mat.swap(i, j);
-					p.swap(i, j);
+					//p.swap(i, j);
 					rowOptime++;
 				}
 			}
