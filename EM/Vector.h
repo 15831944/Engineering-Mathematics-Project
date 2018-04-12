@@ -28,4 +28,5 @@ public:
 	bool LinearIndependent(const Vector&);
 	static valarray<Vector> Gram_Schmidt_Orthogonal(valarray<Vector>&);
 	string ToString();
+	string getSizeInfo();
 };

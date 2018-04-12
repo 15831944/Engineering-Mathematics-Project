@@ -94,6 +94,12 @@ Matrix Matrix::operator*(const Matrix& m) {
 	}
 }
 
+string Matrix::getSizeInfo() {
+	stringstream ss;
+	ss << this->shape_[0] << "x" << this->shape_[1];
+	return ss.str();
+}
+
 string Matrix::ToString() {
 	// check
 	if (this->shape_[0] == 0 || this->shape_[1] == 0)

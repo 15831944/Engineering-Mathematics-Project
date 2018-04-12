@@ -38,6 +38,8 @@ public:
 
 	void rowAdd(int rowFrom,NumType scale,int addTo);
 	void rowScale(int row, NumType scale);
+
+	string getSizeInfo();
 private:
 	void swap(int, int);
 };

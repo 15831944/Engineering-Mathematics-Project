@@ -1,6 +1,6 @@
 #include "Interpreter.h"
 
-#include <fstream>
+
 #include <algorithm>
 using std::ifstream;
 
@@ -175,7 +175,7 @@ Var getVal(string f) {
 	
 	// is value
 
-	return Var{ "Num",new NumType(atof(f.c_str())) };
+	return Var{ "Error",new string("Syntax Error!") };
 
 }
 

@@ -55,6 +55,12 @@ Vector Vector::operator=(const Vector& v) {
 	return *this;
 }
 
+string Vector::getSizeInfo() {
+	stringstream ss;
+	ss << this->dim_;
+	return ss.str();
+}
+
 string Vector::ToString(){
 	if (this->dim_ == 0)
 		return "";
