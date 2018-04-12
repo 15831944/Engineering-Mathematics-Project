@@ -198,8 +198,22 @@ Vector Vector::PlaneNormal(const Vector& v) {
 	return tmp;
 }
 
-bool Vector::LinearIndependent(const Vector& v){
-	return !this->Parallel(v);
+bool Vector::LinearIndependent(const valarray<Vector>& v){
+	int dim = v[0].dim_;
+	for (int i = 1; i < v.size(); i++) {
+		if(v[i].dim_!=dim)
+			throw "Dimension is not same!";
+	}
+	if (dim > v.size())//col>row
+		return false;
+	Matrix tmp(v.size(), dim);
+	for (int i = 0; i < v.size(); i++)
+		for (int j = 0; j < dim; j++)
+			tmp.data_[i*dim + j];
+	if (tmp.Rank() == v.size())
+		return true;
+	else
+		return false;
 }
 
 valarray<Vector> Vector::Gram_Schmidt_Orthogonal(valarray<Vector>& v) {

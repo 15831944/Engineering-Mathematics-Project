@@ -43,7 +43,7 @@ String^ getResultStr(String^ s) {
 		return gcnew String(((Matrix *)result.data)->ToString().c_str()) + "\n";
 		
 	}
-	else if (result.type == "NumType") {
+	else if  (result.type == "NumType") {
 		return (*((NumType *)result.data)).ToString() + "\n";
 	}
 	else if (result.type == "Bool") {

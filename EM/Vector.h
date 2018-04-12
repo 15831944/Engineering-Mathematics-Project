@@ -1,5 +1,6 @@
 #pragma once
 #include "Defines.h"
+#include "Matrix.h" 
 
 class Vector {
 public:
@@ -25,7 +26,7 @@ public:
 	bool Orthogonal(const Vector&);
 	NumType Getangle(const Vector&);
 	Vector PlaneNormal(const Vector&);
-	bool LinearIndependent(const Vector&);
+	bool LinearIndependent(valarray<Vector>&);
 	static valarray<Vector> Gram_Schmidt_Orthogonal(valarray<Vector>&);
 	string ToString();
 	string getSizeInfo();

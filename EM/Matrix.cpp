@@ -171,10 +171,11 @@ int Matrix::Rank() {
 	Matrix tmp = *this;
 	int rank = this->shape_[0];
 	for (int row = 0; row < tmp.shape_[0]; row++) {
-		if (tmp.data_[row*this->shape_[1] + row]) {//判斷是否為0
+		if (abs(tmp.data_[row*this->shape_[1] + row])>=0.000001) {//判斷是否為0
 			for (int col = row + 1; col < this->shape_[0]; col++) {
 				NumType mult = tmp.data_[col*this->shape_[1]+row] / tmp.data_[row*this->shape_[1] + row];
-				for (int i = 0; i < tmp.shape_[1]; i++) {
+				//tmp.data_[col*tmp.shape_[1] + row] = 0;
+				for (int i = row; i < tmp.shape_[1]; i++) {
 					tmp.data_[col*tmp.shape_[1] + i] -= mult * tmp.data_[row*this->shape_[1] + i];
 				}
 			}
@@ -182,7 +183,7 @@ int Matrix::Rank() {
 		else
 		{
 			for (int i = row + 1; i < tmp.shape_[0]; i++) {
-				if (tmp.data_[i*tmp.shape_[1]+row]) {
+				if (abs(tmp.data_[i*tmp.shape_[1]+row])>=0.000001) {
 					tmp.swap(row, i);
 					row--;
 					break;
@@ -190,10 +191,11 @@ int Matrix::Rank() {
 			}
 		}
 	}
+	bool check = true;
 	for (int i = 0; i < tmp.shape_[0]; i++) {//判斷0列有幾列
-		bool check = true;
+		check = true;
 		for (int j = 0; j < tmp.shape_[1]; j++) {
-			if (!tmp.data_[i*tmp.shape_[0] + j]) {
+			if (abs(tmp.data_[i*tmp.shape_[1] + j])>= 0.000001) {
 				check = false;
 				break;
 			}		
@@ -535,7 +537,7 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 		}
 	}
 	else {//B非0
-		Matrix tmp(this->shape_[0],this->shape_[1]);//A|B
+		Matrix tmp(this->shape_[0],this->shape_[1]+1);//A|B
 		for (int i = 0; i < tmp.data_.size(); i++) {
 			if (i%tmp.shape_[1] == tmp.shape_[1] - 1) {
 				tmp.data_[i] = m.data_[i / tmp.shape_[1]];
@@ -543,7 +545,10 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 			else
 				tmp.data_[i] = this->data_[i - i / tmp.shape_[1]];
 		}
+		int a = this->Rank();
+		int b = tmp.Rank();
 		if (this->Rank() == tmp.Rank()) {//Consistent
+			
 			if (this->Rank() == this->shape_[0]) {//唯一解
 				return this->Inv()*m;
 			}
