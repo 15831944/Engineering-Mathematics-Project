@@ -5,7 +5,7 @@ int rowOptime;
 Matrix::Matrix(int rSize, int cSize) {
 	// check
 	if (rSize <= 0 || cSize <= 0)
-		throw "Wrong Size!";
+		throw std::runtime_error("Wrong Size!");
 	//
 	this->data_.resize(rSize*cSize);
 	this->shape_[0] = rSize;
@@ -15,7 +15,7 @@ Matrix::Matrix(int rSize, int cSize) {
 Matrix::Matrix(int rSize, int cSize, initializer_list<NumType> args) {
 	// check
 	if (rSize <= 0 || cSize <= 0)
-		throw "Wrong Size!";
+		throw std::runtime_error("Wrong Size!");
 	//
 	this->data_.resize(rSize*cSize);
 	this->shape_[0] = rSize;
@@ -30,7 +30,7 @@ Matrix::Matrix(int rSize, int cSize, initializer_list<NumType> args) {
 
 Matrix Matrix::operator+(const Matrix& m) {
 	if(this->shape_[0]!=m.shape_[0]||this->shape_[1]!=m.shape_[1])
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	else {
 		Matrix result(this->shape_[0],this->shape_[1]);
 		for (int i = 0; i < this->shape_[0]*this->shape_[1]; i++){
@@ -42,7 +42,7 @@ Matrix Matrix::operator+(const Matrix& m) {
 
 Matrix Matrix::operator-(const Matrix& m) {
 	if (this->shape_[0] != m.shape_[0] || this->shape_[1] != m.shape_[1])
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	else {
 		Matrix result(this->shape_[0], this->shape_[1]);
 		for (int i = 0; i < this->shape_[0] * this->shape_[1]; i++) {
@@ -64,7 +64,7 @@ Matrix Matrix::operator=(const Matrix& m) {
 
 Matrix Matrix::operator=(initializer_list<NumType> args) {
 	if(this->data_.size()!=args.size())
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	else {
 		auto iter = args.begin();
 		int i;
@@ -77,7 +77,7 @@ Matrix Matrix::operator=(initializer_list<NumType> args) {
 
 Matrix Matrix::operator*(const Matrix& m) {
 	if (this->shape_[1] != m.shape_[0])
-		throw "Error dimension!";
+		throw std::runtime_error("Error dimension!");
 	else
 	{
 		Matrix result(this->shape_[0], m.shape_[1]);
@@ -125,11 +125,11 @@ bool Matrix::IsSquare() {
 Matrix Matrix::MiniorMat_(int row, int col) {
 	// check
 	if (!this->IsSquare())
-		throw "Not a Square Matrix !";
+		throw std::runtime_error("Not a Square Matrix !");
 	if (row < 0 || col < 0)
-		throw "Row and Column are start from 1!";
+		throw std::runtime_error("Row and Column are start from 1!");
 	if (row >= this->shape_[0] || col >= this->shape_[1])
-		throw "Row or Column is out of range!";
+		throw std::runtime_error("Row or Column is out of range!");
 	//
 
 	/*  calc Minor
@@ -209,7 +209,7 @@ int Matrix::Rank() {
 Matrix Matrix::Trans() {
 	// check
 	if (this->shape_[0] == 0 || this->shape_[1] == 0)
-		throw "Empty Matrix!";
+		throw std::runtime_error("Empty Matrix!");
 	//
 
 	Matrix result(this->shape_[1], this->shape_[0]);
@@ -224,7 +224,7 @@ Matrix Matrix::Trans() {
 Matrix Matrix::Adj() {
 	// check
 	if (!this->IsSquare())
-		throw "Not a Square Matrix !";
+		throw std::runtime_error("Not a Square Matrix !");
 	//
 
 	Matrix result(this->shape_[0], this->shape_[1]);
@@ -239,12 +239,12 @@ Matrix Matrix::Adj() {
 Matrix Matrix::Inv() {
 	// check
 	if (!this->IsSquare())
-		throw "Not a Square Matrix !";
+		throw std::runtime_error("Not a Square Matrix !");
 	//
 
 	NumType det = this->Det();
 	if (det == 0.0)
-		throw "singular";
+		throw std::runtime_error("singular");
 
 	Matrix result = this->Adj();
 	result.data_ *= 1 / det;
@@ -255,7 +255,7 @@ Matrix Matrix::Inv() {
 NumType Matrix::Cofactor(int row, int col) {
 	// check
 	if (!this->IsSquare())
-		throw "Not a Square Matrix !";
+		throw std::runtime_error("Not a Square Matrix !");
 	//
 
 	//Note that row and col start form 0 !
@@ -296,7 +296,7 @@ NumType Matrix::Det(Matrix mat) {
 		}
 	}
 	if (!rowFlag)
-		throw "不可解";
+		throw std::runtime_error("不可解");
 	for (int i = 0; i < mat.shape_[0]; ++i) {
 		NumType scale = mat.data_[i*mat.shape_[0] + i];
 		if (scale == 0.0) {
@@ -331,7 +331,7 @@ NumType Matrix::Det(Matrix mat) {
 valarray<Matrix> Matrix::reff() {
 	
 	if (!this->IsSquare())
-		throw "Not a Square Matrix !";
+		throw std::runtime_error("Not a Square Matrix !");
 	valarray<Matrix> LU(2);
 	Matrix mat = *this;
 	Matrix L(this->shape_[0], this->shape_[1]);
@@ -358,7 +358,7 @@ valarray<Matrix> Matrix::reff() {
 		}
 	}
 	if (!rowFlag)
-		throw "不可解";
+		throw std::runtime_error("不可解");
 	for (int i = 0; i < mat.shape_[0]; ++i) {
 		NumType scale = mat.data_[i*mat.shape_[0]+i];
 		if (scale == 0.0) {
@@ -452,7 +452,7 @@ void Matrix::rowScale(int row, NumType scale) {
 
 Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 	if(this->shape_[0]!=m.shape_[0])
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	bool zero = true;
 	for (int i = 0; i < m.data_.size(); i++) {//判斷B是否為0
 		if (m.data_[i] != 0) {
@@ -622,7 +622,7 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 			}
 		}
 		else {//無解
-			throw "Inconsistent!";
+			throw std::runtime_error("Inconsistent!");
 		}
 	}
 }
@@ -635,13 +635,13 @@ Matrix Matrix::LeastSquare(const Matrix& y) {
 
 valarray<Matrix> Matrix::Eigen() {
 	if(!this->IsSquare())
-		throw "Not a Square Matrix !";
+		throw std::runtime_error("Not a Square Matrix !");
 	valarray<Matrix> ans;
 	ans.resize(2);
 	if (this->shape_[0] == 2) {
 		NumType det=(this->data_[0]+this->data_[3])*(this->data_[0] + this->data_[3])+4*(this->data_[1]*this->data_[2]+this->data_[0]*this->data_[3]);
 		if (det < 0)
-			throw "Not support imaginary number solution!";
+			throw std::runtime_error("Not support imaginary number solution!");
 		else if (det == 0) {
 			Matrix E_value(2,2);
 			E_value.data_[0] = (this->data_[0]+this->data_[3])/(-2);
@@ -694,7 +694,7 @@ valarray<Matrix> Matrix::Eigen() {
 
 		NumType det = pow(36 * a*b*c - 8 * pow(b, 3) - 108 * pow(a, 2)*d, 2) + pow(12 * a*c - 4 * pow(b, 2), 3);
 		if (det > 0) {
-			throw "Not support imaginary number solution!";
+			throw std::runtime_error("Not support imaginary number solution!");
 		}
 		else{
 			NumType Alpha, Beta;

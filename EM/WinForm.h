@@ -211,8 +211,11 @@ namespace EM {
 			this->Controls->Add(this->debugLabel);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->toolStrip1);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->KeyPreview = true;
 			this->Margin = System::Windows::Forms::Padding(2);
+			this->MaximizeBox = false;
 			this->Name = L"WinForm";
 			this->Text = L"Mat";
 			this->Load += gcnew System::EventHandler(this, &WinForm::WinForm_Load);

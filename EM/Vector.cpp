@@ -6,7 +6,7 @@ Vector::Vector() {
 
 Vector::Vector(int dim) {
 	if (dim < 0)
-		throw "Dimension can't be negtive!";
+		throw std::runtime_error("Dimension can't be negtive!");
 	this->data_.resize(dim);
 	this->dim_ = dim;
 }
@@ -81,7 +81,7 @@ Vector Vector::operator+(const Vector& v) {
 		return *this;
 	// dim not same
 	if (this->dim_ != v.dim_)
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	Vector result(this->dim_);
 	result.data_ = this->data_ + v.data_;
 	return result;
@@ -98,7 +98,7 @@ Vector Vector::operator-(const Vector& v) {
 		return *this;
 	// dim not same
 	if (this->dim_ != v.dim_)
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 
 	Vector result(this->dim_);
 	result.data_ = this->data_ - v.data_;
@@ -107,7 +107,7 @@ Vector Vector::operator-(const Vector& v) {
 
 double Vector::Dot(const Vector& v){
 	if (this->dim_!=v.dim_){
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	}
 	else{
 		return (v.data_ * this->data_).sum();
@@ -136,7 +136,7 @@ Vector Vector::Normalization() {
 
 Vector Vector::Cross(const Vector& v) {
 	if(this->dim_!=v.dim_)
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	else {
 		Vector tmp(this->dim_);
 		int dim = this->dim_;
@@ -148,7 +148,7 @@ Vector Vector::Cross(const Vector& v) {
 
 NumType Vector::Component(const Vector& v) {
 	if (this->dim_ != v.dim_)
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	else {
 		Vector tmp = v;
 		return this->Dot(tmp.Normalization());
@@ -157,7 +157,7 @@ NumType Vector::Component(const Vector& v) {
 
 Vector Vector::Projection(const Vector& v) {
 	if (this->Dot(v) == 0)
-		throw "two vector are vertical";
+		throw std::runtime_error("two vector are vertical");
 	Vector tmp = v;
 	tmp.Normalization();
 	return (tmp.Scalar(this->Component(v)));
@@ -169,7 +169,7 @@ NumType Vector::TriangleArea(const Vector& v) {
 
 bool Vector::Parallel(const Vector& v) {
 	if (this->dim_ != v.dim_)
-		throw "Dimension is not same!";
+		throw std::runtime_error("Dimension is not same!");
 	else {
 		for (int i = 0; i < this->dim_ - 1; i++)
 		{
@@ -189,7 +189,7 @@ bool Vector::Orthogonal(const Vector& v) {
 NumType Vector::Getangle(const Vector& v){
 	NumType tmp = this->Dot(v);
 	if (this->Norm() == 0 || v.Norm() == 0)
-		throw "vector can't be zero vector";
+		throw std::runtime_error("vector can't be zero vector");
 	return (acos(tmp / (this->Norm()* v.Norm())) * 180.0 / PI);
 }
 
@@ -202,7 +202,7 @@ bool Vector::LinearIndependent(const valarray<Vector>& v){
 	int dim = v[0].dim_;
 	for (int i = 1; i < v.size(); i++) {
 		if(v[i].dim_!=dim)
-			throw "Dimension is not same!";
+			throw std::runtime_error("Dimension is not same!");
 	}
 	/*if (dim > v.size())//col>row
 		return false;*/

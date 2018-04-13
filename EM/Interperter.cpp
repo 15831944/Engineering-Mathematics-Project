@@ -65,6 +65,9 @@ String^ getResultStr(String^ s) {
 		}
 		return gcnew String(tmp.c_str());
 	}
+	else if (result.type == "String") {
+		return gcnew String(((string *)result.data)->c_str()) + "\n";
+	}
 	else if (result.type == "Error") {
 		return gcnew String(((string *)result.data)->c_str()) + "\n";
 	}
@@ -211,10 +214,10 @@ Var regularCale(Var a, Var b, char op) {
 			try {
 				*ToVector(result.data) = *ToVector(a.data) + *ToVector(b.data);
 			}
-			catch (const string e) {
+			catch (const std::runtime_error& error) {
 				delete result.data;
 				result.type = "Error";
-				result.data = new string(e);
+				result.data = new string(error.what());
 			}
 			
 		}
@@ -224,10 +227,10 @@ Var regularCale(Var a, Var b, char op) {
 			try {
 				*ToMatrix(result.data) = *ToMatrix(a.data) + *ToMatrix(b.data);
 			}
-			catch (const string e) {
+			catch (const std::runtime_error& error) {
 				delete result.data;
 				result.type = "Error";
-				result.data = new string(e);
+				result.data = new string(error.what());
 			}
 		}
 		break;
@@ -240,10 +243,10 @@ Var regularCale(Var a, Var b, char op) {
 			try {
 				*ToVector(result.data) = *ToVector(a.data) - *ToVector(b.data);
 			}
-			catch (const string e) {
+			catch (const std::runtime_error& error) {
 				delete result.data;
 				result.type = "Error";
-				result.data = new string(e);
+				result.data = new string(error.what());
 			}
 
 		}
@@ -253,10 +256,10 @@ Var regularCale(Var a, Var b, char op) {
 			try {
 				*ToMatrix(result.data) = *ToMatrix(a.data) - *ToMatrix(b.data);
 			}
-			catch (const string e) {
+			catch (const std::runtime_error& error) {
 				delete result.data;
 				result.type = "Error";
-				result.data = new string(e);
+				result.data = new string(error.what());
 			}
 		}
 		break;
@@ -277,10 +280,10 @@ Var regularCale(Var a, Var b, char op) {
 				try {
 					*ToVector(result.data) = bp->Scalar(ap->data_[0]);
 				}
-				catch (const string e) {
+				catch (const std::runtime_error& error) {
 					delete result.data;
 					result.type = "Error";
-					result.data = new string(e);
+					result.data = new string(error.what());
 				}
 			}
 			else if (ap->data_.size() == bp->data_.size()) {
@@ -290,10 +293,10 @@ Var regularCale(Var a, Var b, char op) {
 				try {
 					*((NumType *)result.data) = ap->Dot(*bp);
 				}
-				catch (const string e) {
+				catch (const std::runtime_error& error) {
 					delete result.data;
 					result.type = "Error";
-					result.data = new string(e);
+					result.data = new string(error.what());
 				}
 			}
 			else {
@@ -308,10 +311,10 @@ Var regularCale(Var a, Var b, char op) {
 			try {
 				*ToMatrix(result.data) = *ToMatrix(a.data) * *ToMatrix(b.data);
 			}
-			catch (const string e) {
+			catch (const std::runtime_error& error) {
 				delete result.data;
 				result.type = "Error";
-				result.data = new string(e);
+				result.data = new string(error.what());
 			}
 		}
 		break;
@@ -352,10 +355,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((NumType *)result.data) = ToVector(args[0].data)->Dot(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -368,10 +371,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((NumType *)result.data) = ToVector(args[0].data)->Norm();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -383,10 +386,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*ToVector(result.data) = ToVector(args[0].data)->Normalization();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		
 		return result;
@@ -402,10 +405,10 @@ Var funcCale(string cmd, string argument) {
 
 			*ToVector(result.data) = ToVector(args[0].data)->Cross(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	} // below need test
@@ -419,10 +422,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((NumType *)result.data) = ToVector(args[0].data)->Component(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -437,10 +440,10 @@ Var funcCale(string cmd, string argument) {
 
 			*ToVector(result.data) = ToVector(args[0].data)->Projection(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -454,10 +457,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((NumType *)result.data) = ToVector(args[0].data)->TriangleArea(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -471,10 +474,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((bool *)result.data) = ToVector(args[0].data)->Parallel(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -488,10 +491,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((bool *)result.data) = ToVector(args[0].data)->Orthogonal(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -505,10 +508,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((NumType *)result.data) = ToVector(args[0].data)->Getangle(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -523,10 +526,10 @@ Var funcCale(string cmd, string argument) {
 
 			*ToVector(result.data) = ToVector(args[0].data)->PlaneNormal(*ToVector(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -547,10 +550,10 @@ Var funcCale(string cmd, string argument) {
 		try{
 			*((bool*)result.data) = ToVector(args[0].data)->LinearIndependent(basis);
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -570,9 +573,9 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((valarray<Vector>*)result.data) = Vector::Gram_Schmidt_Orthogonal(basis);
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -589,10 +592,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((NumType *)result.data) = ToMatrix(args[0].data)->Rank();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -606,10 +609,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->Trans();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -619,14 +622,35 @@ Var funcCale(string cmd, string argument) {
 			return Var{ "Error",new string("parameter wrong") };
 		//
 		result.type = "Matrix";
-		result.data = new Matrix();;
+		result.data = new Matrix();
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->SolveLinear(*ToMatrix(args[1].data));
+			Matrix r = *ToMatrix(result.data);
+			if (r.shape_[1] != 0) {
+				//°Ñ¼Æ¸Ñ
+				string pResult = "";
+				for (int j = 0; j < r.shape_[0]; ++j) {
+					for (int k = 0; k < r.shape_[1]; ++k) {
+						NumType val = r.data_[j*r.shape_[1] + k];
+						if (val < 1e-8)
+							continue;
+						string va = "a";
+						va[0] = va[0] + k;
+						if (k != 0)
+							pResult += "+";
+						pResult += "(" + std::to_string(val) + ")" + va;
+					}
+					pResult += '\n';
+				}
+				result.type = "String";
+				delete result.data;
+				result.data = new string(pResult);
+			}
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -657,10 +681,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->Inv();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -674,10 +698,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->Adj();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -689,10 +713,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			(*(valarray<Matrix> *)result.data) = ToMatrix(args[0].data)->Eigen();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -706,10 +730,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->LeastSquare(*ToMatrix(args[1].data));
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
