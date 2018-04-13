@@ -586,9 +586,12 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 				}
 				int t = 0;
 				for (int i = this->shape_[0] - 1; i >= 0; i--) {
+					valarray<NumType> solution;
+					solution.resize(tmp.shape_[1]);
+					solution[tmp.shape_[1]-1] = tmp.data_[i*tmp.shape_[1] -1];
 					int count = 0;
 					for (int k = 0; k <= i; k++) {
-						if (abs(data_[i*tmp.shape_[0] + k])>=0.000001) {//耞碭ゼ计
+						if (abs(data_[i*tmp.shape_[0] + k]) >=0.000001) {//耞碭ゼ计
 							if (!check[k])
 								count++;
 						}
@@ -596,14 +599,27 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 					for (int j = this->shape_[1] - 1; j >= i; j--) {
 						if (count == 0)
 							break;
-						else if (count == 1) {
+						else if (count == 1) {//逞ゼ计
 							if (!check[j]) {
-
-							}
-							else {
+								for (int col = 0; col < solution.size(); col++) {
+									ans.data_[j*ans.shape_[1] + col] = solution[col]/tmp.data_[i*tmp.shape_[1]+j];
+								}
+								count--;
+								check[j] = true;
 							}
 						}
-						else {
+						else {//ゼ计
+							if (!check[j]) {//ゼ倒把计ぇゼ计
+								ans.data_[j*ans.shape_[1] + t] = 1;
+								solution[t] -= tmp.data_[i*tmp.shape_[1] + j];
+								t++;
+							}
+							else {//计
+								for (int col = 0; col < solution.size(); col++) {
+									solution[col] -= tmp.data_[i*tmp.shape_[1] + j] * ans.data_[j*ans.shape_[1] + col];
+								}
+							}
+							count--;
 						}
 					}
 					return ans;
