@@ -516,21 +516,20 @@ Var funcCale(string cmd, string argument) {
 	}
 	else if (cmd == "Indepen") {
 		// check arguments
+		valarray<Vector> basis(args.size());
 		if(args.size()<2)
 			return Var{ "Error",new string("parameter wrong") };
 		for (int i = 0; i < args.size(); ++i) {
 			if(args[i].type != "Vector")
 				return Var{ "Error",new string("parameter wrong") };
+			basis[i] = *ToVector(args[i].data);
 		}
+		//
 		//
 		result.type = "Bool";
 		result.data = new bool(true);
 		try{
-			for (int i = 0; i < args.size(); ++i) {
-				for (int j = i+1; j < args.size(); ++j) {
-					*((bool *)result.data) &= ToVector(args[i].data)->LinearIndependent(*ToVector(args[j].data));
-				}
-			}
+			*((bool*)result.data) = ToVector(args[0].data)->LinearIndependent(basis);
 		}
 		catch (const string e) {
 			delete result.data;
