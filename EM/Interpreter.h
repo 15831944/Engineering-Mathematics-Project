@@ -54,3 +54,5 @@ Var funcCale(string cmd, string argument);
 Var ExecFormula(string f);
 
 String^ getResultStr(String^ s);
+
+void clearMap();

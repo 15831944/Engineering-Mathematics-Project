@@ -51,6 +51,8 @@ namespace EM {
 
 	private: System::Windows::Forms::ToolStripMenuItem^  saveResultsToolStripMenuItem;
 	private: System::Windows::Forms::SaveFileDialog^  SFD;
+	private: System::Windows::Forms::Button^  button1;
+
 
 
 
@@ -87,6 +89,7 @@ namespace EM {
 			this->OFD = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->debugLabel = (gcnew System::Windows::Forms::Label());
 			this->SFD = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -133,6 +136,7 @@ namespace EM {
 			// 
 			// groupBox1
 			// 
+			this->groupBox1->Controls->Add(this->button1);
 			this->groupBox1->Controls->Add(this->listView1);
 			this->groupBox1->Controls->Add(this->cmdBox);
 			this->groupBox1->Location = System::Drawing::Point(12, 41);
@@ -203,6 +207,16 @@ namespace EM {
 			this->debugLabel->Size = System::Drawing::Size(0, 12);
 			this->debugLabel->TabIndex = 3;
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(788, 375);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 2;
+			this->button1->Text = L"Clear Table";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &WinForm::button1_Click);
+			// 
 			// WinForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
@@ -242,5 +256,8 @@ namespace EM {
 	private: System::Void saveResultsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void InfoBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 	}
+private: System::Void toolStripButton1_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }

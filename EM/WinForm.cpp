@@ -51,3 +51,11 @@ System::Void EM::WinForm::saveResultsToolStripMenuItem_Click(System::Object^  se
 	fout << resultRecord;
 	fout.close();
 }
+
+System::Void EM::WinForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
+	clearMap();
+	vCounter = 0;
+	mCounter = 0;
+	this->listView1->Items->Clear();
+}
+

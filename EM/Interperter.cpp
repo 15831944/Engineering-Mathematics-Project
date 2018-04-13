@@ -53,7 +53,7 @@ String^ getResultStr(String^ s) {
 		string tmp = "";
 		int size = ((valarray<Vector>*)result.data)->size();
 		for (int i = 0; i < size; ++i) {
-			tmp += "\n" + (*(valarray<Vector>*)result.data)[i].ToString();
+			tmp += (*(valarray<Vector>*)result.data)[i].ToString() + "\n";
 		}
 		return gcnew String(tmp.c_str());
 	}
@@ -61,7 +61,7 @@ String^ getResultStr(String^ s) {
 		string tmp = "";
 		int size = ((valarray<Matrix>*)result.data)->size();
 		for (int i = 0; i < size; ++i) {
-			tmp += "\n" + (*(valarray<Matrix>*)result.data)[i].ToString();
+			tmp +=   (*(valarray<Matrix>*)result.data)[i].ToString()+ "\n";
 		}
 		return gcnew String(tmp.c_str());
 	}
@@ -626,7 +626,7 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->SolveLinear(*ToMatrix(args[1].data));
 			Matrix r = *ToMatrix(result.data);
-			if (r.shape_[1] != 0) {
+			if (r.shape_[1] != 1) {
 				//°Ñ¼Æ¸Ñ
 				string pResult = "";
 				for (int j = 0; j < r.shape_[0]; ++j) {
@@ -790,4 +790,8 @@ Var ExecFormula(string f) {
 			
 		}
 	}
+}
+
+void clearMap() {
+	vars.clear();
 }
