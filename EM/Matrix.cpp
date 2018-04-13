@@ -575,23 +575,23 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 					}
 				}
 
-				int n = tmp.shape_[0] - rank;
-				Matrix ans(n, this->shape_[1] + 1);
+				int n = tmp.shape_[0] - tmp.Rank();
+				Matrix ans(this->shape_[0],  n + 1);
 
 
 				bool *check = NULL;
-				check = new bool[this->shape_[0]];
-				for (int i = 0; i < this->shape_[0]; i++) {
+				check = new bool[this->shape_[1]];
+				for (int i = 0; i < this->shape_[1]; i++) {
 					check[i] = false;
 				}
 				int t = 0;
 				for (int i = this->shape_[0] - 1; i >= 0; i--) {
 					valarray<NumType> solution;
-					solution.resize(tmp.shape_[1]);
-					solution[tmp.shape_[1]-1] = tmp.data_[i*tmp.shape_[1] -1];
+					solution.resize(n+1);
+					solution[n] = tmp.data_[(i+1)*tmp.shape_[1] -1];
 					int count = 0;
-					for (int k = 0; k <= i; k++) {
-						if (abs(data_[i*tmp.shape_[0] + k]) >=0.000001) {//耞碭ゼ计
+					for (int k = 0; k <tmp.shape_[1]-1; k++) {
+						if (abs(tmp.data_[i*tmp.shape_[1] + k]) >0.000001) {//耞碭ゼ计
 							if (!check[k])
 								count++;
 						}
@@ -612,6 +612,7 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 							if (!check[j]) {//ゼ倒把计ぇゼ计
 								ans.data_[j*ans.shape_[1] + t] = 1;
 								solution[t] -= tmp.data_[i*tmp.shape_[1] + j];
+								check[j] = true;
 								t++;
 							}
 							else {//计
@@ -622,8 +623,9 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 							count--;
 						}
 					}
-					return ans;
+					
 				}
+				return ans;
 			}
 		}
 		else {//礚秆
@@ -704,7 +706,7 @@ valarray<Matrix> Matrix::Eigen() {
 		NumType d = this->data_[0] * this->data_[4] * this->data_[8] + this->data_[2] * this->data_[3] * this->data_[7] + this->data_[1] * this->data_[5] * this->data_[6] - this->data_[2] * this->data_[6] * this->data_[4] - this->data_[0] * this->data_[7] * this->data_[5] - this->data_[1] * this->data_[3] * this->data_[8];
 
 		NumType det = pow(36 * a*b*c - 8 * pow(b, 3) - 108 * pow(a, 2)*d, 2) + pow(12 * a*c - 4 * pow(b, 2), 3);
-		if (det > 0) {
+		if (det > 0.000001) {
 			throw std::runtime_error("Not support imaginary number solution!");
 		}
 		else{
@@ -713,17 +715,9 @@ valarray<Matrix> Matrix::Eigen() {
 			Beta = c / (3 * a) - pow(b, 2) / (9 * pow(a, 2));
 			NumType x[3];
 			x[0] = -b / (3 * a) + 2 * sqrt(-Beta)*cos(acos(Alpha / (sqrt(pow(-Beta, 3)))) / 3);
-			x[1] = -b / (3 * a) + 2 * sqrt(-Beta)*cos(acos(Alpha / (sqrt(pow(-Beta, 3))))+2*PI / 3);
-			x[2] = -b / (3 * a) + 2 * sqrt(-Beta)*cos(acos(Alpha / (sqrt(pow(-Beta, 3))))-2*PI / 3);
-			for (int i = 0; i < 2; i++) {//玡
-				for (int j = i + 1; j < 3; j++) {
-					if (x[j] > x[i]) {
-						NumType tmp = x[i];
-						x[i] = x[j];
-						x[j] = tmp;
-					}
-				}
-			}
+			x[1] = -b / (3 * a) + 2 * sqrt(-Beta)*cos((acos(Alpha / (sqrt(pow(-Beta, 3)))) + 2 * PI) / 3);
+			x[2] = -b / (3 * a) + 2 * sqrt(-Beta)*cos((acos(Alpha / (sqrt(pow(-Beta, 3)))) - 2 * PI) / 3);
+			
 
 			Matrix E_value(3, 3);
 			E_value.data_[0] = x[0];
