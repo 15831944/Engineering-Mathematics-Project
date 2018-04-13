@@ -49,6 +49,22 @@ String^ getResultStr(String^ s) {
 	else if (result.type == "Bool") {
 		return *((bool*)result.data) ? "True\n" : "False\n";
 	}
+	else if (result.type == "ArrayV") {
+		string tmp = "";
+		int size = ((valarray<Vector>*)result.data)->size();
+		for (int i = 0; i < size; ++i) {
+			tmp += "\n" + (*(valarray<Vector>*)result.data)[i].ToString();
+		}
+		return gcnew String(tmp.c_str());
+	}
+	else if (result.type == "ArrayM") {
+		string tmp = "";
+		int size = ((valarray<Matrix>*)result.data)->size();
+		for (int i = 0; i < size; ++i) {
+			tmp += "\n" + (*(valarray<Matrix>*)result.data)[i].ToString();
+		}
+		return gcnew String(tmp.c_str());
+	}
 	else if (result.type == "Error") {
 		return gcnew String(((string *)result.data)->c_str()) + "\n";
 	}
@@ -549,7 +565,7 @@ Var funcCale(string cmd, string argument) {
 				return Var{ "Error",new string("parameter wrong") };
 		}
 		//
-		result.type = "Array";
+		result.type = "ArrayV";
 		result.data = new valarray<Vector>(args.size());
 		try {
 			*((valarray<Vector>*)result.data) = Vector::Gram_Schmidt_Orthogonal(basis);
@@ -624,10 +640,10 @@ Var funcCale(string cmd, string argument) {
 		try {
 			*((NumType *)result.data) = ToMatrix(args[0].data)->Det();
 		}
-		catch (const string e) {
+		catch (const std::runtime_error& error) {
 			delete result.data;
 			result.type = "Error";
-			result.data = new string(e);
+			result.data = new string(error.what());
 		}
 		return result;
 	}
@@ -657,6 +673,38 @@ Var funcCale(string cmd, string argument) {
 		result.data = new Matrix();;
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->Adj();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "Eigen") {
+		if (args.size() != 1 || args[0].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		result.type = "ArrayM";
+		result.data = new valarray<Matrix>(2);
+		try {
+			(*(valarray<Matrix> *)result.data) = ToMatrix(args[0].data)->Eigen();
+		}
+		catch (const string e) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(e);
+		}
+		return result;
+	}
+	else if (cmd == "LeastS") {
+		// check 
+		if (args.size() != 2 || args[0].type != "Matrix" || args[1].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		//
+		result.type = "Matrix";
+		result.data = new Matrix();;
+		try {
+			*ToMatrix(result.data) = ToMatrix(args[0].data)->LeastSquare(*ToMatrix(args[1].data));
 		}
 		catch (const string e) {
 			delete result.data;
