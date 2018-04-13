@@ -217,6 +217,11 @@ bool Vector::LinearIndependent(const valarray<Vector>& v){
 }
 
 valarray<Vector> Vector::Gram_Schmidt_Orthogonal(valarray<Vector>& v) {
+	int dim = v[0].dim_;
+	for (int i = 1; i < v.size(); i++) {
+		if (v[i].dim_ != dim)
+			throw std::runtime_error("Dimension is not same!");
+	}
 	valarray<Vector> tmp;
 	tmp.resize(v.size());
 	for (int i = 0; i < v.size(); i++) {

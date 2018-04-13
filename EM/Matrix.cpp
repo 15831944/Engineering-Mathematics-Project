@@ -644,12 +644,12 @@ valarray<Matrix> Matrix::Eigen() {
 	valarray<Matrix> ans;
 	ans.resize(2);
 	if (this->shape_[0] == 2) {
-		NumType det=(this->data_[0]+this->data_[3])*(this->data_[0] + this->data_[3])+4*(this->data_[1]*this->data_[2]+this->data_[0]*this->data_[3]);
-		if (det < 0)
+		NumType det=(this->data_[0]+this->data_[3])*(this->data_[0] + this->data_[3])-4*(-this->data_[1]*this->data_[2]+this->data_[0]*this->data_[3]);
+		if (det < 0 && abs(det) >=0.000001 )
 			throw std::runtime_error("Not support imaginary number solution!");
-		else if (det == 0) {
+		else if (abs(det) <= 0.000001) {
 			Matrix E_value(2,2);
-			E_value.data_[0] = (this->data_[0]+this->data_[3])/(-2);
+			E_value.data_[0] = (this->data_[0]+this->data_[3])/2;
 			E_value.data_[3] = E_value.data_[0];
 			ans[0] = E_value;
 			Matrix E_vector(2, 2);
@@ -664,22 +664,29 @@ valarray<Matrix> Matrix::Eigen() {
 			return ans;
 		}
 		else {
-			Matrix E_value(2, 2);
-			E_value.data_[0] = ((this->data_[0] + this->data_[3]) + sqrt(det)) / (-2);
-			E_value.data_[3] = ((this->data_[0] + this->data_[3]) - sqrt(det)) / (-2);
+			Matrix E_value(2,2);
+			E_value.data_[0] = ((this->data_[0] + this->data_[3]) + sqrt(det)) / 2;
+			E_value.data_[3] = ((this->data_[0] + this->data_[3]) - sqrt(det)) / 2;
 			ans[0] = E_value;
 			Matrix E_vector(2, 2);
 			Vector tmp(2);
 			tmp.data_[0] = this->data_[0] - E_value.data_[0];
 			tmp.data_[1] = this->data_[2];
-			E_vector.data_[0] = tmp.Normalization().data_[0];
-			E_vector.data_[2] = tmp.Normalization().data_[1];
-
+			E_vector.data_[1] = tmp.Normalization().data_[0];
+			E_vector.data_[3] = tmp.Normalization().data_[1];
+			if (E_vector.data_[1] < 0 && E_vector.data_[3] < 0) {
+				E_vector.data_[1] *= -1;
+				E_vector.data_[3] *= -1;
+			}
 
 			tmp.data_[0] = this->data_[0] - E_value.data_[3];
 			tmp.data_[1] = this->data_[2];
-			E_vector.data_[1] = tmp.Normalization().data_[0];
-			E_vector.data_[3] = tmp.Normalization().data_[1];
+			E_vector.data_[0] = tmp.Normalization().data_[0];
+			E_vector.data_[2] = tmp.Normalization().data_[1];
+			if (E_vector.data_[0] < 0 && E_vector.data_[2] < 0) {
+				E_vector.data_[0] *= -1;
+				E_vector.data_[2] *= -1;
+			}
 			ans[1] = E_vector;
 			return ans;
 		}
