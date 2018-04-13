@@ -545,74 +545,79 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 			else
 				tmp.data_[i] = this->data_[i - i / tmp.shape_[1]];
 		}
-		int a = this->Rank();
-		int b = tmp.Rank();
+		//int a = this->Rank();
+		//int b = tmp.Rank();
 		if (this->Rank() == tmp.Rank()) {//Consistent
 			
 			if (this->Rank() == this->shape_[0]) {//斑秆
 				return this->Inv()*m;
 			}
 			else {//把计秆
-				valarray<Matrix> LU;
-				LU.resize(2);
-				LU = this->reff();
-				int n = this->shape_[0] - this->Rank();
-				Matrix y(this->shape_[0], 1);
-				Matrix ans(this->shape_[0], n + 1);
-				for (int i = 0; i < ans.data_.size(); i++)
-					ans.data_[i] = 0;
-				for (int i = 0; i < this->shape_[0]; i++) {//Ly=B
-					NumType tmp = m.data_[i];
-					for (int j = 0; j <= i; j++) {
-						if (i == j)
-							y.data_[i] = tmp;
-						else
-							tmp -= LU[0].data_[i*this->shape_[1] + j] * y.data_[j];
+				int rank = this->shape_[0];
+				for (int row = 0; row < tmp.shape_[0]; row++) {
+					if (abs(tmp.data_[row*tmp.shape_[1] + row]) >= 0.000001) {//耞琌0
+						for (int col = row + 1; col < tmp.shape_[0]; col++) {
+							NumType mult = tmp.data_[col*tmp.shape_[1] + row] / tmp.data_[row*tmp.shape_[1] + row];
+							for (int i = row; i < tmp.shape_[1]; i++) {
+								tmp.data_[col*tmp.shape_[1] + i] -= mult * tmp.data_[row*tmp.shape_[1] + i];
+							}
+						}
+					}
+					else
+					{
+						for (int i = row + 1; i < tmp.shape_[0]; i++) {
+							if (abs(tmp.data_[i*tmp.shape_[1] + row]) >= 0.000001) {
+								tmp.swap(row, i);
+								row--;
+								break;
+							}
+						}
 					}
 				}
+
+				int n = tmp.shape_[0] - rank;
+				Matrix ans(n, this->shape_[1] + 1);
+
+
 				bool *check = NULL;
 				check = new bool[this->shape_[0]];
 				for (int i = 0; i < this->shape_[0]; i++) {
 					check[i] = false;
 				}
 				int t = 0;
-				for (int i = this->shape_[0] - 1; i >= 0; i--) {//Ux=y
+				for (int i = this->shape_[0] - 1; i >= 0; i--) {
+					valarray<NumType> solution;
+					solution.resize(tmp.shape_[1]);
+					solution[tmp.shape_[1]-1] = tmp.data_[i*tmp.shape_[1] -1];
 					int count = 0;
 					for (int k = 0; k <= i; k++) {
-						if (LU[1].data_[i*this->shape_[0] + k]) {//耞碭ゼ计
+						if (abs(data_[i*tmp.shape_[0] + k]) >=0.000001) {//耞碭ゼ计
 							if (!check[k])
 								count++;
 						}
 					}
-					valarray <NumType> tmp;
-					tmp.resize(ans.shape_[1]);
-					for (int i = 0; i < tmp.size() - 1; i++)
-						tmp[i] = 0;
 					for (int j = this->shape_[1] - 1; j >= i; j--) {
-						tmp[tmp.size()] = y.data_[i];
 						if (count == 0)
 							break;
-						else if (count == 1) {
+						else if (count == 1) {//逞ゼ计
 							if (!check[j]) {
-								for (int a = 0; a < ans.shape_[1]; a++)
-									ans.data_[j*ans.shape_[1] + a] = tmp[a] / LU[1].data_[i*this->shape_[1] + j];
+								for (int col = 0; col < solution.size(); col++) {
+									ans.data_[j*ans.shape_[1] + col] = solution[col]/tmp.data_[i*tmp.shape_[1]+j];
+								}
 								count--;
 								check[j] = true;
 							}
-							else {
-								for (int a = 0; a < ans.shape_[1]; a++) {
-									tmp[a] -= LU[1].data_[i*this->shape_[1] + j] * ans.data_[j*ans.shape_[1] + a];
-								}
-								count--;
-							}
 						}
-						else {
-							if (!check[j]) {
+						else {//ゼ计
+							if (!check[j]) {//ゼ倒把计ぇゼ计
 								ans.data_[j*ans.shape_[1] + t] = 1;
+								solution[t] -= tmp.data_[i*tmp.shape_[1] + j];
 								t++;
 							}
-							for (int a = 0; a < ans.shape_[1]; a++) {
-								tmp[a] -= LU[1].data_[i*this->shape_[1] + j] * ans.data_[j*ans.shape_[1] + a];
+							else {//计
+								for (int col = 0; col < solution.size(); col++) {
+									solution[col] -= tmp.data_[i*tmp.shape_[1] + j] * ans.data_[j*ans.shape_[1] + col];
+								}
 							}
 							count--;
 						}
@@ -659,10 +664,9 @@ valarray<Matrix> Matrix::Eigen() {
 			return ans;
 		}
 		else {
-			ans.resize(4);
 			Matrix E_value(2, 2);
-			E_value.data_[0] = (this->data_[0] + this->data_[3]) / (-2) + det;
-			E_value.data_[3] = (this->data_[0] + this->data_[3]) / (-2) - det;
+			E_value.data_[0] = ((this->data_[0] + this->data_[3]) + sqrt(det)) / (-2);
+			E_value.data_[3] = ((this->data_[0] + this->data_[3]) - sqrt(det)) / (-2);
 			ans[0] = E_value;
 			Matrix E_vector(2, 2);
 			Vector tmp(2);

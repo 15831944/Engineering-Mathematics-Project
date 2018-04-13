@@ -160,7 +160,7 @@ Vector Vector::Projection(const Vector& v) {
 		throw std::runtime_error("two vector are vertical");
 	Vector tmp = v;
 	tmp.Normalization();
-	return (tmp.Scalar(this->Component(v)));
+	return (tmp.Normalization().Scalar(this->Component(v)));
 }
 
 NumType Vector::TriangleArea(const Vector& v) {
@@ -226,7 +226,7 @@ valarray<Vector> Vector::Gram_Schmidt_Orthogonal(valarray<Vector>& v) {
 		}
 	}
 	for (int i = 0; i < tmp.size(); i++)
-		tmp[i].Normalization();
+		tmp[i]=tmp[i].Normalization();
 	return tmp;
 }
 
