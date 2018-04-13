@@ -119,7 +119,7 @@ string Matrix::ToString() {
 }
 
 bool Matrix::IsSquare() {
-	return this->shape_[0] > 1 && this->shape_[1] > 1 && this->shape_[0] == this->shape_[1];
+	return this->shape_[0] >= 1 && this->shape_[1] >= 1 && this->shape_[0] == this->shape_[1];
 }
 
 Matrix Matrix::MiniorMat_(int row, int col) {
@@ -267,7 +267,7 @@ NumType Matrix::Cofactor(int row, int col) {
 NumType Matrix::Det() {
 	// check
 	if (!this->IsSquare()) 
-		throw "Not a Square Matrix !";
+		throw std::runtime_error("Not a Square Matrix !");
 	//
 
 	return Det(*this);
