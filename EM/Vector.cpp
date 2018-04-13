@@ -204,12 +204,12 @@ bool Vector::LinearIndependent(const valarray<Vector>& v){
 		if(v[i].dim_!=dim)
 			throw "Dimension is not same!";
 	}
-	if (dim > v.size())//col>row
-		return false;
+	/*if (dim > v.size())//col>row
+		return false;*/
 	Matrix tmp(v.size(), dim);
 	for (int i = 0; i < v.size(); i++)
 		for (int j = 0; j < dim; j++)
-			tmp.data_[i*dim + j];
+			tmp.data_[i*dim + j]=v[i].data_[j];
 	if (tmp.Rank() == v.size())
 		return true;
 	else
