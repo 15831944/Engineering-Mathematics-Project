@@ -164,7 +164,8 @@ Vector Vector::Projection(const Vector& v) {
 }
 
 NumType Vector::TriangleArea(const Vector& v) {
-	return (this->Cross(v).Norm()/2.0);
+	return this->Norm()*v.Norm()*sin(this->Getangle(v)*PI/180.0f) / 2;
+	//return (this->Cross(v).Norm()/2.0);
 }
 
 bool Vector::Parallel(const Vector& v) {
