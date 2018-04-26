@@ -169,16 +169,14 @@ NumType Vector::TriangleArea(const Vector& v) {
 }
 
 bool Vector::Parallel(const Vector& v) {
-	if (this->dim_ != v.dim_)
-		throw std::runtime_error("Dimension is not same!");
-	else {
-		for (int i = 0; i < this->dim_ - 1; i++)
-		{
-			if (this->data_[i] / v.data_[i] != this->data_[i + 1] / v.data_[i + 1])
-				return false;
-		}
-		return true;
+	valarray<Vector> tmp;
+	tmp.resize(1);
+	tmp[0] = v;
+	if (this->LinearIndependent(tmp)) {
+		return false;
 	}
+	else
+		return true;
 }
 
 bool Vector::Orthogonal(const Vector& v) {
