@@ -468,6 +468,7 @@ Matrix Matrix::SolveLinear(const Matrix& m) {//Ax=B
 			return ans;
 		}
 		else {//°Ñ¼Æ¸Ñ
+			throw std::runtime_error("Error!");
 			valarray<Matrix> LU;
 			LU.resize(2);
 			LU = this->reff();
@@ -650,46 +651,42 @@ valarray<Matrix> Matrix::Eigen() {
 		if (det < 0 && abs(det) >=0.000001 )
 			throw std::runtime_error("Not support imaginary number solution!");
 		else if (abs(det) <= 0.000001) {
-			Matrix E_value(2,2);
-			E_value.data_[0] = (this->data_[0]+this->data_[3])/2;
-			E_value.data_[3] = E_value.data_[0];
-			ans[0] = E_value;
-			Matrix E_vector(2, 2);
+			NumType v1, v2;
+			v1 = ((this->data_[0] + this->data_[3]) + sqrt(det)) / 2;
+			Matrix K1(2,1);
+			NumType a1, a2;
+			a1 = this->data_[0] - v1;
+			a2 = this->data_[1];
 			Vector tmp(2);
-			tmp.data_[0] = this->data_[0] - E_value.data_[0];
-			tmp.data_[1] = this->data_[2];
-			E_vector.data_[0] = tmp.Normalization().data_[0];
-			E_vector.data_[1] = E_vector.data_[0];
-			E_vector.data_[2] = tmp.Normalization().data_[1];
-			E_vector.data_[3] = E_vector.data_[2];
-			ans[1] = E_vector;
-			return ans;
-		}
-		else {
-			Matrix E_value(2,2);
-			E_value.data_[0] = ((this->data_[0] + this->data_[3]) + sqrt(det)) / 2;
-			E_value.data_[3] = ((this->data_[0] + this->data_[3]) - sqrt(det)) / 2;
-			ans[0] = E_value;
-			Matrix E_vector(2, 2);
-			Vector tmp(2);
-			tmp.data_[0] = this->data_[0] - E_value.data_[0];
-			tmp.data_[1] = this->data_[2];
-			E_vector.data_[1] = tmp.Normalization().data_[0];
-			E_vector.data_[3] = tmp.Normalization().data_[1];
-			if (E_vector.data_[1] < 0 && E_vector.data_[3] < 0) {
-				E_vector.data_[1] *= -1;
-				E_vector.data_[3] *= -1;
-			}
+			tmp.data_[0] = a1;
+			tmp.data_[1] = -a2;
+			tmp = tmp.Normalization();
+			K1.data_[0] = tmp.data_[0];
+			K1.data_[1] = tmp.data_[1];
 
-			tmp.data_[0] = this->data_[0] - E_value.data_[3];
-			tmp.data_[1] = this->data_[2];
-			E_vector.data_[0] = tmp.Normalization().data_[0];
-			E_vector.data_[2] = tmp.Normalization().data_[1];
-			if (E_vector.data_[0] < 0 && E_vector.data_[2] < 0) {
-				E_vector.data_[0] *= -1;
-				E_vector.data_[2] *= -1;
-			}
-			ans[1] = E_vector;
+
+			v2 = ((this->data_[0] + this->data_[3]) - sqrt(det)) / 2;
+			Matrix K2(2, 1);
+			a1 = this->data_[0] - v1;
+			a2 = this->data_[1];
+			tmp.data_[0] = a1;
+			tmp.data_[1] = -a2;
+			tmp = tmp.Normalization();
+			K2.data_[0] = tmp.data_[0];
+			K2.data_[1] = tmp.data_[1];
+
+			Matrix P(2, 2);
+			P.data_[0] = K1.data_[0];
+			P.data_[1] = K2.data_[0];
+			P.data_[2] = K1.data_[1];
+			P.data_[3] = K2.data_[1];
+
+			Matrix D(2, 2);
+			D.data_[0] = v1;
+			D.data_[3] = v2;
+
+			ans[0] = D;
+			ans[1] = P;
 			return ans;
 		}
 	}
