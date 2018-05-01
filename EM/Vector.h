@@ -22,7 +22,7 @@ public:
 	NumType Component(const Vector&);
 	Vector Projection(const Vector& v);//project onto v
 	NumType TriangleArea(const Vector&);
-	bool Parallel(const Vector&);
+	bool Parallel(Vector&);
 	bool Orthogonal(const Vector&);
 	NumType Getangle(const Vector&);
 	Vector PlaneNormal(const Vector&);

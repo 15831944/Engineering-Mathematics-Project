@@ -168,15 +168,18 @@ NumType Vector::TriangleArea(const Vector& v) {
 	//return (this->Cross(v).Norm()/2.0);
 }
 
-bool Vector::Parallel(const Vector& v) {
-	valarray<Vector> tmp;
-	tmp.resize(1);
-	tmp[0] = v;
-	if (this->LinearIndependent(tmp)) {
-		return false;
+bool Vector::Parallel(Vector& v) {
+	if(this->dim_!=v.dim_)
+		throw std::runtime_error("Dimension is not the same");
+	Vector v1, v2;
+	v1 = this->Normalization();
+	v2 = v.Normalization();
+	for (int i = 0; i < v1.dim_; i++)
+	{
+		if (abs(v1.data_[i] - v2.data_[i]) > 0.000001)
+			return false;
 	}
-	else
-		return true;
+	return true;
 }
 
 bool Vector::Orthogonal(const Vector& v) {
