@@ -67,6 +67,9 @@ namespace EM {
 	private: System::Windows::Forms::Button^  button3;
 	private: System::Windows::Forms::ListBox^  EqtListBox;
 	private: System::Windows::Forms::Button^  button2;
+	private: System::Windows::Forms::TextBox^  intervalBBox;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::TextBox^  intervalABox;
 
 
 
@@ -94,6 +97,7 @@ namespace EM {
 			this->toolStripDropDownButton1 = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->載入檔案ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveResultsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->loadEqualToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
@@ -108,26 +112,28 @@ namespace EM {
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
-			this->loadEqualToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
-			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
-			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
-			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
-			this->EqtListBox = (gcnew System::Windows::Forms::ListBox());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
-			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
+			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->EqtListBox = (gcnew System::Windows::Forms::ListBox());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
+			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
+			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
+			this->intervalABox = (gcnew System::Windows::Forms::TextBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->intervalBBox = (gcnew System::Windows::Forms::TextBox());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->tabPage1->SuspendLayout();
 			this->tabPage2->SuspendLayout();
-			this->groupBox2->SuspendLayout();
-			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
+			this->groupBox3->SuspendLayout();
+			this->groupBox2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// toolStrip1
@@ -169,6 +175,13 @@ namespace EM {
 			this->saveResultsToolStripMenuItem->Size = System::Drawing::Size(160, 22);
 			this->saveResultsToolStripMenuItem->Text = L"Save Results";
 			this->saveResultsToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::saveResultsToolStripMenuItem_Click);
+			// 
+			// loadEqualToolStripMenuItem
+			// 
+			this->loadEqualToolStripMenuItem->Name = L"loadEqualToolStripMenuItem";
+			this->loadEqualToolStripMenuItem->Size = System::Drawing::Size(160, 22);
+			this->loadEqualToolStripMenuItem->Text = L"Load  Equation";
+			this->loadEqualToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::loadEqualToolStripMenuItem_Click);
 			// 
 			// groupBox1
 			// 
@@ -287,42 +300,92 @@ namespace EM {
 			this->tabPage2->Text = L"Optimization";
 			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
-			// loadEqualToolStripMenuItem
+			// groupBox4
 			// 
-			this->loadEqualToolStripMenuItem->Name = L"loadEqualToolStripMenuItem";
-			this->loadEqualToolStripMenuItem->Size = System::Drawing::Size(160, 22);
-			this->loadEqualToolStripMenuItem->Text = L"Load  Equation";
+			this->groupBox4->Controls->Add(this->button4);
+			this->groupBox4->Controls->Add(this->richTextBox1);
+			this->groupBox4->Location = System::Drawing::Point(15, 103);
+			this->groupBox4->Name = L"groupBox4";
+			this->groupBox4->Size = System::Drawing::Size(605, 366);
+			this->groupBox4->TabIndex = 2;
+			this->groupBox4->TabStop = false;
+			this->groupBox4->Text = L"Results";
+			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(473, 307);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(96, 29);
+			this->button4->TabIndex = 5;
+			this->button4->Text = L"Clear Result";
+			this->button4->UseVisualStyleBackColor = true;
+			// 
+			// richTextBox1
+			// 
+			this->richTextBox1->BackColor = System::Drawing::SystemColors::InactiveCaptionText;
+			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(136)));
+			this->richTextBox1->ForeColor = System::Drawing::SystemColors::Window;
+			this->richTextBox1->Location = System::Drawing::Point(14, 26);
+			this->richTextBox1->Name = L"richTextBox1";
+			this->richTextBox1->ReadOnly = true;
+			this->richTextBox1->Size = System::Drawing::Size(571, 327);
+			this->richTextBox1->TabIndex = 0;
+			this->richTextBox1->Text = L"";
+			// 
+			// groupBox3
+			// 
+			this->groupBox3->Controls->Add(this->button3);
+			this->groupBox3->Controls->Add(this->EqtListBox);
+			this->groupBox3->Location = System::Drawing::Point(626, 6);
+			this->groupBox3->Name = L"groupBox3";
+			this->groupBox3->Size = System::Drawing::Size(308, 463);
+			this->groupBox3->TabIndex = 1;
+			this->groupBox3->TabStop = false;
+			this->groupBox3->Text = L"Equation List";
+			// 
+			// button3
+			// 
+			this->button3->Location = System::Drawing::Point(184, 405);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(96, 29);
+			this->button3->TabIndex = 4;
+			this->button3->Text = L"Clear Equations";
+			this->button3->UseVisualStyleBackColor = true;
+			// 
+			// EqtListBox
+			// 
+			this->EqtListBox->FormattingEnabled = true;
+			this->EqtListBox->ItemHeight = 12;
+			this->EqtListBox->Location = System::Drawing::Point(16, 21);
+			this->EqtListBox->Name = L"EqtListBox";
+			this->EqtListBox->Size = System::Drawing::Size(277, 424);
+			this->EqtListBox->TabIndex = 0;
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->intervalBBox);
+			this->groupBox2->Controls->Add(this->label1);
+			this->groupBox2->Controls->Add(this->intervalABox);
 			this->groupBox2->Controls->Add(this->button2);
 			this->groupBox2->Controls->Add(this->OptWaySelect);
 			this->groupBox2->Controls->Add(this->initPointBox);
 			this->groupBox2->Controls->Add(this->nowEquationBox);
 			this->groupBox2->Location = System::Drawing::Point(15, 6);
 			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(605, 54);
+			this->groupBox2->Size = System::Drawing::Size(605, 91);
 			this->groupBox2->TabIndex = 0;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Optimizer";
 			// 
-			// nowEquationBox
+			// button2
 			// 
-			this->nowEquationBox->Location = System::Drawing::Point(6, 21);
-			this->nowEquationBox->Name = L"nowEquationBox";
-			this->nowEquationBox->ReadOnly = true;
-			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
-			this->nowEquationBox->TabIndex = 0;
-			// 
-			// initPointBox
-			// 
-			this->initPointBox->ForeColor = System::Drawing::SystemColors::MenuHighlight;
-			this->initPointBox->Location = System::Drawing::Point(211, 21);
-			this->initPointBox->Name = L"initPointBox";
-			this->initPointBox->Size = System::Drawing::Size(171, 22);
-			this->initPointBox->TabIndex = 1;
-			this->initPointBox->Text = L"0,0,0";
-			this->initPointBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->button2->Location = System::Drawing::Point(524, 16);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(75, 29);
+			this->button2->TabIndex = 3;
+			this->button2->Text = L"Run";
+			this->button2->UseVisualStyleBackColor = true;
 			// 
 			// OptWaySelect
 			// 
@@ -339,76 +402,48 @@ namespace EM {
 			this->OptWaySelect->Size = System::Drawing::Size(121, 21);
 			this->OptWaySelect->TabIndex = 2;
 			// 
-			// groupBox3
+			// initPointBox
 			// 
-			this->groupBox3->Controls->Add(this->button3);
-			this->groupBox3->Controls->Add(this->EqtListBox);
-			this->groupBox3->Location = System::Drawing::Point(626, 6);
-			this->groupBox3->Name = L"groupBox3";
-			this->groupBox3->Size = System::Drawing::Size(308, 463);
-			this->groupBox3->TabIndex = 1;
-			this->groupBox3->TabStop = false;
-			this->groupBox3->Text = L"Equation List";
+			this->initPointBox->ForeColor = System::Drawing::SystemColors::MenuHighlight;
+			this->initPointBox->Location = System::Drawing::Point(211, 21);
+			this->initPointBox->Name = L"initPointBox";
+			this->initPointBox->Size = System::Drawing::Size(171, 22);
+			this->initPointBox->TabIndex = 1;
+			this->initPointBox->Text = L"0,0,0";
+			this->initPointBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
-			// EqtListBox
+			// nowEquationBox
 			// 
-			this->EqtListBox->FormattingEnabled = true;
-			this->EqtListBox->ItemHeight = 12;
-			this->EqtListBox->Location = System::Drawing::Point(16, 21);
-			this->EqtListBox->Name = L"EqtListBox";
-			this->EqtListBox->Size = System::Drawing::Size(277, 424);
-			this->EqtListBox->TabIndex = 0;
+			this->nowEquationBox->Location = System::Drawing::Point(6, 21);
+			this->nowEquationBox->Name = L"nowEquationBox";
+			this->nowEquationBox->ReadOnly = true;
+			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
+			this->nowEquationBox->TabIndex = 0;
 			// 
-			// button2
+			// intervalABox
 			// 
-			this->button2->Location = System::Drawing::Point(524, 16);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(75, 29);
-			this->button2->TabIndex = 3;
-			this->button2->Text = L"Run";
-			this->button2->UseVisualStyleBackColor = true;
+			this->intervalABox->Location = System::Drawing::Point(6, 49);
+			this->intervalABox->Name = L"intervalABox";
+			this->intervalABox->Size = System::Drawing::Size(65, 22);
+			this->intervalABox->TabIndex = 4;
 			// 
-			// button3
+			// label1
 			// 
-			this->button3->Location = System::Drawing::Point(184, 405);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(96, 29);
-			this->button3->TabIndex = 4;
-			this->button3->Text = L"Clear Equations";
-			this->button3->UseVisualStyleBackColor = true;
-			// 
-			// groupBox4
-			// 
-			this->groupBox4->Controls->Add(this->button4);
-			this->groupBox4->Controls->Add(this->richTextBox1);
-			this->groupBox4->Location = System::Drawing::Point(15, 66);
-			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(605, 403);
-			this->groupBox4->TabIndex = 2;
-			this->groupBox4->TabStop = false;
-			this->groupBox4->Text = L"Results";
-			// 
-			// richTextBox1
-			// 
-			this->richTextBox1->BackColor = System::Drawing::SystemColors::InactiveCaptionText;
-			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"新細明體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->richTextBox1->ForeColor = System::Drawing::SystemColors::Window;
-			this->richTextBox1->Location = System::Drawing::Point(17, 22);
-			this->richTextBox1->Name = L"richTextBox1";
-			this->richTextBox1->ReadOnly = true;
-			this->richTextBox1->Size = System::Drawing::Size(571, 342);
-			this->richTextBox1->TabIndex = 0;
-			this->richTextBox1->Text = L"";
+			this->label1->Location = System::Drawing::Point(77, 49);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(16, 16);
+			this->label1->TabIndex = 5;
+			this->label1->Text = L"~";
 			// 
-			// button4
+			// intervalBBox
 			// 
-			this->button4->Location = System::Drawing::Point(492, 370);
-			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(96, 29);
-			this->button4->TabIndex = 5;
-			this->button4->Text = L"Clear Result";
-			this->button4->UseVisualStyleBackColor = true;
+			this->intervalBBox->Location = System::Drawing::Point(99, 49);
+			this->intervalBBox->Name = L"intervalBBox";
+			this->intervalBBox->Size = System::Drawing::Size(65, 22);
+			this->intervalBBox->TabIndex = 6;
 			// 
 			// WinForm
 			// 
@@ -432,10 +467,10 @@ namespace EM {
 			this->tabControl1->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
 			this->tabPage2->ResumeLayout(false);
+			this->groupBox4->ResumeLayout(false);
+			this->groupBox3->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
-			this->groupBox3->ResumeLayout(false);
-			this->groupBox4->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -459,5 +494,6 @@ namespace EM {
 private: System::Void toolStripButton1_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void loadEqualToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }
