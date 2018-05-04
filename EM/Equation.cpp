@@ -135,3 +135,46 @@ NumType Equation::calcEquation(Equation eqt, NumType X = 0, NumType Y = 0) {
 	}
 	return result;
 }
+
+Equation Equation::operator=(const Equation& rhs) {
+	this->polynomial_ = rhs.polynomial_;
+	return *this;
+}
+
+Equation Equation::operator=(const string& rhs) {
+	*this = Equation(rhs);
+	return *this;
+}
+
+Equation Equation::PartialDerivative(char respectTo) {
+	Equation result = *this;
+	if (respectTo == 'x') {
+		for (int i = 0; i < result.polynomial_.size(); ++i) {
+			// no x term
+			if (result.polynomial_[i].powX == 0.0) {
+				result.polynomial_.erase(result.polynomial_.begin() + i);
+				--i;
+			}
+			else {
+				// partial derivative
+				result.polynomial_[i].coef *= result.polynomial_[i].powX;
+				result.polynomial_[i].powX -= 1;
+			}
+		}
+	}
+	else if (respectTo == 'y') {
+		for (int i = 0; i < result.polynomial_.size(); ++i) {
+			// no y term
+			if (result.polynomial_[i].powY == 0.0) {
+				result.polynomial_.erase(result.polynomial_.begin() + i);
+				--i;
+			}
+			else {
+				// partial derivative
+				result.polynomial_[i].coef *= result.polynomial_[i].powY;
+				result.polynomial_[i].powY -= 1;
+			}
+		}
+	}
+	return result;
+}

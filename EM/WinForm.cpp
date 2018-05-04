@@ -29,9 +29,9 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 }
 
 System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
-	//Equation eq("x^2+x-2*x^0.5");
-
-	//std::cout << "guo";
+	Equation eq("x^2+x-2*x^0.5");
+	Equation d = eq.PartialDerivative('x');
+	std::cout << "guo";
 }
 
 System::Void EM::WinForm::cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex) {
