@@ -735,7 +735,7 @@ valarray<Matrix> Matrix::Eigen() {
 		if (det > 0.000001) {
 			throw std::runtime_error("Not support imaginary number solution!");
 		}
-		else{
+		else {
 			NumType Alpha, Beta;
 			Alpha = (-pow(b, 3) / (27 * pow(a, 3)) + (-d) / (2 * a) + b * c / (6 * pow(a, 2)));
 			Beta = c / (3 * a) - pow(b, 2) / (9 * pow(a, 2));
@@ -743,42 +743,88 @@ valarray<Matrix> Matrix::Eigen() {
 			x[0] = -b / (3 * a) + 2 * sqrt(-Beta)*cos(acos(Alpha / (sqrt(pow(-Beta, 3)))) / 3);
 			x[1] = -b / (3 * a) + 2 * sqrt(-Beta)*cos((acos(Alpha / (sqrt(pow(-Beta, 3)))) + 2 * PI) / 3);
 			x[2] = -b / (3 * a) + 2 * sqrt(-Beta)*cos((acos(Alpha / (sqrt(pow(-Beta, 3)))) - 2 * PI) / 3);
+
+
+			Matrix D(3, 3);
+			D.data_[0] = x[0];
+			D.data_[4] = x[1];
+			D.data_[8] = x[2];
+
+			valarray<Vector> E_vector;
+			E_vector.resize(3);
+			for (int i = 0; i < 3; i++)
+			{
+				E_vector[i].data_.resize(3);
+				E_vector[i].dim_ = 3;
+				E_vector[i]=E_vector[i].Scalar(0);
+			}
+
+			for (int j = 0; j < 3; j++)
+			{
+
+				Matrix tmp = *this;
+				tmp.data_[0] -= x[j];
+				tmp.data_[4] -= x[j];
+				tmp.data_[8] -= x[j];
+
+				for (int row = 0; row < tmp.shape_[0]; row++) {
+				if (abs(tmp.data_[row*this->shape_[1] + row]) >= 0.000001) {//§PÂ_¬O§_¬°0
+					for (int col = row + 1; col < this->shape_[0]; col++) {
+						NumType mult = tmp.data_[col*this->shape_[1] + row] / tmp.data_[row*this->shape_[1] + row];
+						//tmp.data_[col*tmp.shape_[1] + row] = 0;
+						for (int i = row; i < tmp.shape_[1]; i++) {
+							tmp.data_[col*tmp.shape_[1] + i] -= mult * tmp.data_[row*this->shape_[1] + i];
+						}
+					}
+				}
+				else
+				{
+					for (int i = row + 1; i < tmp.shape_[0]; i++) {
+						if (abs(tmp.data_[i*tmp.shape_[1] + row]) >= 0.000001) {
+							tmp.swap(row, i);
+							row--;
+							break;
+						}
+					}
+				}
+			}
+
+				if (abs(tmp.data_[5]) >= 0.000001)
+				{
+					if (abs(tmp.data_[4]) >= 0.000001)
+					{
+						E_vector[j].data_[2] = 1;
+						E_vector[j].data_[1] = -tmp.data_[5] / tmp.data_[4];
+						if (abs(tmp.data_[0]) >= 0.000001)
+							E_vector[j].data_[0] = -(tmp.data_[1] * E_vector[j].data_[1] + tmp.data_[2] * E_vector[j].data_[2]) / tmp.data_[0];
+					}
+					else
+					{
+						E_vector[j].data_[2] = 0;
+						E_vector[j].data_[0] = tmp.data_[1];
+						E_vector[j].data_[1] = -tmp.data_[0];
+					}
+				}
+				else
+				{
+					E_vector[j].data_[1] = 0;
+					E_vector[j].data_[0] = tmp.data_[2];
+					E_vector[j].data_[2] = -tmp.data_[0];
+				}
+
+				E_vector[j].Normalization();
+			}
 			
-
-			Matrix E_value(3, 3);
-			E_value.data_[0] = x[0];
-			E_value.data_[4] = x[1];
-			E_value.data_[8] = x[2];
-
-			Matrix E_vector(3, 3);
-			
-			Vector tmp(3);
-			tmp.data_[0] = this->data_[0] - x[0];
-			tmp.data_[1] = this->data_[3];
-			tmp.data_[2] = this->data_[6];
-
-			E_vector.data_[0] = tmp.Normalization().data_[0];
-			E_vector.data_[3] = tmp.Normalization().data_[1];
-			E_vector.data_[6] = tmp.Normalization().data_[2];
-
-			tmp.data_[0] = this->data_[0] - x[1];
-			tmp.data_[1] = this->data_[3];
-			tmp.data_[2] = this->data_[6];
-
-			E_vector.data_[1] = tmp.Normalization().data_[0];
-			E_vector.data_[4] = tmp.Normalization().data_[1];
-			E_vector.data_[7] = tmp.Normalization().data_[2];
-
-			tmp.data_[0] = this->data_[0] - x[2];
-			tmp.data_[1] = this->data_[3];
-			tmp.data_[2] = this->data_[6];
-
-			E_vector.data_[2] = tmp.Normalization().data_[0];
-			E_vector.data_[5] = tmp.Normalization().data_[1];
-			E_vector.data_[8] = tmp.Normalization().data_[2];
-
-			ans[0] = E_value;
-			ans[1] = E_vector;
+			Matrix P(3, 3);
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					P.data_[3*j+i] = E_vector[i].data_[j];
+				}
+			}
+			ans[0] = D;
+			ans[1] = P;
 			return ans;
 		}
 	}
