@@ -650,10 +650,39 @@ valarray<Matrix> Matrix::Eigen() {
 		NumType det=(this->data_[0]+this->data_[3])*(this->data_[0] + this->data_[3])-4*(-this->data_[1]*this->data_[2]+this->data_[0]*this->data_[3]);
 		if (det < 0 && abs(det) >=0.000001 )
 			throw std::runtime_error("Not support imaginary number solution!");
-		else if (abs(det) <= 0.000001) {
+		else if (abs(det) <= 0.000001) {//­«®Ú
+			NumType v1, v2;
+			v1 = ((this->data_[0] + this->data_[3])) / 2;
+			Matrix K1(2, 1);
+			NumType a1, a2;
+			a1 = this->data_[0] - v1;
+			a2 = this->data_[1];
+			Vector tmp(2);
+			tmp.data_[0] = a1;
+			tmp.data_[1] = -a2;
+			tmp = tmp.Normalization();
+			K1.data_[0] = tmp.data_[0];
+			K1.data_[1] = tmp.data_[1];
+
+			Matrix P(2, 2);
+			P.data_[0] = K1.data_[0];
+			P.data_[1] = K1.data_[0];
+			P.data_[2] = K1.data_[1];
+			P.data_[3] = K1.data_[1];
+
+			Matrix D(2, 2);
+			D.data_[0] = v1;
+			D.data_[3] = v1;
+
+			ans[0] = D;
+			ans[1] = P;
+			return ans;
+		}
+		else
+		{
 			NumType v1, v2;
 			v1 = ((this->data_[0] + this->data_[3]) + sqrt(det)) / 2;
-			Matrix K1(2,1);
+			Matrix K1(2, 1);
 			NumType a1, a2;
 			a1 = this->data_[0] - v1;
 			a2 = this->data_[1];
@@ -754,4 +783,34 @@ valarray<Matrix> Matrix::Eigen() {
 		}
 	}
 	
+}
+
+valarray<Matrix> Matrix::PowerEigen() {
+	if (!IsSquare())
+		throw std::runtime_error("not a square");
+	int times=15;
+	Matrix tmp;
+	tmp.shape_[0] = this->shape_[0];
+	tmp.shape_[1] = 1;
+	tmp.data_.resize(tmp.shape_[0]);
+	for (int i = 0; i < tmp.data_.size(); i++)
+		tmp.data_[i] = 1;
+	for (int i = 0; i < times; i++)
+		tmp = *this*tmp;
+	valarray<NumType> data;
+	data = tmp.data_;
+	Vector ans(data);
+	Matrix E_value(1,1);
+	E_value.data_[0] = ans.Norm();
+	ans = ans.Normalization();
+	data = ans.data_;
+	Matrix E_vector;
+	E_vector.shape_[0] = this->shape_[0];
+	E_vector.shape_[1] = 1;
+	E_vector.data_ = data;
+	valarray<Matrix> eigen;
+	eigen.resize(2);
+	eigen[0] = E_value;
+	eigen[1] = E_vector;
+	return eigen;
 }
