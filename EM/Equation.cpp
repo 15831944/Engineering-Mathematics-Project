@@ -34,7 +34,7 @@ inline NumType getNum(const string& equation, size_t& nowPosi) {
 
 Equation::Equation(string equation) {
 	// 0 nomial will have bug 
-
+	dim_ = 1;
 	equation.erase(std::remove(equation.begin(), equation.end(), '*'), equation.end());
 	Nomial nowNomial;
 	bool neg;
@@ -93,6 +93,7 @@ Equation::Equation(string equation) {
 		
 		// check y
 		if (equation[nowPosi] == 'y') {
+			dim_ = 2;
 			nowNomial.powY = 1;
 			if (nowPosi + 1 >= equation.length()) {
 				this->polynomial_.push_back(nowNomial);
@@ -128,8 +129,10 @@ vector<string> loadEquations(string path) {
 	return display;
 }
 
-NumType Equation::calcEquation(Equation eqt, NumType X = 0, NumType Y = 0) {
-	NumType result = 0;
+NumType Equation::calcEquation(Equation eqt,Vector vec) {
+	NumType result = 0,X=vec.data_[0],Y=0;
+	if (vec.dim_ == 2)
+		Y = vec.data_[1];
 	for (int i = 0; i < eqt.polynomial_.size(); ++i) {
 		result += eqt.polynomial_[i].coef * pow(X, eqt.polynomial_[i].powX) * pow(Y, eqt.polynomial_[i].powY);
 	}
@@ -177,4 +180,8 @@ Equation Equation::PartialDerivative(char respectTo) {
 		}
 	}
 	return result;
+}
+
+int Equation::getDim() {
+	return this->dim_;
 }

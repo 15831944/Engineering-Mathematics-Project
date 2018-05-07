@@ -24,12 +24,12 @@ class Equation
 {
 private:
 	vector<Nomial> polynomial_;
-	
+	int dim_;
 
 public:
 	Equation(string);
-	
-	static NumType calcEquation(Equation, NumType, NumType);
+	int getDim();
+	static NumType calcEquation(Equation, Vector);
 	Equation PartialDerivative(char respectTo);
 
 	Equation operator=(const Equation& rhs);
