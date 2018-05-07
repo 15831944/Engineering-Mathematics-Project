@@ -70,6 +70,7 @@ namespace EM {
 	private: System::Windows::Forms::TextBox^  intervalBBox;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::TextBox^  intervalABox;
+	private: System::Windows::Forms::Label^  label2;
 
 
 
@@ -126,6 +127,7 @@ namespace EM {
 			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
 			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
 			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
@@ -361,9 +363,11 @@ namespace EM {
 			this->EqtListBox->Name = L"EqtListBox";
 			this->EqtListBox->Size = System::Drawing::Size(277, 424);
 			this->EqtListBox->TabIndex = 0;
+			this->EqtListBox->SelectedIndexChanged += gcnew System::EventHandler(this, &WinForm::EqtListBox_SelectedIndexChanged);
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->label2);
 			this->groupBox2->Controls->Add(this->intervalBBox);
 			this->groupBox2->Controls->Add(this->label1);
 			this->groupBox2->Controls->Add(this->intervalABox);
@@ -381,11 +385,11 @@ namespace EM {
 			// intervalBBox
 			// 
 			this->intervalBBox->ForeColor = System::Drawing::SystemColors::MenuHighlight;
-			this->intervalBBox->Location = System::Drawing::Point(99, 49);
+			this->intervalBBox->Location = System::Drawing::Point(123, 49);
 			this->intervalBBox->Name = L"intervalBBox";
 			this->intervalBBox->Size = System::Drawing::Size(65, 22);
 			this->intervalBBox->TabIndex = 6;
-			this->intervalBBox->Text = L"10,10";
+			this->intervalBBox->Text = L"0,0";
 			this->intervalBBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label1
@@ -393,20 +397,20 @@ namespace EM {
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"新細明體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->label1->Location = System::Drawing::Point(77, 49);
+			this->label1->Location = System::Drawing::Point(101, 49);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(16, 16);
+			this->label1->Size = System::Drawing::Size(19, 16);
 			this->label1->TabIndex = 5;
-			this->label1->Text = L"~";
+			this->label1->Text = L"Y";
 			// 
 			// intervalABox
 			// 
 			this->intervalABox->ForeColor = System::Drawing::SystemColors::MenuHighlight;
-			this->intervalABox->Location = System::Drawing::Point(6, 49);
+			this->intervalABox->Location = System::Drawing::Point(30, 49);
 			this->intervalABox->Name = L"intervalABox";
 			this->intervalABox->Size = System::Drawing::Size(65, 22);
 			this->intervalABox->TabIndex = 4;
-			this->intervalABox->Text = L"-10,-10";
+			this->intervalABox->Text = L"-100,100";
 			this->intervalABox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// button2
@@ -451,6 +455,17 @@ namespace EM {
 			this->nowEquationBox->ReadOnly = true;
 			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
 			this->nowEquationBox->TabIndex = 0;
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"新細明體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(136)));
+			this->label2->Location = System::Drawing::Point(6, 49);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(19, 16);
+			this->label2->TabIndex = 7;
+			this->label2->Text = L"X";
 			// 
 			// WinForm
 			// 
@@ -503,5 +518,6 @@ private: System::Void toolStripButton1_Click(System::Object^  sender, System::Ev
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void loadEqualToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void EqtListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 };
 }

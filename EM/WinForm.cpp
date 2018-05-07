@@ -72,6 +72,11 @@ System::Void EM::WinForm::loadEqualToolStripMenuItem_Click(System::Object^  send
 	}
 }
 
+System::Void EM::WinForm::EqtListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+	this->nowEquationBox->Text = this->EqtListBox->SelectedItem->ToString();
+
+}
+
 Vector strToVec(string str) {
 	size_t nowPosi = 0, cammaPosi = str.find(',', nowPosi);
 	vector<size_t> cammaPosis;
@@ -92,6 +97,20 @@ Vector strToVec(string str) {
 	return point;
 }
 
+
+
+void GradientMethod(Equation eqt,Vector point,Vector limX,Vector limY) {
+	const NumType stepSize = 0.01;
+	// boundary check
+
+	// get gradient
+	 
+	// desent
+
+	// print
+
+}
+
 System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventArgs^  e) {
 	// optimization
 
@@ -99,14 +118,14 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	string eqtStr = msclr::interop::marshal_as< std::string >(this->nowEquationBox->Text);
 	string initPStr = msclr::interop::marshal_as< std::string >(this->initPointBox->Text);
 	string optMethod = msclr::interop::marshal_as< std::string >(this->OptWaySelect->Items[this->OptWaySelect->SelectedIndex]->ToString());
-	string intervalA = msclr::interop::marshal_as< std::string >(this->intervalABox->Text);
-	string intervalB = msclr::interop::marshal_as< std::string >(this->intervalBBox->Text);
+	string intervalX = msclr::interop::marshal_as< std::string >(this->intervalABox->Text);
+	string intervalY = msclr::interop::marshal_as< std::string >(this->intervalBBox->Text);
 
 	// convert
 	Equation eqt(eqtStr);
 	Vector initP = strToVec(initPStr);
-	Vector A = strToVec(intervalA);
-	Vector B = strToVec(intervalB);
+	Vector limX = strToVec(intervalX);
+	Vector limY = strToVec(intervalY);
 	
 	// call optimize
 	
