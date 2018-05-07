@@ -27,6 +27,7 @@ private:
 	int dim_;
 
 public:
+	Equation() {};
 	Equation(string);
 	int getDim();
 	static NumType calcEquation(Equation, Vector);

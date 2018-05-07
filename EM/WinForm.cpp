@@ -1,6 +1,7 @@
 #include "WinForm.h"
 #include "Interpreter.h"
 #include "Equation.h"
+#include "Optimization.h"
 #include <msclr/marshal_cppstd.h>
 
 
@@ -68,4 +69,36 @@ System::Void EM::WinForm::loadEqualToolStripMenuItem_Click(System::Object^  send
 	for (int i = 0; i < display.size(); ++i) {
 		this->EqtListBox->Items->Add(gcnew String(display[i].c_str()));
 	}
+}
+
+System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventArgs^  e) {
+	// optimization
+
+	// get info
+	string eqtStr = msclr::interop::marshal_as< std::string >(this->nowEquationBox->Text);
+	string initPStr = msclr::interop::marshal_as< std::string >(this->initPointBox->Text);
+	string optMethod = msclr::interop::marshal_as< std::string >(this->OptWaySelect->Items[this->OptWaySelect->SelectedIndex]->ToString());
+	string intervalA = msclr::interop::marshal_as< std::string >(this->intervalABox->Text);
+	string intervalB = msclr::interop::marshal_as< std::string >(this->intervalBBox->Text);
+
+	// convert init posi
+	size_t nowPosi = 0,cammaPosi = initPStr.find(',',nowPosi);
+	vector<size_t> cammaPosis;
+	while (cammaPosi != string::npos) {
+		cammaPosis.push_back(cammaPosi);
+		nowPosi = cammaPosi + 1;
+	}
+
+	Vector initPoint(cammaPosis.size()+1);
+
+	nowPosi = 0;
+	for (int i = 0; i < cammaPosis.size(); ++i) {
+		initPoint.data_[i] = std::stof(initPStr.substr(nowPosi, cammaPosis[i] - nowPosi));
+		nowPosi = cammaPosis[i] + 1;
+	}
+	initPoint.data_[initPoint.dim_-1] = std::stof(initPStr.substr(nowPosi, initPStr.size() - nowPosi));
+
+	cout << "guo";
+
+
 }

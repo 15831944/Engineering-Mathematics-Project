@@ -119,13 +119,13 @@ namespace EM {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->EqtListBox = (gcnew System::Windows::Forms::ListBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->intervalBBox = (gcnew System::Windows::Forms::TextBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->intervalABox = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
 			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
 			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
-			this->intervalABox = (gcnew System::Windows::Forms::TextBox());
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->intervalBBox = (gcnew System::Windows::Forms::TextBox());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
@@ -378,6 +378,31 @@ namespace EM {
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Optimizer";
 			// 
+			// intervalBBox
+			// 
+			this->intervalBBox->Location = System::Drawing::Point(99, 49);
+			this->intervalBBox->Name = L"intervalBBox";
+			this->intervalBBox->Size = System::Drawing::Size(65, 22);
+			this->intervalBBox->TabIndex = 6;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"新細明體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(136)));
+			this->label1->Location = System::Drawing::Point(77, 49);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(16, 16);
+			this->label1->TabIndex = 5;
+			this->label1->Text = L"~";
+			// 
+			// intervalABox
+			// 
+			this->intervalABox->Location = System::Drawing::Point(6, 49);
+			this->intervalABox->Name = L"intervalABox";
+			this->intervalABox->Size = System::Drawing::Size(65, 22);
+			this->intervalABox->TabIndex = 4;
+			// 
 			// button2
 			// 
 			this->button2->Location = System::Drawing::Point(524, 16);
@@ -386,6 +411,7 @@ namespace EM {
 			this->button2->TabIndex = 3;
 			this->button2->Text = L"Run";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &WinForm::button2_Click);
 			// 
 			// OptWaySelect
 			// 
@@ -409,7 +435,7 @@ namespace EM {
 			this->initPointBox->Name = L"initPointBox";
 			this->initPointBox->Size = System::Drawing::Size(171, 22);
 			this->initPointBox->TabIndex = 1;
-			this->initPointBox->Text = L"0,0,0";
+			this->initPointBox->Text = L"0,0";
 			this->initPointBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// nowEquationBox
@@ -419,31 +445,6 @@ namespace EM {
 			this->nowEquationBox->ReadOnly = true;
 			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
 			this->nowEquationBox->TabIndex = 0;
-			// 
-			// intervalABox
-			// 
-			this->intervalABox->Location = System::Drawing::Point(6, 49);
-			this->intervalABox->Name = L"intervalABox";
-			this->intervalABox->Size = System::Drawing::Size(65, 22);
-			this->intervalABox->TabIndex = 4;
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"新細明體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(136)));
-			this->label1->Location = System::Drawing::Point(77, 49);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(16, 16);
-			this->label1->TabIndex = 5;
-			this->label1->Text = L"~";
-			// 
-			// intervalBBox
-			// 
-			this->intervalBBox->Location = System::Drawing::Point(99, 49);
-			this->intervalBBox->Name = L"intervalBBox";
-			this->intervalBBox->Size = System::Drawing::Size(65, 22);
-			this->intervalBBox->TabIndex = 6;
 			// 
 			// WinForm
 			// 
@@ -495,5 +496,6 @@ private: System::Void toolStripButton1_Click(System::Object^  sender, System::Ev
 }
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void loadEqualToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }
