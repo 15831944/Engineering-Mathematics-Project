@@ -706,7 +706,7 @@ Var funcCale(string cmd, string argument) {
 		return result;
 	}
 	else if (cmd == "Eigen") {
-		if (args.size() != 1 || args[0].type != "Matrix")
+		if (args.size() != 2 || args[0].type != "Matrix" || args[1].type != "Matrix")
 			return Var{ "Error",new string("parameter wrong") };
 		result.type = "ArrayM";
 		result.data = new valarray<Matrix>(2);
@@ -729,6 +729,21 @@ Var funcCale(string cmd, string argument) {
 		result.data = new Matrix();;
 		try {
 			*ToMatrix(result.data) = ToMatrix(args[0].data)->LeastSquare(*ToMatrix(args[1].data));
+		}
+		catch (const std::runtime_error& error) {
+			delete result.data;
+			result.type = "Error";
+			result.data = new string(error.what());
+		}
+		return result;
+	}
+	else if (cmd == "PowM") {
+		if (args.size() != 2 || args[0].type != "Matrix" || args[1].type != "Matrix")
+			return Var{ "Error",new string("parameter wrong") };
+		result.type = "ArrayM";
+		result.data = new valarray<Matrix>(2);
+		try {
+			(*(valarray<Matrix> *)result.data) = ToMatrix(args[0].data)->PowerEigen();
 		}
 		catch (const std::runtime_error& error) {
 			delete result.data;
