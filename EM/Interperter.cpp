@@ -706,7 +706,7 @@ Var funcCale(string cmd, string argument) {
 		return result;
 	}
 	else if (cmd == "Eigen") {
-		if (args.size() != 2 || args[0].type != "Matrix" || args[1].type != "Matrix")
+		if (args.size() != 1 || args[0].type != "Matrix")
 			return Var{ "Error",new string("parameter wrong") };
 		result.type = "ArrayM";
 		result.data = new valarray<Matrix>(2);
@@ -738,7 +738,7 @@ Var funcCale(string cmd, string argument) {
 		return result;
 	}
 	else if (cmd == "PowM") {
-		if (args.size() != 2 || args[0].type != "Matrix" || args[1].type != "Matrix")
+		if (args.size() != 1 || args[0].type != "Matrix")
 			return Var{ "Error",new string("parameter wrong") };
 		result.type = "ArrayM";
 		result.data = new valarray<Matrix>(2);

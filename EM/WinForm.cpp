@@ -77,7 +77,7 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	// get info
 	string eqtStr = msclr::interop::marshal_as< std::string >(this->nowEquationBox->Text);
 	string initPStr = msclr::interop::marshal_as< std::string >(this->initPointBox->Text);
-	string optMethod = msclr::interop::marshal_as< std::string >(this->OptWaySelect->Items[this->OptWaySelect->SelectedIndex]->ToString());
+	//string optMethod = msclr::interop::marshal_as< std::string >(this->OptWaySelect->Items[this->OptWaySelect->SelectedIndex]->ToString());
 	string intervalA = msclr::interop::marshal_as< std::string >(this->intervalABox->Text);
 	string intervalB = msclr::interop::marshal_as< std::string >(this->intervalBBox->Text);
 
@@ -87,6 +87,7 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	while (cammaPosi != string::npos) {
 		cammaPosis.push_back(cammaPosi);
 		nowPosi = cammaPosi + 1;
+		cammaPosi = initPStr.find(',', nowPosi);
 	}
 
 	Vector initPoint(cammaPosis.size()+1);
