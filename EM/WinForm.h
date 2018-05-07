@@ -380,10 +380,13 @@ namespace EM {
 			// 
 			// intervalBBox
 			// 
+			this->intervalBBox->ForeColor = System::Drawing::SystemColors::MenuHighlight;
 			this->intervalBBox->Location = System::Drawing::Point(99, 49);
 			this->intervalBBox->Name = L"intervalBBox";
 			this->intervalBBox->Size = System::Drawing::Size(65, 22);
 			this->intervalBBox->TabIndex = 6;
+			this->intervalBBox->Text = L"10,10";
+			this->intervalBBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label1
 			// 
@@ -398,10 +401,13 @@ namespace EM {
 			// 
 			// intervalABox
 			// 
+			this->intervalABox->ForeColor = System::Drawing::SystemColors::MenuHighlight;
 			this->intervalABox->Location = System::Drawing::Point(6, 49);
 			this->intervalABox->Name = L"intervalABox";
 			this->intervalABox->Size = System::Drawing::Size(65, 22);
 			this->intervalABox->TabIndex = 4;
+			this->intervalABox->Text = L"-10,-10";
+			this->intervalABox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// button2
 			// 

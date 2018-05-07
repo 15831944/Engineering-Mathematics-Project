@@ -30,9 +30,10 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 }
 
 System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
-	Equation eq("x^2+x-2*x^0.5");
+	this->OptWaySelect->SelectedIndex = 0;
+	/*Equation eq("x^2+x-2*x^0.5");
 	Equation d = eq.PartialDerivative('x');
-	std::cout << "guo";
+	std::cout << "guo";*/
 }
 
 System::Void EM::WinForm::cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex) {
@@ -71,35 +72,44 @@ System::Void EM::WinForm::loadEqualToolStripMenuItem_Click(System::Object^  send
 	}
 }
 
+Vector strToVec(string str) {
+	size_t nowPosi = 0, cammaPosi = str.find(',', nowPosi);
+	vector<size_t> cammaPosis;
+	while (cammaPosi != string::npos) {
+		cammaPosis.push_back(cammaPosi);
+		nowPosi = cammaPosi + 1;
+		cammaPosi = str.find(',', nowPosi);
+	}
+
+	Vector point(cammaPosis.size() + 1);
+
+	nowPosi = 0;
+	for (int i = 0; i < cammaPosis.size(); ++i) {
+		point.data_[i] = std::stof(str.substr(nowPosi, cammaPosis[i] - nowPosi));
+		nowPosi = cammaPosis[i] + 1;
+	}
+	point.data_[point.dim_ - 1] = std::stof(str.substr(nowPosi, str.size() - nowPosi));
+	return point;
+}
+
 System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventArgs^  e) {
 	// optimization
 
 	// get info
 	string eqtStr = msclr::interop::marshal_as< std::string >(this->nowEquationBox->Text);
 	string initPStr = msclr::interop::marshal_as< std::string >(this->initPointBox->Text);
-	//string optMethod = msclr::interop::marshal_as< std::string >(this->OptWaySelect->Items[this->OptWaySelect->SelectedIndex]->ToString());
+	string optMethod = msclr::interop::marshal_as< std::string >(this->OptWaySelect->Items[this->OptWaySelect->SelectedIndex]->ToString());
 	string intervalA = msclr::interop::marshal_as< std::string >(this->intervalABox->Text);
 	string intervalB = msclr::interop::marshal_as< std::string >(this->intervalBBox->Text);
 
-	// convert init posi
-	size_t nowPosi = 0,cammaPosi = initPStr.find(',',nowPosi);
-	vector<size_t> cammaPosis;
-	while (cammaPosi != string::npos) {
-		cammaPosis.push_back(cammaPosi);
-		nowPosi = cammaPosi + 1;
-		cammaPosi = initPStr.find(',', nowPosi);
-	}
-
-	Vector initPoint(cammaPosis.size()+1);
-
-	nowPosi = 0;
-	for (int i = 0; i < cammaPosis.size(); ++i) {
-		initPoint.data_[i] = std::stof(initPStr.substr(nowPosi, cammaPosis[i] - nowPosi));
-		nowPosi = cammaPosis[i] + 1;
-	}
-	initPoint.data_[initPoint.dim_-1] = std::stof(initPStr.substr(nowPosi, initPStr.size() - nowPosi));
-
-	cout << "guo";
+	// convert
+	Equation eqt(eqtStr);
+	Vector initP = strToVec(initPStr);
+	Vector A = strToVec(intervalA);
+	Vector B = strToVec(intervalB);
+	
+	// call optimize
+	
 
 
 }
