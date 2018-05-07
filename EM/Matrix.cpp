@@ -687,8 +687,8 @@ valarray<Matrix> Matrix::Eigen() {
 			a1 = this->data_[0] - v1;
 			a2 = this->data_[1];
 			Vector tmp(2);
-			tmp.data_[0] = a1;
-			tmp.data_[1] = -a2;
+			tmp.data_[0] = a2;
+			tmp.data_[1] = -a1;
 			tmp = tmp.Normalization();
 			K1.data_[0] = tmp.data_[0];
 			K1.data_[1] = tmp.data_[1];
@@ -696,10 +696,10 @@ valarray<Matrix> Matrix::Eigen() {
 
 			v2 = ((this->data_[0] + this->data_[3]) - sqrt(det)) / 2;
 			Matrix K2(2, 1);
-			a1 = this->data_[0] - v1;
+			a1 = this->data_[0] - v2;
 			a2 = this->data_[1];
-			tmp.data_[0] = a1;
-			tmp.data_[1] = -a2;
+			tmp.data_[0] = a2;
+			tmp.data_[1] = -a1;
 			tmp = tmp.Normalization();
 			K2.data_[0] = tmp.data_[0];
 			K2.data_[1] = tmp.data_[1];
@@ -812,7 +812,7 @@ valarray<Matrix> Matrix::Eigen() {
 					E_vector[j].data_[2] = -tmp.data_[0];
 				}
 
-				E_vector[j].Normalization();
+				E_vector[j]=E_vector[j].Normalization();
 			}
 			
 			Matrix P(3, 3);
