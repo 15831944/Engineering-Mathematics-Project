@@ -2,10 +2,11 @@
 
 #include "Equation.h"
 
-const int MAX_ITER = 10000;
-const NumType OptDlt = 0.001;
+const int MAX_ITER = 10000,WAYS = 5;
+const NumType OptDlt = 1e-6;
+enum {Gradient,Powell};
+const NumType StepSize[WAYS] = {0.1};
 
-Vector getGradient(Equation,Vector); // To determine what equation should partial derivative be store
+Vector getGradient(const Equation&, const Vector&);
 
-Vector getDirection(Equation,Vector,string);
-
+void optimize(const Equation&, Vector&, const string&,string&);

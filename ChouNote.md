@@ -4,5 +4,6 @@
 | UI | 5/2 | True |
 | Equation input and calc | 5/3 | True |
 | Derivative of Equation | 5/7 | True |
-| Optimization Base Framwork Design | 5/8 | False |
+| Optimization Base Framwork Design | 5/8 | True |
+| Gradient Decent | None | True |
 | Powell and Output | 5/9 | False |

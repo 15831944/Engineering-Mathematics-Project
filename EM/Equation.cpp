@@ -116,6 +116,13 @@ Equation::Equation(string equation) {
 		// push to polynomial
 		this->polynomial_.push_back(nowNomial);
 	}
+
+	// set directional derivative
+	this->directionalDerivatives.resize(this->dim_);
+	for (int i = 0; i < this->dim_; ++i) {
+		directionalDerivatives[i] = this->PartialDerivative('x' + i);
+	}
+
 }
 
 vector<string> loadEquations(string path) {
@@ -141,6 +148,7 @@ NumType Equation::calcEquation(Equation eqt,Vector vec) {
 
 Equation Equation::operator=(const Equation& rhs) {
 	this->polynomial_ = rhs.polynomial_;
+	this->dim_ = rhs.dim_;
 	return *this;
 }
 

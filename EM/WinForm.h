@@ -62,7 +62,8 @@ namespace EM {
 	private: System::Windows::Forms::TextBox^  nowEquationBox;
 	private: System::Windows::Forms::GroupBox^  groupBox4;
 	private: System::Windows::Forms::Button^  button4;
-	private: System::Windows::Forms::RichTextBox^  richTextBox1;
+	private: System::Windows::Forms::RichTextBox^  optRichBox;
+
 	private: System::Windows::Forms::GroupBox^  groupBox3;
 	private: System::Windows::Forms::Button^  button3;
 	private: System::Windows::Forms::ListBox^  EqtListBox;
@@ -115,11 +116,12 @@ namespace EM {
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
 			this->button4 = (gcnew System::Windows::Forms::Button());
-			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
+			this->optRichBox = (gcnew System::Windows::Forms::RichTextBox());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->EqtListBox = (gcnew System::Windows::Forms::ListBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->intervalBBox = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->intervalABox = (gcnew System::Windows::Forms::TextBox());
@@ -127,7 +129,6 @@ namespace EM {
 			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
 			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
 			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
-			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
@@ -305,7 +306,7 @@ namespace EM {
 			// groupBox4
 			// 
 			this->groupBox4->Controls->Add(this->button4);
-			this->groupBox4->Controls->Add(this->richTextBox1);
+			this->groupBox4->Controls->Add(this->optRichBox);
 			this->groupBox4->Location = System::Drawing::Point(15, 103);
 			this->groupBox4->Name = L"groupBox4";
 			this->groupBox4->Size = System::Drawing::Size(605, 366);
@@ -322,18 +323,18 @@ namespace EM {
 			this->button4->Text = L"Clear Result";
 			this->button4->UseVisualStyleBackColor = true;
 			// 
-			// richTextBox1
+			// optRichBox
 			// 
-			this->richTextBox1->BackColor = System::Drawing::SystemColors::InactiveCaptionText;
-			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->optRichBox->BackColor = System::Drawing::SystemColors::InactiveCaptionText;
+			this->optRichBox->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->richTextBox1->ForeColor = System::Drawing::SystemColors::Window;
-			this->richTextBox1->Location = System::Drawing::Point(14, 26);
-			this->richTextBox1->Name = L"richTextBox1";
-			this->richTextBox1->ReadOnly = true;
-			this->richTextBox1->Size = System::Drawing::Size(571, 327);
-			this->richTextBox1->TabIndex = 0;
-			this->richTextBox1->Text = L"";
+			this->optRichBox->ForeColor = System::Drawing::SystemColors::Window;
+			this->optRichBox->Location = System::Drawing::Point(14, 26);
+			this->optRichBox->Name = L"optRichBox";
+			this->optRichBox->ReadOnly = true;
+			this->optRichBox->Size = System::Drawing::Size(571, 327);
+			this->optRichBox->TabIndex = 0;
+			this->optRichBox->Text = L"";
 			// 
 			// groupBox3
 			// 
@@ -382,6 +383,17 @@ namespace EM {
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Optimizer";
 			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"新細明體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(136)));
+			this->label2->Location = System::Drawing::Point(6, 49);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(19, 16);
+			this->label2->TabIndex = 7;
+			this->label2->Text = L"X";
+			// 
 			// intervalBBox
 			// 
 			this->intervalBBox->ForeColor = System::Drawing::SystemColors::MenuHighlight;
@@ -389,7 +401,7 @@ namespace EM {
 			this->intervalBBox->Name = L"intervalBBox";
 			this->intervalBBox->Size = System::Drawing::Size(65, 22);
 			this->intervalBBox->TabIndex = 6;
-			this->intervalBBox->Text = L"0,0";
+			this->intervalBBox->Text = L"-100,100";
 			this->intervalBBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label1
@@ -445,7 +457,6 @@ namespace EM {
 			this->initPointBox->Name = L"initPointBox";
 			this->initPointBox->Size = System::Drawing::Size(171, 22);
 			this->initPointBox->TabIndex = 1;
-			this->initPointBox->Text = L"0,0";
 			this->initPointBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// nowEquationBox
@@ -455,17 +466,6 @@ namespace EM {
 			this->nowEquationBox->ReadOnly = true;
 			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
 			this->nowEquationBox->TabIndex = 0;
-			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"新細明體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(136)));
-			this->label2->Location = System::Drawing::Point(6, 49);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(19, 16);
-			this->label2->TabIndex = 7;
-			this->label2->Text = L"X";
 			// 
 			// WinForm
 			// 

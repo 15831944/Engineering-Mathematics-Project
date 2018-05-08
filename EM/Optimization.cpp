@@ -1,28 +1,29 @@
 #include "Optimization.h"
 
 
-Vector getGradient(Equation eqt, Vector vec) {
-	// get directional derivation
-	vector<Equation> directionalDerivatives(vec.dim_);
-	for (int i = 0; i < vec.dim_; ++i) {
-		directionalDerivatives[i] = eqt.PartialDerivative('x' + i);
-	}
+Vector getGradient(const Equation& eqt, const Vector& vec) {
 	// get gradient
 	Vector gradient(vec.dim_);
 	for (int i = 0; i < vec.dim_; ++i) {
-		gradient.data_[i] = Equation::calcEquation(eqt, vec);
+		gradient.data_[i] = Equation::calcEquation(eqt.directionalDerivatives[i], vec);
 	}
 	return gradient;
 }
 
-Vector getDirection(Equation eqt, Vector vec, string method) {
+void optimize(const Equation& eqt, Vector& vec, const string& method, string& info) {
 	Vector direction;
-	if (method == "Powell Method") {
-
+	NumType val;
+	if (method == "Gradient Decent") {
+		direction = getGradient(eqt, vec).Scalar(-StepSize[Gradient]);
+		info += "\n point = " + vec.ToString();
+		val = Equation::calcEquation(eqt, vec);
+		info += "\n val = " + std::to_string(val);
+		info += "\n direction = " + direction.ToString();
+		vec = vec + direction;
+		val = Equation::calcEquation(eqt, vec);
+		info += "\n point = " + vec.ToString();
+		info += "\n val = " + std::to_string(val);
+		
 	}
-	else if (method == "Gradient Decent") {
-		direction = getGradient(eqt, vec).Scalar(-1);
-	}
 
-	return direction;
 }

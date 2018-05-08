@@ -24,6 +24,7 @@ class Equation
 {
 private:
 	vector<Nomial> polynomial_;
+	
 	int dim_;
 
 public:
@@ -35,6 +36,8 @@ public:
 
 	Equation operator=(const Equation& rhs);
 	Equation operator=(const string& rhs);
+
+	vector<Equation> directionalDerivatives;
 
 };
 

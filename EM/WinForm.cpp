@@ -99,16 +99,15 @@ Vector strToVec(string str) {
 
 
 
-void GradientMethod(Equation eqt,Vector point,Vector limX,Vector limY) {
-	const NumType stepSize = 0.01;
-	// boundary check
-
-	// get gradient
-	 
-	// desent
-
-	// print
-
+bool checkBound(Vector p, const Vector& limX, const Vector& limY) {
+	bool result;
+	if (p.dim_ == 1) {
+		result = p.data_[0] > limX.data_[0] && p.data_[0] < limX.data_[1];
+	}
+	else {
+		result = p.data_[0] > limX.data_[0] && p.data_[0] < limX.data_[1] && p.data_[1] > limY.data_[0] && p.data_[1] < limY.data_[1];
+	}
+	return result;
 }
 
 System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -129,6 +128,17 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	
 	// call optimize
 	
+	string info = "";
+	int iter_times = 0;
+	NumType gradient = getGradient(eqt, initP).Norm();
+	while (++iter_times < MAX_ITER && gradient > OptDlt && checkBound(initP,limX,limY)) {
+		info = "\n" + std::to_string(iter_times)+ " times iteration";
+		optimize(eqt, initP, optMethod, info);
 
+		this->optRichBox->AppendText(gcnew String(info.c_str()));
+		gradient = getGradient(eqt, initP).Norm();
+		Application::DoEvents();
+	}
+	
 
 }
