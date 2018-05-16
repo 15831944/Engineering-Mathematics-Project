@@ -463,7 +463,6 @@ namespace EM {
 			// 
 			this->nowEquationBox->Location = System::Drawing::Point(6, 21);
 			this->nowEquationBox->Name = L"nowEquationBox";
-			this->nowEquationBox->ReadOnly = true;
 			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
 			this->nowEquationBox->TabIndex = 0;
 			// 

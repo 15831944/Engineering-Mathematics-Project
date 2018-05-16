@@ -1,12 +1,14 @@
 #pragma once
 #include "Defines.h"
 #include "Matrix.h" 
+class Matrix;
 
 class Vector {
 public:
 	int dim_;
 	valarray<NumType> data_;
 	Vector();
+	Vector(Matrix);
 	Vector(int);
 	Vector(initializer_list<NumType>);
 	Vector(valarray<NumType>);

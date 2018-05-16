@@ -11,6 +11,11 @@ Vector::Vector(int dim) {
 	this->dim_ = dim;
 }
 
+Vector::Vector(Matrix m) {
+	this->dim_ = m.data_.size();
+	this->data_ = m.data_;
+}
+
 Vector::Vector(initializer_list<NumType> v) {
 	this->dim_ = (int)v.size();
 	this->data_.resize(this->dim_);

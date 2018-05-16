@@ -1,6 +1,7 @@
 #pragma once
 #include "Defines.h"
 #include "Vector.h"
+class Vector;
 
 class Matrix {
 public:
@@ -18,6 +19,8 @@ public:
 	Matrix operator=(const Matrix&);
 	Matrix operator=(initializer_list<NumType>);
 	Matrix operator*(const Matrix&);
+
+	Matrix operator*(const Vector&);
 	
 	int Rank();
 	Matrix Trans();

@@ -56,9 +56,7 @@ Matrix Matrix::operator=(const Matrix& m) {
 	this->shape_[0] = m.shape_[0];
 	this->shape_[1] = m.shape_[1];
 	this->data_.resize(m.shape_[0] * m.shape_[1]);
-	for (int i = 0; i < m.shape_[0] * m.shape_[1]; i++) {
-		this->data_[i] = m.data_[i];
-	}
+	this->data_ = m.data_;
 	return *this;
 }
 
@@ -92,6 +90,12 @@ Matrix Matrix::operator*(const Matrix& m) {
 		}
 		return result;
 	}
+}
+
+Matrix Matrix::operator*(const Vector& rhs) {
+	Matrix r(rhs.dim_, 1);
+	r.data_ = rhs.data_;
+	return *this * r;
 }
 
 string Matrix::getSizeInfo() {
@@ -241,7 +245,16 @@ Matrix Matrix::Inv() {
 	if (!this->IsSquare())
 		throw std::runtime_error("Not a Square Matrix !");
 	//
+	if (this->shape_[0] == 1) {
+		if(this->data_[0] == 0)
+			throw std::runtime_error("Invertable !");
+		Matrix inv(1, 1);
+		inv.data_[0] = 1 / this->data_[0];
+		return inv;
+	}
 
+
+	//
 	NumType det = this->Det();
 	if (det == 0.0)
 		throw std::runtime_error("singular");

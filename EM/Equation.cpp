@@ -36,6 +36,7 @@ Equation::Equation(string equation) {
 	// 0 nomial will have bug 
 	dim_ = 1;
 	equation.erase(std::remove(equation.begin(), equation.end(), '*'), equation.end());
+	equation.erase(std::remove(equation.begin(), equation.end(), ' '), equation.end());
 	Nomial nowNomial;
 	bool neg;
 	
@@ -123,6 +124,16 @@ Equation::Equation(string equation) {
 		directionalDerivatives[i] = this->PartialDerivative('x' + i);
 	}
 
+	// set second partial Derivatives
+
+	this->secondPartialDerivatives.resize(this->dim_ * this->dim_);
+	for (int i = 0; i < this->dim_; ++i) {
+		for (int j = 0; j < this->dim_; ++j) {
+			int ith = i * this->dim_ + j;
+			this->secondPartialDerivatives[ith] = this->directionalDerivatives[i].PartialDerivative('x' + j);
+		}
+	}
+
 }
 
 vector<string> loadEquations(string path) {
@@ -141,7 +152,7 @@ NumType Equation::calcEquation(Equation eqt,Vector vec) {
 	if (vec.dim_ == 2)
 		Y = vec.data_[1];
 	for (int i = 0; i < eqt.polynomial_.size(); ++i) {
-		result += eqt.polynomial_[i].coef * pow(X, eqt.polynomial_[i].powX) * pow(Y, eqt.polynomial_[i].powY);
+		result += eqt.polynomial_[i].coef *( (X==0.0 || eqt.polynomial_[i].powX==0.0)? 1:pow(X, eqt.polynomial_[i].powX)) * ((Y == 0.0 || eqt.polynomial_[i].powY == 0.0) ? 1:pow(Y, eqt.polynomial_[i].powY));
 	}
 	return result;
 }

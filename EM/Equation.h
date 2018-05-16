@@ -39,6 +39,8 @@ public:
 
 	vector<Equation> directionalDerivatives;
 
+	vector<Equation> secondPartialDerivatives;
+
 };
 
 extern vector<Equation> equations;

@@ -31,9 +31,10 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 
 System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
 	this->OptWaySelect->SelectedIndex = 0;
-	/*Equation eq("x^2+x-2*x^0.5");
-	Equation d = eq.PartialDerivative('x');
-	std::cout << "guo";*/
+	
+	// debug area
+	//x^2+x-2x^0.5
+	//7+x^2-3xy+3.25y^2-4y
 }
 
 System::Void EM::WinForm::cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex) {
@@ -139,6 +140,7 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 		gradient = getGradient(eqt, initP).Norm();
 		Application::DoEvents();
 	}
-	
+	info = "\n final Point " + initP.ToString();
+	this->optRichBox->AppendText(gcnew String(info.c_str()));
 
 }
