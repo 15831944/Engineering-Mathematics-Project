@@ -33,8 +33,12 @@ System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArg
 	this->OptWaySelect->SelectedIndex = 0;
 	
 	// debug area
-	//x^2+x-2x^0.5
-	//7+x^2-3xy+3.25y^2-4y
+	//Equation eqt("3+x^2-3xy+2.25y^2+y^2-4y+4");
+	//string info;
+	//optimize(eqt, Vector({0.5,0.5}), Vector({ -200,200 }), Vector({ -200,200 }), "Powell Method", info);
+	//
+	cout << "guo";
+	//
 }
 
 System::Void EM::WinForm::cmdBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ ex) {
@@ -134,7 +138,7 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	NumType gradient = getGradient(eqt, initP).Norm();
 	while (++iter_times < MAX_ITER && gradient > OptDlt && checkBound(initP,limX,limY)) {
 		info = "\n" + std::to_string(iter_times)+ " times iteration";
-		optimize(eqt, initP, optMethod, info);
+		optimize(eqt, initP,limX,limY, optMethod, info);
 
 		this->optRichBox->AppendText(gcnew String(info.c_str()));
 		gradient = getGradient(eqt, initP).Norm();
