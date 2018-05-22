@@ -57,6 +57,7 @@ NumType goldenSectionSearch(const Equation& eqt, const Vector& vecL, const Vecto
 }
 
 void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, const string& method, string& info) {
+	
 	Vector direction,gradient;
 	NumType val;
 	gradient = getGradient(eqt, vec);
@@ -71,9 +72,10 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 		vecL.data_[1] = limY.data_[0];
 	}
 
-	if (method == "Gradient Decent") {
-		direction = gradient.Scalar(-StepSize[Gradient]);
-		vec = vec + direction;
+	if (method == "Steep Decent") {
+		direction = gradient.Scalar(-1);
+		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, 1e-9, 1e9);
+		vec = vec + direction.Scalar(alpha);
 		info += "\n h = " + direction.ToString();
 	}
 	else if (method == "Newton Method") {
@@ -106,6 +108,51 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, s, 1e-9, 1e9);
 		vec = vec + s.Scalar(alpha);
 		info += "\n X" + std::to_string(vec.dim_ + 1) + " = " + vec.ToString();
+	}
+	else if (method == "Conjugate Gradient") {
+		static string func;
+		static Vector lastGradient;
+		static Vector lastDirection;
+
+		if (eqt.ToString() != func) {
+			func = eqt.ToString();
+			lastGradient = gradient;
+			direction = lastGradient.Scalar(-1);
+			lastDirection = direction;
+		}
+		else {
+			NumType beta = gradient.Dot(gradient) / lastGradient.Dot(lastGradient);
+			direction = gradient.Scalar(-1) + lastDirection.Scalar(beta);
+			lastGradient = gradient;
+			lastDirection = direction;
+
+		}
+		
+		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, 1e-9, 1e9);
+		vec = vec + direction.Scalar(alpha);
+		info += "\n S= " + direction.ToString();
+		info += "\n alpha= " + std::to_string(alpha);
+		info += "\n X= " + vec.ToString();
+	}
+	else if (method == "Quasi Newton") {
+		static string func;
+		static Matrix lastHInv;
+		Matrix HInv;
+		if (func != eqt.ToString()) {
+			lastHInv = Matrix(vec.dim_, vec.dim_);
+			// Set H to I
+			for (int i = 0; i < vec.dim_; ++i)
+				lastHInv.data_[i*vec.dim_ + i] = 1;	
+		}
+		direction = (lastHInv * gradient);
+		//DFP
+		HInv = lastHInv + Matrix::vecMulMat(vec, vec).Scale(vec.Dot(gradient)) - ((lastHInv*gradient)*((lastHInv*gradient).Trans())).Scale(1 / (Matrix(gradient).Trans() * (lastHInv*gradient)).data_[0]);
+		lastHInv = HInv;
+		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, 1e-9, 1e9);
+		vec = vec + direction.Scalar(alpha);
+		info += "\n S= " + direction.ToString();
+		info += "\n alpha= " + std::to_string(alpha);
+		info += "\n X= " + vec.ToString();
 	}
 	
 }

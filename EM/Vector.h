@@ -24,6 +24,7 @@ public:
 	NumType Component(const Vector&);
 	Vector Projection(const Vector& v);//project onto v
 	NumType TriangleArea(const Vector&);
+	NumType Dist(const Vector&);
 	bool Parallel(Vector&);
 	bool Orthogonal(const Vector&);
 	NumType Getangle(const Vector&);

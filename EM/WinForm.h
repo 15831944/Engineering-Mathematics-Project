@@ -442,7 +442,7 @@ namespace EM {
 				static_cast<System::Byte>(136)));
 			this->OptWaySelect->FormattingEnabled = true;
 			this->OptWaySelect->Items->AddRange(gcnew cli::array< System::Object^  >(5) {
-				L"Powell Method", L"Gradient Decent", L"Newton Method",
+				L"Powell Method", L"Steep Decent", L"Newton Method",
 					L"Conjugate Gradient", L"Quasi Newton"
 			});
 			this->OptWaySelect->Location = System::Drawing::Point(388, 21);

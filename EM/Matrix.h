@@ -14,6 +14,7 @@ public:
 
 	Matrix(int, int);
 	Matrix(int, int, initializer_list<NumType>);
+	Matrix(Vector);
 	Matrix operator+(const Matrix&);
 	Matrix operator-(const Matrix&);
 	Matrix operator=(const Matrix&);
@@ -45,8 +46,9 @@ public:
 	valarray<Matrix> PowerEigen();
 	void rowAdd(int rowFrom,NumType scale,int addTo);
 	void rowScale(int row, NumType scale);
-
+	Matrix Scale(NumType scale);
 	string getSizeInfo();
+	static Matrix vecMulMat(Vector, Vector);
 private:
 	void swap(int, int);
 };

@@ -8,4 +8,5 @@
 | Gradient Decent | None | True |
 | Powell and Output | 5/9 | Revise (output is done) |
 | Powell and golden search | 5/21 | True |
-| Conjugate Gradient | 5/22 | False |
+| Conjugate Gradient | 5/22 | True |
+| Quasi Newton | 5/23 | True |

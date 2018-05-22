@@ -12,6 +12,12 @@ Matrix::Matrix(int rSize, int cSize) {
 	this->shape_[1] = cSize;
 }
 
+Matrix::Matrix(Vector v) {
+	Matrix m(v.dim_, 1);
+	m.data_ = v.data_;
+	*this = m;
+}
+
 Matrix::Matrix(int rSize, int cSize, initializer_list<NumType> args) {
 	// check
 	if (rSize <= 0 || cSize <= 0)
@@ -120,6 +126,12 @@ string Matrix::ToString() {
 	}
 
 	return ss.str();
+}
+
+Matrix Matrix::Scale(NumType scale) {
+	Matrix result = *this;
+	result.data_ *= scale;
+	return result;
 }
 
 bool Matrix::IsSquare() {
@@ -872,4 +884,11 @@ valarray<Matrix> Matrix::PowerEigen() {
 	eigen[0] = E_value;
 	eigen[1] = E_vector;
 	return eigen;
+}
+
+Matrix Matrix::vecMulMat(Vector v1, Vector v2) {
+	Matrix m1(v1.dim_, 1), m2(1, v2.dim_);
+	m1.data_ = v1.data_;
+	m2.data_ = v2.data_;
+	return m1 * m2;
 }

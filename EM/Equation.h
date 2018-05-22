@@ -24,7 +24,7 @@ class Equation
 {
 private:
 	vector<Nomial> polynomial_;
-	
+	string str;
 	int dim_;
 
 public:
@@ -40,7 +40,7 @@ public:
 	vector<Equation> directionalDerivatives;
 
 	vector<Equation> secondPartialDerivatives;
-
+	string ToString() const;
 };
 
 extern vector<Equation> equations;

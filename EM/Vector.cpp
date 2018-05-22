@@ -133,6 +133,14 @@ NumType Vector::Norm() const{
 	return sqrt(tmp);
 }
 
+NumType Vector::Dist(const Vector& v) {
+	NumType tmp = 0;
+	for (int i = 0; i < this->dim_; i++) {
+		tmp += pow(this->data_[i]-v.data_[i], 2);
+	}
+	return sqrt(tmp);
+}
+
 Vector Vector::Normalization() {
 	if (this->Norm()==0)
 		return *this;

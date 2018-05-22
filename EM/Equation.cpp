@@ -34,6 +34,7 @@ inline NumType getNum(const string& equation, size_t& nowPosi) {
 
 Equation::Equation(string equation) {
 	// 0 nomial will have bug 
+	this->str = equation;
 	dim_ = 1;
 	equation.erase(std::remove(equation.begin(), equation.end(), '*'), equation.end());
 	equation.erase(std::remove(equation.begin(), equation.end(), ' '), equation.end());
@@ -160,6 +161,7 @@ NumType Equation::calcEquation(Equation eqt,Vector vec) {
 Equation Equation::operator=(const Equation& rhs) {
 	this->polynomial_ = rhs.polynomial_;
 	this->dim_ = rhs.dim_;
+	this->str = rhs.str;
 	return *this;
 }
 
@@ -203,4 +205,8 @@ Equation Equation::PartialDerivative(char respectTo) {
 
 int Equation::getDim() {
 	return this->dim_;
+}
+
+string Equation::ToString() const{
+	return this->str;
 }
