@@ -10,3 +10,4 @@
 | Powell and golden search | 5/21 | True |
 | Conjugate Gradient | 5/22 | True |
 | Quasi Newton | 5/23 | True |
+| Debug | 6/2 | False |

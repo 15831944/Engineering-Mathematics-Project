@@ -72,6 +72,11 @@ namespace EM {
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::TextBox^  intervalABox;
 	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::RadioButton^  DeriRadioButton;
+	private: System::Windows::Forms::RadioButton^  NumRadioButton;
+
+
+
 
 
 
@@ -129,6 +134,8 @@ namespace EM {
 			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
 			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
 			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
+			this->NumRadioButton = (gcnew System::Windows::Forms::RadioButton());
+			this->DeriRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
@@ -326,9 +333,9 @@ namespace EM {
 			// optRichBox
 			// 
 			this->optRichBox->BackColor = System::Drawing::SystemColors::InactiveCaptionText;
-			this->optRichBox->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->optRichBox->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->optRichBox->ForeColor = System::Drawing::SystemColors::Window;
+			this->optRichBox->ForeColor = System::Drawing::Color::Cyan;
 			this->optRichBox->Location = System::Drawing::Point(14, 26);
 			this->optRichBox->Name = L"optRichBox";
 			this->optRichBox->ReadOnly = true;
@@ -368,6 +375,8 @@ namespace EM {
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->DeriRadioButton);
+			this->groupBox2->Controls->Add(this->NumRadioButton);
 			this->groupBox2->Controls->Add(this->label2);
 			this->groupBox2->Controls->Add(this->intervalBBox);
 			this->groupBox2->Controls->Add(this->label1);
@@ -466,6 +475,29 @@ namespace EM {
 			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
 			this->nowEquationBox->TabIndex = 0;
 			// 
+			// NumRadioButton
+			// 
+			this->NumRadioButton->AutoSize = true;
+			this->NumRadioButton->Location = System::Drawing::Point(332, 55);
+			this->NumRadioButton->Name = L"NumRadioButton";
+			this->NumRadioButton->Size = System::Drawing::Size(107, 16);
+			this->NumRadioButton->TabIndex = 8;
+			this->NumRadioButton->Text = L"用數值計算微分";
+			this->NumRadioButton->UseVisualStyleBackColor = true;
+			// 
+			// DeriRadioButton
+			// 
+			this->DeriRadioButton->AutoSize = true;
+			this->DeriRadioButton->Checked = true;
+			this->DeriRadioButton->Location = System::Drawing::Point(211, 55);
+			this->DeriRadioButton->Name = L"DeriRadioButton";
+			this->DeriRadioButton->Size = System::Drawing::Size(107, 16);
+			this->DeriRadioButton->TabIndex = 9;
+			this->DeriRadioButton->TabStop = true;
+			this->DeriRadioButton->Text = L"用導函數算微分";
+			this->DeriRadioButton->UseVisualStyleBackColor = true;
+			this->DeriRadioButton->CheckedChanged += gcnew System::EventHandler(this, &WinForm::DeriRadioButton_CheckedChanged);
+			// 
 			// WinForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
@@ -518,5 +550,6 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 private: System::Void loadEqualToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void EqtListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void DeriRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 };
 }

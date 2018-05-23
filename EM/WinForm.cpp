@@ -29,15 +29,26 @@ System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sende
 	}
 }
 
+System::Void EM::WinForm::DeriRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+	
+}
+
 System::Void EM::WinForm::WinForm_Load(System::Object^  sender, System::EventArgs^  e) {
 	this->OptWaySelect->SelectedIndex = 0;
 	
+
+
 	// debug area
+	/*
 	Equation eqt("7+x^2-3xy+3.25y^2-4y");
 	string info;
+	Matrix h1, h2;
+	h1 = getHessian(eqt, Vector({ 50.0,30.0 }));
+	h2 = numericalGetHessian(eqt, Vector({ 50.0,30.0 }));
 	optimize(eqt, Vector({50.0,30.0}), Vector({ -50,70 }), Vector({ -70,70 }), "Conjugate Gradient", info);
 	
 	cout << "guo";
+	*/
 	//
 }
 
@@ -135,18 +146,36 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	
 	string info = "";
 	int iter_times = 0;
-	NumType gradient = getGradient(eqt, initP).Norm();
-	Vector lastP = getGradient(eqt, initP).Scalar(100) + initP;
+	NumType gradient = getGradient(eqt, initP,this->NumRadioButton->Checked).Norm();
+	Vector lastP = getGradient(eqt, initP, this->NumRadioButton->Checked).Scalar(100) + initP;
 	
-	while ((++iter_times < MAX_ITER) && (gradient > OptDlt) && checkBound(initP,limX,limY) && initP.Dist(lastP)>OptDlt) {
+	// print initial information
+
+	// set color
+	
+	info = "\nf = " + eqt.ToString() + "\n";
+	info += "initail Point = " + initP.ToString() + "\n";
+	info += "Optimization Method : " + optMethod + "\n";
+	info += "---------------------------------------------";
+	this->optRichBox->SelectionColor = Color::AntiqueWhite;;
+	this->optRichBox->AppendText(gcnew String(info.c_str()));
+	this->optRichBox->SelectionColor = this->optRichBox->ForeColor;
+	//
+	while ((++iter_times < MAX_ITER) && (gradient > OptDlt) && initP.Dist(lastP)>OptDlt) {
 		info = "\n" + std::to_string(iter_times)+ " times iteration";
 		lastP = initP;
-		optimize(eqt, initP,limX,limY, optMethod, info);
+		optimize(eqt, initP,limX,limY, optMethod, info, this->NumRadioButton->Checked,iter_times);
+		info += "\n------------------------------------------------";
 		this->optRichBox->AppendText(gcnew String(info.c_str()));
-		gradient = getGradient(eqt, initP).Norm();
+		gradient = getGradient(eqt, initP, this->NumRadioButton->Checked).Norm();
 		Application::DoEvents();
+		if (!checkBound(initP, limX, limY)) {
+			info = "\nout of domain, Try another initial point !!";
+			this->optRichBox->AppendText(gcnew String(info.c_str()));
+		}
 	}
-	info = "\n final Point " + initP.ToString();
+	info = "\n X = " + initP.ToString();
+	info += "\n min = " + std::to_string(Equation::calcEquation(eqt,initP));
 	this->optRichBox->AppendText(gcnew String(info.c_str()));
 
 }

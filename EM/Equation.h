@@ -13,6 +13,8 @@ using std::vector;
 only two variables x y
 */
 
+const NumType calcDlt = 1e-9;
+
 struct Nomial
 {
 	NumType powX;

@@ -38,6 +38,8 @@ Equation::Equation(string equation) {
 	dim_ = 1;
 	equation.erase(std::remove(equation.begin(), equation.end(), '*'), equation.end());
 	equation.erase(std::remove(equation.begin(), equation.end(), ' '), equation.end());
+	equation.erase(std::remove(equation.begin(), equation.end(), '('), equation.end());
+	equation.erase(std::remove(equation.begin(), equation.end(), ')'), equation.end());
 	Nomial nowNomial;
 	bool neg;
 	
@@ -149,9 +151,14 @@ vector<string> loadEquations(string path) {
 }
 
 NumType Equation::calcEquation(Equation eqt,Vector vec) {
-	NumType result = 0,X=vec.data_[0],Y=0;
+	NumType result = 0,X=vec.data_[0],Y= calcDlt;
 	if (vec.dim_ == 2)
 		Y = vec.data_[1];
+
+	if (std::abs(X) < calcDlt)
+		X = calcDlt;
+	else if (std::abs(Y) < calcDlt)
+		Y = calcDlt;
 	for (int i = 0; i < eqt.polynomial_.size(); ++i) {
 		result += eqt.polynomial_[i].coef *( (X==0.0 || eqt.polynomial_[i].powX==0.0)? 1:pow(X, eqt.polynomial_[i].powX)) * ((Y == 0.0 || eqt.polynomial_[i].powY == 0.0) ? 1:pow(Y, eqt.polynomial_[i].powY));
 	}

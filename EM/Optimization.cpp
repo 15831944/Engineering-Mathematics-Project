@@ -1,7 +1,22 @@
 #include "Optimization.h"
 
 
-Vector getGradient(const Equation& eqt, const Vector& vec) {
+Vector getGradient(const Equation& eqt, const Vector& vec, bool numWay) {
+	if (numWay)
+		return numericalGetGradient(eqt, vec);
+	else
+		return DeriGetGradient(eqt, vec);
+
+}
+
+Matrix getHessian(const Equation& eqt,const Vector& vec, bool numWay) {
+	if (numWay)
+		return numericalGetHessian(eqt, vec);
+	else
+		return DeriGetHessian(eqt, vec);
+}
+
+Vector DeriGetGradient(const Equation& eqt, const Vector& vec) {
 	// get gradient
 	Vector gradient(vec.dim_);
 	for (int i = 0; i < vec.dim_; ++i) {
@@ -10,7 +25,7 @@ Vector getGradient(const Equation& eqt, const Vector& vec) {
 	return gradient;
 }
 
-Matrix getHessian(const Equation& eqt, const Vector& vec) {
+Matrix DeriGetHessian(const Equation& eqt, const Vector& vec) {
 	// get hessian
 	Matrix hessian(vec.dim_, vec.dim_);
 	for (int i = 0; i < hessian.data_.size(); ++i) {
@@ -23,6 +38,17 @@ Matrix getHessian(const Equation& eqt, const Vector& vec) {
 
 }
 
+Vector calcBound(const Vector& vecL, const Vector& vecU, Vector p, Vector dir) {
+	Vector bound({BIGNUM,-BIGNUM});
+	for (int i = 0; i < p.dim_; ++i) {
+		NumType extrem1, extrem2;
+		extrem1 = (vecU.data_[i] - p.data_[i]) / dir.data_[i];
+		extrem2 = (vecL.data_[i] - p.data_[i]) / dir.data_[i];
+		bound.data_[0] = std::fmin(bound.data_[0], std::fmin(extrem1, extrem2));
+		bound.data_[1] = std::fmax(bound.data_[1], std::fmax(extrem1, extrem2));
+	}
+	return bound;
+}
 
 Vector goldenSectionSearch(const Equation& eqt, const Vector& vecL, const Vector& vecU, int searchDim) {
 	if (vecU.data_[searchDim] - vecL.data_[searchDim] < OptDlt)
@@ -44,7 +70,7 @@ Vector goldenSectionSearch(const Equation& eqt, const Vector& vecL, const Vector
 
 NumType goldenSectionSearch(const Equation& eqt, const Vector& vecL, const Vector& vecU, Vector p, Vector dir, NumType lowLim, NumType upLim) {
 	if (upLim - lowLim < OptDlt)
-		return upLim;
+		return (upLim+lowLim)/2;
 	NumType d = (upLim - lowLim) * GoldenRatio;
 	NumType a1 = lowLim + d,a2 = upLim - d;
 	NumType fv1 = Equation::calcEquation(eqt, p + dir.Scalar(a1)), fv2 = Equation::calcEquation(eqt, p + dir.Scalar(a2));
@@ -56,15 +82,13 @@ NumType goldenSectionSearch(const Equation& eqt, const Vector& vecL, const Vecto
 	}
 }
 
-void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, const string& method, string& info) {
+void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, const string& method, string& info, bool numWay,int iter) {
 	
 	Vector direction,gradient;
 	NumType val;
-	gradient = getGradient(eqt, vec);
-	info += "\n point = " + vec.ToString();
+	gradient = getGradient(eqt, vec,numWay);
 	val = Equation::calcEquation(eqt, vec);
-	info += "\n val = " + std::to_string(val);
-	Vector vecU(vec.dim_), vecL(vec.dim_);
+	Vector vecU(vec.dim_), vecL(vec.dim_),bound;
 	vecU.data_[0] = limX.data_[1];
 	vecL.data_[0] = limX.data_[0];
 	if (vec.dim_ == 2) {
@@ -74,19 +98,22 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 
 	if (method == "Steep Decent") {
 		direction = gradient.Scalar(-1);
-		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, 1e-9, 1e9);
+		bound = calcBound(vecL, vecU, vec, direction);
+		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, bound.data_[0], bound.data_[1]);
 		vec = vec + direction.Scalar(alpha);
 		info += "\n h = " + direction.ToString();
+		info += "\n alpha = " + std::to_string(alpha);
+		info += "\n x = " + vec.ToString();
 	}
 	else if (method == "Newton Method") {
-		Matrix hessian = getHessian(eqt, vec); 
-		info += "\n hessian = " + hessian.ToString();
+		Matrix hessian = getHessian(eqt, vec,numWay); 
+		info += "\n Hessian = \n" + hessian.ToString();
 		Matrix hessianInv = hessian.Inv();
-		info += "\n hessian Inv = " + hessianInv.ToString();
+		info += "Hessian Inverse = \n" + hessianInv.ToString();
 		hessianInv = hessianInv * gradient;
 		direction = Vector(hessianInv).Scalar(-1);
 		vec = vec + direction;
-		info += "\n h = " + direction.ToString();
+		info += "h = " + direction.ToString();
 	}
 	else if (method == "Powell Method") {
 		// one iteration
@@ -105,7 +132,9 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 			s.data_[i] = s.data_[i];
 		}
 		info += "\n i = " + std::to_string(vec.dim_+1);
-		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, s, 1e-9, 1e9);
+		bound = calcBound(vecL, vecU, vec, s);
+		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, s, bound.data_[0], bound.data_[1]);
+		info += "\n S = " + s.ToString();
 		vec = vec + s.Scalar(alpha);
 		info += "\n X" + std::to_string(vec.dim_ + 1) + " = " + vec.ToString();
 	}
@@ -114,7 +143,7 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 		static Vector lastGradient;
 		static Vector lastDirection;
 
-		if (eqt.ToString() != func) {
+		if (eqt.ToString() != func || iter==1) {
 			func = eqt.ToString();
 			lastGradient = gradient;
 			direction = lastGradient.Scalar(-1);
@@ -127,8 +156,8 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 			lastDirection = direction;
 
 		}
-		
-		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, 1e-9, 1e9);
+		bound = calcBound(vecL, vecU, vec, direction);
+		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, bound.data_[0], bound.data_[1]);
 		vec = vec + direction.Scalar(alpha);
 		info += "\n S= " + direction.ToString();
 		info += "\n alpha= " + std::to_string(alpha);
@@ -137,22 +166,68 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 	else if (method == "Quasi Newton") {
 		static string func;
 		static Matrix lastHInv;
+		static Vector lastGradient;
+		static Vector lastVec;
 		Matrix HInv;
-		if (func != eqt.ToString()) {
+		if (func != eqt.ToString() || iter==1) {
+			func = eqt.ToString();
 			lastHInv = Matrix(vec.dim_, vec.dim_);
 			// Set H to I
-			for (int i = 0; i < vec.dim_; ++i)
-				lastHInv.data_[i*vec.dim_ + i] = 1;	
+			//for (int i = 0; i < vec.dim_; ++i)
+			//	lastHInv.data_[i*vec.dim_ + i] = 1;
+			lastHInv = getHessian(eqt, vec, numWay);
+			info += "H init = \n" + lastHInv.ToString();
+			lastHInv = lastHInv.Inv();
+			info += "H init Inv = \n" + lastHInv.ToString();
+			lastGradient = gradient;
+			lastVec = vec;
+			direction = lastHInv * gradient;
+			vec = vec + direction;
+			info += "\n X= " + vec.ToString();
 		}
-		direction = (lastHInv * gradient);
-		//DFP
-		HInv = lastHInv + Matrix::vecMulMat(vec, vec).Scale(vec.Dot(gradient)) - ((lastHInv*gradient)*((lastHInv*gradient).Trans())).Scale(1 / (Matrix(gradient).Trans() * (lastHInv*gradient)).data_[0]);
-		lastHInv = HInv;
-		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, 1e-9, 1e9);
-		vec = vec + direction.Scalar(alpha);
-		info += "\n S= " + direction.ToString();
-		info += "\n alpha= " + std::to_string(alpha);
-		info += "\n X= " + vec.ToString();
+		else {
+			//DFP
+			Vector dgradient = gradient - lastGradient, dvec = vec - lastVec;
+			HInv = lastHInv + Matrix::vecMulMat(dvec, dvec).Scale(1 / (dvec.Dot(dgradient))) - ((lastHInv*dgradient)*((Matrix(dgradient).Trans())*lastHInv)).Scale(1 / (Matrix(dgradient).Trans() * (lastHInv*dgradient)).data_[0]);
+			lastHInv = HInv;
+			direction = (HInv * gradient);
+			bound = calcBound(vecL, vecU, vec, direction);
+			NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, bound.data_[0], bound.data_[1]);
+			vec = vec + direction.Scalar(alpha);
+			info += "\n h inv= \n" + HInv.ToString();
+			info += "\n alpha= " + std::to_string(alpha);
+			info += "\n X= " + vec.ToString();
+			lastGradient = gradient;
+			lastVec = vec;
+		}
 	}
 	
+}
+
+Vector numericalGetGradient(const Equation& eqt, const Vector& vec) {
+	Vector gradient(vec.dim_), vecp;
+	NumType val1 = Equation::calcEquation(eqt,vec), val2;
+	for (int i = 0; i < vec.dim_; ++i) {
+		vecp = vec;
+		vecp.data_[i] += NumDlt;
+		val2 = Equation::calcEquation(eqt, vecp);
+		gradient.data_[i] = (val2 - val1) / NumDlt;
+	}
+	return gradient;
+}
+
+
+Matrix numericalGetHessian(const Equation& eqt, const Vector& vec) {
+	Matrix hessian(vec.dim_, vec.dim_);
+	Vector grad1 = numericalGetGradient(eqt, vec), grad2,vecp;
+	for (int i = 0; i < vec.dim_; ++i) {
+		vecp = vec;
+		vecp.data_[i] += NumDlt;
+		grad2 = numericalGetGradient(eqt, vecp);
+		for (int j = 0; j < vec.dim_; ++j) {
+			int loca = i * vec.dim_ + j;
+			hessian.data_[loca] = (grad2.data_[j] - grad1.data_[j]) / NumDlt;
+		}
+	}
+	return hessian;
 }
