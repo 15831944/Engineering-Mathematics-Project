@@ -162,7 +162,7 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	this->optRichBox->SelectionColor = this->optRichBox->ForeColor;
 	//
 	while ((++iter_times < MAX_ITER) && (gradient > OptDlt) && initP.Dist(lastP)>OptDlt) {
-		info = "\n" + std::to_string(iter_times)+ " times iteration";
+		info = "\n" + std::to_string(iter_times)+ " times iteration\n";
 		lastP = initP;
 		optimize(eqt, initP,limX,limY, optMethod, info, this->NumRadioButton->Checked,iter_times);
 		info += "\n------------------------------------------------";

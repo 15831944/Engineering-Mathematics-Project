@@ -193,12 +193,13 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 			direction = (HInv * gradient);
 			bound = calcBound(vecL, vecU, vec, direction);
 			NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, bound.data_[0], bound.data_[1]);
+			lastVec = vec;
 			vec = vec + direction.Scalar(alpha);
 			info += "\n h inv= \n" + HInv.ToString();
 			info += "\n alpha= " + std::to_string(alpha);
 			info += "\n X= " + vec.ToString();
 			lastGradient = gradient;
-			lastVec = vec;
+			
 		}
 	}
 	
