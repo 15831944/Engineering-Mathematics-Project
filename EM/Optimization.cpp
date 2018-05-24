@@ -176,7 +176,7 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 			//for (int i = 0; i < vec.dim_; ++i)
 			//	lastHInv.data_[i*vec.dim_ + i] = 1;
 			lastHInv = getHessian(eqt, vec, numWay);
-			info += "H init = \n" + lastHInv.ToString();
+			info += "\nH init = \n" + lastHInv.ToString();
 			lastHInv = lastHInv.Inv();
 			info += "H init Inv = \n" + lastHInv.ToString();
 			lastGradient = gradient;

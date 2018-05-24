@@ -179,3 +179,7 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	this->optRichBox->AppendText(gcnew String(info.c_str()));
 
 }
+
+System::Void EM::WinForm::button4_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->optRichBox->Text = "";
+}
