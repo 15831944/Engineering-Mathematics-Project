@@ -7,6 +7,8 @@
 
 string resultRecord = "";
 
+
+
 System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->OFD->ShowDialog();
 	string path = msclr::interop::marshal_as< std::string >(this->OFD->FileName);
@@ -124,6 +126,17 @@ bool checkBound(Vector p, const Vector& limX, const Vector& limY) {
 		result = p.data_[0] > limX.data_[0] && p.data_[0] < limX.data_[1] && p.data_[1] > limY.data_[0] && p.data_[1] < limY.data_[1];
 	}
 	return result;
+}
+
+System::Void EM::WinForm::OptWaySelect_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+
+	this->newtonstep->Enabled = this->OptWaySelect->Items[this->OptWaySelect->SelectedIndex]->ToString() == "Newton Method";
+	
+}
+
+System::Void EM::WinForm::newtonstep_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+	newtonStepping = this->newtonstep->Checked;
+
 }
 
 System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventArgs^  e) {

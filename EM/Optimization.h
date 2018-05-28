@@ -5,6 +5,7 @@
 const int MAX_ITER = 10000;
 const NumType OptDlt = 1e-6, GoldenRatio = 0.61803398875f,NumDlt = 1e-6,BIGNUM=1e7;
 
+extern bool newtonStepping;
 
 Vector getGradient(const Equation&, const Vector&, bool);
 Matrix getHessian(const Equation&, const Vector&, bool);

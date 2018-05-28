@@ -74,6 +74,7 @@ namespace EM {
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::RadioButton^  DeriRadioButton;
 	private: System::Windows::Forms::RadioButton^  NumRadioButton;
+	private: System::Windows::Forms::CheckBox^  newtonstep;
 
 
 
@@ -126,6 +127,7 @@ namespace EM {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->EqtListBox = (gcnew System::Windows::Forms::ListBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->newtonstep = (gcnew System::Windows::Forms::CheckBox());
 			this->DeriRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->NumRadioButton = (gcnew System::Windows::Forms::RadioButton());
 			this->label2 = (gcnew System::Windows::Forms::Label());
@@ -376,6 +378,7 @@ namespace EM {
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->newtonstep);
 			this->groupBox2->Controls->Add(this->DeriRadioButton);
 			this->groupBox2->Controls->Add(this->NumRadioButton);
 			this->groupBox2->Controls->Add(this->label2);
@@ -392,6 +395,20 @@ namespace EM {
 			this->groupBox2->TabIndex = 0;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Optimizer";
+			// 
+			// newtonstep
+			// 
+			this->newtonstep->AutoSize = true;
+			this->newtonstep->Checked = true;
+			this->newtonstep->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->newtonstep->Enabled = false;
+			this->newtonstep->Location = System::Drawing::Point(446, 55);
+			this->newtonstep->Name = L"newtonstep";
+			this->newtonstep->Size = System::Drawing::Size(126, 16);
+			this->newtonstep->TabIndex = 10;
+			this->newtonstep->Text = L"¤û¹yªk¨Ï¥ÎStep Size";
+			this->newtonstep->UseVisualStyleBackColor = true;
+			this->newtonstep->CheckedChanged += gcnew System::EventHandler(this, &WinForm::newtonstep_CheckedChanged);
 			// 
 			// DeriRadioButton
 			// 
@@ -482,6 +499,7 @@ namespace EM {
 			this->OptWaySelect->Name = L"OptWaySelect";
 			this->OptWaySelect->Size = System::Drawing::Size(121, 21);
 			this->OptWaySelect->TabIndex = 2;
+			this->OptWaySelect->SelectedIndexChanged += gcnew System::EventHandler(this, &WinForm::OptWaySelect_SelectedIndexChanged);
 			// 
 			// initPointBox
 			// 
@@ -553,5 +571,7 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 private: System::Void EqtListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void DeriRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void OptWaySelect_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void newtonstep_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 };
 }

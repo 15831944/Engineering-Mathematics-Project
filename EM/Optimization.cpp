@@ -1,5 +1,6 @@
 #include "Optimization.h"
 
+bool newtonStepping = true;
 
 Vector getGradient(const Equation& eqt, const Vector& vec, bool numWay) {
 	if (numWay)
@@ -112,6 +113,12 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 		info += "Hessian Inverse = \n" + hessianInv.ToString();
 		hessianInv = hessianInv * gradient;
 		direction = Vector(hessianInv).Scalar(-1);
+		bound = calcBound(vecL, vecU, vec, direction);
+		if (newtonStepping) {
+			NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, bound.data_[0], bound.data_[1]);
+			info += "\n alpha = " + std::to_string(alpha);
+			direction = direction.Scalar(alpha);
+		}
 		vec = vec + direction;
 		info += "h = " + direction.ToString();
 	}
