@@ -11,4 +11,5 @@
 | Conjugate Gradient | 5/22 | True |
 | Quasi Newton | 5/23 | True |
 | Color issue | 6/1 | False|
+| Fix Det | 6/1 | False |
 | Debug | 6/2 | False |
