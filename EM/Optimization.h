@@ -3,7 +3,7 @@
 #include "Equation.h"
 
 const int MAX_ITER = 10000;
-const NumType OptDlt = 1e-6, GoldenRatio = 0.61803398875f,NumDlt = 1e-6,BIGNUM=1e7;
+const NumType OptDlt = 1e-6, GoldenRatio = 0.61803398875f,NumDlt = 0.000000001,BIGNUM=1e9;
 
 extern bool newtonStepping;
 

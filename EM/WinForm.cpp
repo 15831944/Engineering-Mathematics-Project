@@ -154,7 +154,6 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 	Vector initP = strToVec(initPStr);
 	Vector limX = strToVec(intervalX);
 	Vector limY = strToVec(intervalY);
-	
 	// call optimize
 	
 	string info = "";
@@ -183,8 +182,10 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 		gradient = getGradient(eqt, initP, this->NumRadioButton->Checked).Norm();
 		Application::DoEvents();
 		if (!checkBound(initP, limX, limY)) {
+			initP = lastP;
 			info = "\nout of domain, Try another initial point !!";
 			this->optRichBox->AppendText(gcnew String(info.c_str()));
+			break;
 		}
 	}
 	info = "\n X = " + initP.ToString();

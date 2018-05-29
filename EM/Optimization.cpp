@@ -40,13 +40,29 @@ Matrix DeriGetHessian(const Equation& eqt, const Vector& vec) {
 }
 
 Vector calcBound(const Vector& vecL, const Vector& vecU, Vector p, Vector dir) {
-	Vector bound({BIGNUM,-BIGNUM});
+	Vector bound({-BIGNUM,BIGNUM});
 	for (int i = 0; i < p.dim_; ++i) {
+		if (abs(dir.data_[i]) < NumDlt)
+			continue;
 		NumType extrem1, extrem2;
+
 		extrem1 = (vecU.data_[i] - p.data_[i]) / dir.data_[i];
-		extrem2 = (vecL.data_[i] - p.data_[i]) / dir.data_[i];
-		bound.data_[0] = std::fmin(bound.data_[0], std::fmin(extrem1, extrem2));
-		bound.data_[1] = std::fmax(bound.data_[1], std::fmax(extrem1, extrem2));
+		// can't bigger than ex1
+
+		extrem2 = -(p.data_[i] - vecL.data_[i]) / dir.data_[i];
+		//can't lower than ex2
+		
+		if (dir.data_[i] < 0) {
+			extrem1 += extrem2;
+			extrem2 = extrem1 - extrem2;
+			extrem1 = extrem1 - extrem2;
+		}
+
+
+
+
+		bound.data_[0] = std::fmax(bound.data_[0], extrem2);
+		bound.data_[1] = std::fmin(bound.data_[1], extrem1);
 	}
 	return bound;
 }
@@ -120,7 +136,7 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 			direction = direction.Scalar(alpha);
 		}
 		vec = vec + direction;
-		info += "h = " + direction.ToString();
+		info += "\nh = " + direction.ToString();
 	}
 	else if (method == "Powell Method") {
 		// one iteration
@@ -142,6 +158,7 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 		bound = calcBound(vecL, vecU, vec, s);
 		NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, s, bound.data_[0], bound.data_[1]);
 		info += "\n S = " + s.ToString();
+		info += "\n alpha = " + std::to_string(alpha);
 		vec = vec + s.Scalar(alpha);
 		info += "\n X" + std::to_string(vec.dim_ + 1) + " = " + vec.ToString();
 	}
@@ -189,7 +206,12 @@ void optimize(const Equation& eqt, Vector& vec, Vector& limX, Vector& limY, cons
 			lastGradient = gradient;
 			lastVec = vec;
 			direction = lastHInv * gradient;
-			vec = vec + direction;
+			bound = calcBound(vecL, vecU, vec, direction);
+			NumType alpha = goldenSectionSearch(eqt, vecL, vecU, vec, direction, bound.data_[0], bound.data_[1]);
+
+			vec = vec + direction.Scalar(alpha);
+			info += "\n alpha= " + std::to_string(alpha);
+
 			info += "\n X= " + vec.ToString();
 		}
 		else {
