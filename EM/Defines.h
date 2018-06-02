@@ -11,7 +11,7 @@ using std::cout;
 #endif
 
 using NumType = double;
-const NumType PI = 3.14159265;
+const NumType PI = 3.14159265,DELTA = 1e-8;
 using std::stringstream;
 using std::valarray;
 using std::string;

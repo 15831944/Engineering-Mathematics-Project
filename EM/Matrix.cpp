@@ -258,7 +258,7 @@ Matrix Matrix::Inv() {
 		throw std::runtime_error("Not a Square Matrix !");
 	//
 	if (this->shape_[0] == 1) {
-		if(this->data_[0] == 0)
+		if(this->data_[0] == 0.0)
 			throw std::runtime_error("Invertable !");
 		Matrix inv(1, 1);
 		inv.data_[0] = 1 / this->data_[0];
@@ -334,7 +334,7 @@ NumType Matrix::Det(Matrix mat) {
 			}
 		}
 		for (int j = i + 1; j < mat.shape_[0]; j++) {
-			scale = -mat.data_[j*mat.shape_[0] + i] / mat.data_[i*mat.shape_[0] + i];
+			scale = -mat.data_[j*mat.shape_[0] + i] / (mat.data_[i*mat.shape_[0] + i]+DELTA);
 			if (scale == 0.0) continue;
 			mat.rowAdd(i, scale, j);
 		}
@@ -398,7 +398,7 @@ valarray<Matrix> Matrix::reff() {
 			}
 		}
 		for (int j = i + 1; j < mat.shape_[0]; j++) {
-			scale = -mat.data_[j*mat.shape_[0] + i] / mat.data_[i*mat.shape_[0] + i];
+			scale = -mat.data_[j*mat.shape_[0] + i] / (mat.data_[i*mat.shape_[0] + i]+DELTA);
 			if (scale == 0.0) continue;
 			mat.rowAdd(i, scale, j);
 			p.rowAdd(i, scale, j);
@@ -437,7 +437,7 @@ valarray<Matrix> Matrix::reff() {
 		
 		
 		for (int j = i + 1; j < mat.shape_[0]; j++) {
-			scale = -p.data_[j*mat.shape_[0] + i]/p.data_[i*mat.shape_[0] + i];
+			scale = -p.data_[j*mat.shape_[0] + i]/(p.data_[i*mat.shape_[0] + i]+DELTA);
 			if (scale == 0.0) continue;
 			p.rowAdd(i, scale, j);
 			L.rowAdd(i, scale, j);
@@ -450,7 +450,7 @@ valarray<Matrix> Matrix::reff() {
 	
 	for (int i = mat.shape_[0]-1; i > 0; --i) {
 		for (int j = 0; j < i; j++) {
-			NumType scale = -p.data_[j*mat.shape_[0] + i]/ p.data_[i*mat.shape_[0] + i];
+			NumType scale = -p.data_[j*mat.shape_[0] + i]/ (p.data_[i*mat.shape_[0] + i]+DELTA);
 			if (scale == 0.0)
 				continue;
 			p.rowAdd(i, scale, j);

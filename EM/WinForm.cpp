@@ -95,6 +95,10 @@ System::Void EM::WinForm::EqtListBox_SelectedIndexChanged(System::Object^  sende
 
 }
 
+System::Void EM::WinForm::button3_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->EqtListBox->Items->Clear();
+}
+
 Vector strToVec(string str) {
 	size_t nowPosi = 0, cammaPosi = str.find(',', nowPosi);
 	vector<size_t> cammaPosis;

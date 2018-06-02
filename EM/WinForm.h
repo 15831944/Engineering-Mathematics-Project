@@ -325,7 +325,7 @@ namespace EM {
 			// 
 			// button4
 			// 
-			this->button4->Location = System::Drawing::Point(473, 307);
+			this->button4->Location = System::Drawing::Point(455, 308);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(96, 29);
 			this->button4->TabIndex = 5;
@@ -365,6 +365,7 @@ namespace EM {
 			this->button3->TabIndex = 4;
 			this->button3->Text = L"Clear Equations";
 			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &WinForm::button3_Click);
 			// 
 			// EqtListBox
 			// 
@@ -573,5 +574,6 @@ private: System::Void DeriRadioButton_CheckedChanged(System::Object^  sender, Sy
 private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void OptWaySelect_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void newtonstep_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }
