@@ -75,6 +75,18 @@ namespace EM {
 	private: System::Windows::Forms::RadioButton^  DeriRadioButton;
 	private: System::Windows::Forms::RadioButton^  NumRadioButton;
 	private: System::Windows::Forms::CheckBox^  newtonstep;
+	private: System::Windows::Forms::TabPage^  tabPage3;
+	private: System::Windows::Forms::GroupBox^  groupBox5;
+	private: System::Windows::Forms::GroupBox^  groupBox6;
+	private: System::Windows::Forms::PictureBox^  transPicBox;
+	private: System::Windows::Forms::PictureBox^  oriPicBox;
+	private: System::Windows::Forms::Button^  transBtn;
+	private: System::Windows::Forms::ComboBox^  transWayBox;
+
+	private: System::Windows::Forms::GroupBox^  groupBox7;
+	private: System::Windows::Forms::ToolStripMenuItem^  loadImageToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  saveImageToolStripMenuItem;
+	private: System::Windows::Forms::Button^  excBtn;
 
 
 
@@ -104,8 +116,10 @@ namespace EM {
 			this->toolStrip1 = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripDropDownButton1 = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->更郎ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->saveResultsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->loadEqualToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->loadImageToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveImageToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveResultsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
@@ -138,6 +152,15 @@ namespace EM {
 			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
 			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
 			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
+			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+			this->excBtn = (gcnew System::Windows::Forms::Button());
+			this->groupBox7 = (gcnew System::Windows::Forms::GroupBox());
+			this->transBtn = (gcnew System::Windows::Forms::Button());
+			this->transWayBox = (gcnew System::Windows::Forms::ComboBox());
+			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->transPicBox = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->oriPicBox = (gcnew System::Windows::Forms::PictureBox());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
@@ -146,6 +169,12 @@ namespace EM {
 			this->groupBox4->SuspendLayout();
 			this->groupBox3->SuspendLayout();
 			this->groupBox2->SuspendLayout();
+			this->tabPage3->SuspendLayout();
+			this->groupBox7->SuspendLayout();
+			this->groupBox6->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->transPicBox))->BeginInit();
+			this->groupBox5->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->oriPicBox))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// toolStrip1
@@ -163,9 +192,9 @@ namespace EM {
 			// toolStripDropDownButton1
 			// 
 			this->toolStripDropDownButton1->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
-			this->toolStripDropDownButton1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+			this->toolStripDropDownButton1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
 				this->更郎ToolStripMenuItem,
-					this->saveResultsToolStripMenuItem, this->loadEqualToolStripMenuItem
+					this->loadEqualToolStripMenuItem, this->loadImageToolStripMenuItem, this->saveImageToolStripMenuItem, this->saveResultsToolStripMenuItem
 			});
 			this->toolStripDropDownButton1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"toolStripDropDownButton1.Image")));
 			this->toolStripDropDownButton1->ImageTransparentColor = System::Drawing::Color::Magenta;
@@ -181,19 +210,33 @@ namespace EM {
 			this->更郎ToolStripMenuItem->Text = L"Load Variables";
 			this->更郎ToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::更郎ToolStripMenuItem_Click);
 			// 
-			// saveResultsToolStripMenuItem
-			// 
-			this->saveResultsToolStripMenuItem->Name = L"saveResultsToolStripMenuItem";
-			this->saveResultsToolStripMenuItem->Size = System::Drawing::Size(160, 22);
-			this->saveResultsToolStripMenuItem->Text = L"Save Results";
-			this->saveResultsToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::saveResultsToolStripMenuItem_Click);
-			// 
 			// loadEqualToolStripMenuItem
 			// 
 			this->loadEqualToolStripMenuItem->Name = L"loadEqualToolStripMenuItem";
 			this->loadEqualToolStripMenuItem->Size = System::Drawing::Size(160, 22);
 			this->loadEqualToolStripMenuItem->Text = L"Load  Equation";
 			this->loadEqualToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::loadEqualToolStripMenuItem_Click);
+			// 
+			// loadImageToolStripMenuItem
+			// 
+			this->loadImageToolStripMenuItem->Name = L"loadImageToolStripMenuItem";
+			this->loadImageToolStripMenuItem->Size = System::Drawing::Size(160, 22);
+			this->loadImageToolStripMenuItem->Text = L"Load Image";
+			this->loadImageToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::loadImageToolStripMenuItem_Click);
+			// 
+			// saveImageToolStripMenuItem
+			// 
+			this->saveImageToolStripMenuItem->Name = L"saveImageToolStripMenuItem";
+			this->saveImageToolStripMenuItem->Size = System::Drawing::Size(160, 22);
+			this->saveImageToolStripMenuItem->Text = L"Save Image";
+			this->saveImageToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::saveImageToolStripMenuItem_Click);
+			// 
+			// saveResultsToolStripMenuItem
+			// 
+			this->saveResultsToolStripMenuItem->Name = L"saveResultsToolStripMenuItem";
+			this->saveResultsToolStripMenuItem->Size = System::Drawing::Size(160, 22);
+			this->saveResultsToolStripMenuItem->Text = L"Save Results";
+			this->saveResultsToolStripMenuItem->Click += gcnew System::EventHandler(this, &WinForm::saveResultsToolStripMenuItem_Click);
 			// 
 			// groupBox1
 			// 
@@ -282,6 +325,7 @@ namespace EM {
 			// 
 			this->tabControl1->Controls->Add(this->tabPage1);
 			this->tabControl1->Controls->Add(this->tabPage2);
+			this->tabControl1->Controls->Add(this->tabPage3);
 			this->tabControl1->Location = System::Drawing::Point(8, 34);
 			this->tabControl1->Name = L"tabControl1";
 			this->tabControl1->SelectedIndex = 0;
@@ -518,6 +562,101 @@ namespace EM {
 			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
 			this->nowEquationBox->TabIndex = 0;
 			// 
+			// tabPage3
+			// 
+			this->tabPage3->Controls->Add(this->excBtn);
+			this->tabPage3->Controls->Add(this->groupBox7);
+			this->tabPage3->Controls->Add(this->groupBox6);
+			this->tabPage3->Controls->Add(this->groupBox5);
+			this->tabPage3->Location = System::Drawing::Point(4, 22);
+			this->tabPage3->Name = L"tabPage3";
+			this->tabPage3->Size = System::Drawing::Size(940, 475);
+			this->tabPage3->TabIndex = 2;
+			this->tabPage3->Text = L"Transform";
+			this->tabPage3->UseVisualStyleBackColor = true;
+			// 
+			// excBtn
+			// 
+			this->excBtn->Location = System::Drawing::Point(770, 122);
+			this->excBtn->Name = L"excBtn";
+			this->excBtn->Size = System::Drawing::Size(155, 23);
+			this->excBtn->TabIndex = 5;
+			this->excBtn->Text = L"Trans to ori";
+			this->excBtn->UseVisualStyleBackColor = true;
+			this->excBtn->Click += gcnew System::EventHandler(this, &WinForm::excBtn_Click);
+			// 
+			// groupBox7
+			// 
+			this->groupBox7->Controls->Add(this->transBtn);
+			this->groupBox7->Controls->Add(this->transWayBox);
+			this->groupBox7->Location = System::Drawing::Point(770, 16);
+			this->groupBox7->Name = L"groupBox7";
+			this->groupBox7->Size = System::Drawing::Size(155, 82);
+			this->groupBox7->TabIndex = 4;
+			this->groupBox7->TabStop = false;
+			this->groupBox7->Text = L"Trans Option";
+			// 
+			// transBtn
+			// 
+			this->transBtn->Location = System::Drawing::Point(18, 47);
+			this->transBtn->Name = L"transBtn";
+			this->transBtn->Size = System::Drawing::Size(118, 23);
+			this->transBtn->TabIndex = 2;
+			this->transBtn->Text = L"Transform";
+			this->transBtn->UseVisualStyleBackColor = true;
+			this->transBtn->Click += gcnew System::EventHandler(this, &WinForm::transBtn_Click);
+			// 
+			// transWayBox
+			// 
+			this->transWayBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->transWayBox->FormattingEnabled = true;
+			this->transWayBox->Items->AddRange(gcnew cli::array< System::Object^  >(6) {
+				L"DFT", L"IDFT", L"FFT", L"IFFT", L"High Pass",
+					L"Low Pass"
+			});
+			this->transWayBox->Location = System::Drawing::Point(18, 21);
+			this->transWayBox->Name = L"transWayBox";
+			this->transWayBox->Size = System::Drawing::Size(117, 20);
+			this->transWayBox->TabIndex = 3;
+			// 
+			// groupBox6
+			// 
+			this->groupBox6->Controls->Add(this->transPicBox);
+			this->groupBox6->Location = System::Drawing::Point(384, 16);
+			this->groupBox6->Name = L"groupBox6";
+			this->groupBox6->Size = System::Drawing::Size(365, 428);
+			this->groupBox6->TabIndex = 1;
+			this->groupBox6->TabStop = false;
+			this->groupBox6->Text = L"Transform";
+			// 
+			// transPicBox
+			// 
+			this->transPicBox->Location = System::Drawing::Point(7, 22);
+			this->transPicBox->Name = L"transPicBox";
+			this->transPicBox->Size = System::Drawing::Size(345, 390);
+			this->transPicBox->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->transPicBox->TabIndex = 1;
+			this->transPicBox->TabStop = false;
+			// 
+			// groupBox5
+			// 
+			this->groupBox5->Controls->Add(this->oriPicBox);
+			this->groupBox5->Location = System::Drawing::Point(15, 16);
+			this->groupBox5->Name = L"groupBox5";
+			this->groupBox5->Size = System::Drawing::Size(363, 428);
+			this->groupBox5->TabIndex = 0;
+			this->groupBox5->TabStop = false;
+			this->groupBox5->Text = L"Original";
+			// 
+			// oriPicBox
+			// 
+			this->oriPicBox->Location = System::Drawing::Point(7, 22);
+			this->oriPicBox->Name = L"oriPicBox";
+			this->oriPicBox->Size = System::Drawing::Size(345, 390);
+			this->oriPicBox->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->oriPicBox->TabIndex = 0;
+			this->oriPicBox->TabStop = false;
+			// 
 			// WinForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
@@ -544,6 +683,12 @@ namespace EM {
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
+			this->tabPage3->ResumeLayout(false);
+			this->groupBox7->ResumeLayout(false);
+			this->groupBox6->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->transPicBox))->EndInit();
+			this->groupBox5->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->oriPicBox))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -575,5 +720,10 @@ private: System::Void button4_Click(System::Object^  sender, System::EventArgs^ 
 private: System::Void OptWaySelect_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void newtonstep_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void loadImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void saveImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+
+private: System::Void transBtn_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void excBtn_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }
