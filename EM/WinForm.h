@@ -75,6 +75,14 @@ namespace EM {
 	private: System::Windows::Forms::RadioButton^  DeriRadioButton;
 	private: System::Windows::Forms::RadioButton^  NumRadioButton;
 	private: System::Windows::Forms::CheckBox^  newtonstep;
+	private: System::Windows::Forms::TabPage^  tabPage3;
+	private: System::Windows::Forms::GroupBox^  groupBox5;
+	private: System::Windows::Forms::GroupBox^  groupBox6;
+	private: System::Windows::Forms::PictureBox^  transPicBox;
+	private: System::Windows::Forms::PictureBox^  oriPicBox;
+	private: System::Windows::Forms::Button^  transBtn;
+	private: System::Windows::Forms::ComboBox^  comboBox1;
+	private: System::Windows::Forms::GroupBox^  groupBox7;
 
 
 
@@ -138,6 +146,14 @@ namespace EM {
 			this->OptWaySelect = (gcnew System::Windows::Forms::ComboBox());
 			this->initPointBox = (gcnew System::Windows::Forms::TextBox());
 			this->nowEquationBox = (gcnew System::Windows::Forms::TextBox());
+			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->oriPicBox = (gcnew System::Windows::Forms::PictureBox());
+			this->transPicBox = (gcnew System::Windows::Forms::PictureBox());
+			this->transBtn = (gcnew System::Windows::Forms::Button());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->groupBox7 = (gcnew System::Windows::Forms::GroupBox());
 			this->toolStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
@@ -146,6 +162,12 @@ namespace EM {
 			this->groupBox4->SuspendLayout();
 			this->groupBox3->SuspendLayout();
 			this->groupBox2->SuspendLayout();
+			this->tabPage3->SuspendLayout();
+			this->groupBox5->SuspendLayout();
+			this->groupBox6->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->oriPicBox))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->transPicBox))->BeginInit();
+			this->groupBox7->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// toolStrip1
@@ -282,6 +304,7 @@ namespace EM {
 			// 
 			this->tabControl1->Controls->Add(this->tabPage1);
 			this->tabControl1->Controls->Add(this->tabPage2);
+			this->tabControl1->Controls->Add(this->tabPage3);
 			this->tabControl1->Location = System::Drawing::Point(8, 34);
 			this->tabControl1->Name = L"tabControl1";
 			this->tabControl1->SelectedIndex = 0;
@@ -518,6 +541,83 @@ namespace EM {
 			this->nowEquationBox->Size = System::Drawing::Size(199, 22);
 			this->nowEquationBox->TabIndex = 0;
 			// 
+			// tabPage3
+			// 
+			this->tabPage3->Controls->Add(this->groupBox7);
+			this->tabPage3->Controls->Add(this->groupBox6);
+			this->tabPage3->Controls->Add(this->groupBox5);
+			this->tabPage3->Location = System::Drawing::Point(4, 22);
+			this->tabPage3->Name = L"tabPage3";
+			this->tabPage3->Size = System::Drawing::Size(940, 475);
+			this->tabPage3->TabIndex = 2;
+			this->tabPage3->Text = L"Transform";
+			this->tabPage3->UseVisualStyleBackColor = true;
+			// 
+			// groupBox5
+			// 
+			this->groupBox5->Controls->Add(this->oriPicBox);
+			this->groupBox5->Location = System::Drawing::Point(15, 16);
+			this->groupBox5->Name = L"groupBox5";
+			this->groupBox5->Size = System::Drawing::Size(363, 428);
+			this->groupBox5->TabIndex = 0;
+			this->groupBox5->TabStop = false;
+			this->groupBox5->Text = L"Original";
+			// 
+			// groupBox6
+			// 
+			this->groupBox6->Controls->Add(this->transPicBox);
+			this->groupBox6->Location = System::Drawing::Point(384, 16);
+			this->groupBox6->Name = L"groupBox6";
+			this->groupBox6->Size = System::Drawing::Size(380, 428);
+			this->groupBox6->TabIndex = 1;
+			this->groupBox6->TabStop = false;
+			this->groupBox6->Text = L"Transform";
+			// 
+			// oriPicBox
+			// 
+			this->oriPicBox->Location = System::Drawing::Point(7, 22);
+			this->oriPicBox->Name = L"oriPicBox";
+			this->oriPicBox->Size = System::Drawing::Size(345, 390);
+			this->oriPicBox->TabIndex = 0;
+			this->oriPicBox->TabStop = false;
+			// 
+			// transPicBox
+			// 
+			this->transPicBox->Location = System::Drawing::Point(7, 22);
+			this->transPicBox->Name = L"transPicBox";
+			this->transPicBox->Size = System::Drawing::Size(365, 390);
+			this->transPicBox->TabIndex = 1;
+			this->transPicBox->TabStop = false;
+			// 
+			// transBtn
+			// 
+			this->transBtn->Location = System::Drawing::Point(18, 47);
+			this->transBtn->Name = L"transBtn";
+			this->transBtn->Size = System::Drawing::Size(118, 23);
+			this->transBtn->TabIndex = 2;
+			this->transBtn->Text = L"Transform";
+			this->transBtn->UseVisualStyleBackColor = true;
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Location = System::Drawing::Point(18, 21);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(117, 20);
+			this->comboBox1->TabIndex = 3;
+			// 
+			// groupBox7
+			// 
+			this->groupBox7->Controls->Add(this->transBtn);
+			this->groupBox7->Controls->Add(this->comboBox1);
+			this->groupBox7->Location = System::Drawing::Point(770, 16);
+			this->groupBox7->Name = L"groupBox7";
+			this->groupBox7->Size = System::Drawing::Size(155, 82);
+			this->groupBox7->TabIndex = 4;
+			this->groupBox7->TabStop = false;
+			this->groupBox7->Text = L"groupBox7";
+			// 
 			// WinForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
@@ -544,6 +644,12 @@ namespace EM {
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
+			this->tabPage3->ResumeLayout(false);
+			this->groupBox5->ResumeLayout(false);
+			this->groupBox6->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->oriPicBox))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->transPicBox))->EndInit();
+			this->groupBox7->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
