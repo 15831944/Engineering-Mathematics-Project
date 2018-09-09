@@ -130,6 +130,7 @@
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Optimization.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="WinForm.h">
       <FileType>CppForm</FileType>
@@ -141,6 +142,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Optimization.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="WinForm.cpp" />
   </ItemGroup>

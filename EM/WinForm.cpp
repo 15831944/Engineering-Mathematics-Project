@@ -2,12 +2,14 @@
 #include "Interpreter.h"
 #include "Equation.h"
 #include "Optimization.h"
+#include "Transform.h"
 #include <msclr/marshal_cppstd.h>
-
+#include <complex>
+using std::complex;
 
 string resultRecord = "";
 
-
+vector<vector<complex<NumType>>> oriBuffer,transBuffer;
 
 System::Void EM::WinForm::¸ü¤JÀÉ®×ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->OFD->ShowDialog();
@@ -200,4 +202,65 @@ System::Void EM::WinForm::button2_Click(System::Object^  sender, System::EventAr
 
 System::Void EM::WinForm::button4_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->optRichBox->Text = "";
+}
+
+System::Void EM::WinForm::loadImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->OFD->ShowDialog();
+	Bitmap^ pic = gcnew Bitmap(this->OFD->FileName);
+	getBuffer(pic, oriBuffer);
+	this->oriPicBox->Image = pic;
+}
+
+System::Void EM::WinForm::saveImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->SFD->ShowDialog();
+	this->transPicBox->Image->Save(this->SFD->FileName);
+
+
+}
+
+System::Void EM::WinForm::transBtn_Click(System::Object^  sender, System::EventArgs^  e) {
+	Bitmap^ pic = gcnew Bitmap(this->OFD->FileName);
+	//this->oriPicBox->Image = pic;
+	String^ transWay = this->transWayBox->Items[this->transWayBox->SelectedIndex]->ToString();
+	if (transWay == "DFT") {
+		pic = DiscreteFourierTransform(pic);
+		transBuffer = oriBuffer;
+		bufFFT(transBuffer);
+	}
+	else if (transWay == "IDFT") {
+		pic = InvDiscreteFourierTransform(pic);
+		transBuffer = oriBuffer;
+
+		bufIFFT(transBuffer);
+		pic = bufToPic(transBuffer);
+	}
+	else if (transWay == "FFT") {
+		transBuffer = oriBuffer;
+		bufFFT(transBuffer);
+		pic = bufToPic(transBuffer);
+	}
+	else if (transWay == "IFFT") {
+		transBuffer = oriBuffer;
+		bufIFFT(transBuffer);
+		pic = bufToPic(transBuffer);
+	}
+	else if (transWay == "Low Pass") {
+		transBuffer = oriBuffer;
+		bufL(transBuffer);
+		pic = bufToPic(transBuffer);
+	}
+	else if (transWay == "High Pass") {
+		transBuffer = oriBuffer;
+		bufH(transBuffer);
+		pic = bufToPic(transBuffer);
+	}
+	else
+		pic = Test(pic);
+	
+	this->transPicBox->Image = pic;
+}
+
+System::Void EM::WinForm::excBtn_Click(System::Object^  sender, System::EventArgs^  e) {
+	oriBuffer = transBuffer;
+	this->oriPicBox->Image = bufToPic(oriBuffer);
 }
